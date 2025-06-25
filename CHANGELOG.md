@@ -1,3 +1,9 @@
+## 2025-06-25 11:56:22 - Release v$(node -e console.log(require('./package.json').version))
+
+### Changed Files:
+- `package.json`
+- `scripts/release.js`
+
 ## 2025-06-25 11:55:25 - 1.0.4
 
 ### Changed Files:
