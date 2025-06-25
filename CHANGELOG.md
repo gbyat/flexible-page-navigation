@@ -1,3 +1,9 @@
+## 2025-06-25 11:55:24 - Refactor release scripts in package.json to use console.log for version retrieval and add annotated tags for releases.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 11:55:14 - Release v$(node -p require('./package.json').version)
 
 ### Changed Files:
