@@ -18,6 +18,15 @@ try {
     console.log('💾 Committing changes...');
     execSync(`git commit -m "Release v${version}"`, { stdio: 'inherit' });
 
+    // Delete existing tag if it exists
+    try {
+        console.log('🗑️ Removing existing tag if it exists...');
+        execSync(`git tag -d v${version}`, { stdio: 'pipe' });
+        execSync(`git push origin :refs/tags/v${version}`, { stdio: 'pipe' });
+    } catch (e) {
+        // Tag doesn't exist, that's fine
+    }
+
     // Create annotated tag
     console.log('🏷️ Creating tag...');
     execSync(`git tag -a "v${version}" -m "Release v${version}"`, { stdio: 'inherit' });
