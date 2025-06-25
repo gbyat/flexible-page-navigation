@@ -1,3 +1,8 @@
+## 2025-06-25 11:56:33 - 1.0.5
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 11:56:32 - Refactor release scripts in package.json to call an external script for versioning and tagging, improving maintainability.
 
 ### Changed Files:
