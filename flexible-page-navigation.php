@@ -195,6 +195,9 @@ class Flexible_Page_Navigation
         register_block_type(FPN_PLUGIN_DIR . 'build/block.json', array(
             'render_callback' => array($this, 'render_navigation_block'),
         ));
+
+        // Enqueue block editor assets
+        add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
     }
 
     public function add_admin_menu()
@@ -387,6 +390,23 @@ class Flexible_Page_Navigation
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('fpn_nonce'),
         ));
+    }
+
+    public function enqueue_block_editor_assets()
+    {
+        wp_enqueue_script(
+            'flexible-page-navigation-block-editor',
+            FPN_PLUGIN_URL . 'build/index.js',
+            array('wp-blocks', 'wp-block-editor', 'wp-components', 'wp-element', 'wp-i18n'),
+            FPN_VERSION
+        );
+
+        wp_enqueue_style(
+            'flexible-page-navigation-block-editor',
+            FPN_PLUGIN_URL . 'build/index.css',
+            array(),
+            FPN_VERSION
+        );
     }
 
     public function render_navigation_block($attributes)
