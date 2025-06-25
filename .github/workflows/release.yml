@@ -28,19 +28,19 @@ jobs:
       - name: Create ZIP file
         run: |
           # Create a temporary directory for the plugin
-          mkdir -p temp/flexible-page-navigation
+          mkdir -p temp
 
-          # Copy plugin files
-          cp flexible-page-navigation.php temp/flexible-page-navigation/
-          cp -r build temp/flexible-page-navigation/
-          cp -r languages temp/flexible-page-navigation/ 2>/dev/null || true
-          cp README.md temp/flexible-page-navigation/ 2>/dev/null || true
-          cp CHANGELOG.md temp/flexible-page-navigation/ 2>/dev/null || true
-          cp LICENSE temp/flexible-page-navigation/ 2>/dev/null || true
+          # Copy plugin files directly to temp (no subfolder)
+          cp flexible-page-navigation.php temp/
+          cp -r build temp/ 2>/dev/null || true
+          cp -r languages temp/ 2>/dev/null || true
+          cp README.md temp/ 2>/dev/null || true
+          cp CHANGELOG.md temp/ 2>/dev/null || true
+          cp LICENSE temp/ 2>/dev/null || true
 
-          # Create ZIP file
+          # Create ZIP file from temp directory contents
           cd temp
-          zip -r ../flexible-page-navigation.zip flexible-page-navigation/
+          zip -r ../flexible-page-navigation.zip .
           cd ..
 
       - name: Create Release
