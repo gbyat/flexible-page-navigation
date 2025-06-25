@@ -1,3 +1,9 @@
+## 2025-06-25 12:57:33 - Clear plugin data cache and refresh plugin properties after update installation
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 12:57:21 - Release v1.1.8
 
 ### Changed Files:
