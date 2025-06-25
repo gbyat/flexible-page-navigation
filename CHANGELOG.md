@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Fix ZIP filename: Use generic name to avoid GitHub auto-renaming (2025-06-25)
+
+### Added
+- Fix ZIP filename: Use generic name to avoid GitHub auto-renaming (2025-06-25)
 - Fix ZIP structure: Create proper folder name without version suffix (2025-06-25)
 
 ### Added
