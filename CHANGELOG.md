@@ -1,3 +1,8 @@
+## 2025-06-25 11:51:47 - Release v$(npm run version --silent)
+
+### Changed Files:
+- `package.json`
+
 ## 2025-06-25 11:49:13 - 1.0.1
 
 ### Changed Files:
