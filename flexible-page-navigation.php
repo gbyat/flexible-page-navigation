@@ -192,7 +192,7 @@ class Flexible_Page_Navigation
         load_plugin_textdomain('flexible-page-navigation', false, dirname(plugin_basename(__FILE__)) . '/languages');
 
         // Register block
-        register_block_type(FPN_PLUGIN_DIR . 'src/block.json', array(
+        register_block_type(FPN_PLUGIN_DIR . 'build/block.json', array(
             'render_callback' => array($this, 'render_navigation_block'),
         ));
     }

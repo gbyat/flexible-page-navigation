@@ -1,3 +1,9 @@
+## 2025-06-25 12:31:39 - Release v1.1.2
+
+### Changed Files:
+- `flexible-page-navigation.php`
+- `src/block.json`
+
 ## 2025-06-25 12:23:59 - 1.1.2
 
 ### Changed Files:
