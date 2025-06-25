@@ -1,3 +1,8 @@
+## 2025-06-25 12:23:59 - 1.1.2
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 12:23:57 - Remove GitHub token format validation to accept all token formats
 
 ### Changed Files:
