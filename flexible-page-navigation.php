@@ -198,6 +198,8 @@ class Flexible_Page_Navigation
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
         add_action('wp_ajax_fpn_test_github_api', array($this, 'test_github_api'));
         add_action('wp_ajax_fpn_clear_cache', array($this, 'clear_cache'));
+        add_action('wp_ajax_nopriv_fpn_test_github_api', array($this, 'test_github_api'));
+        add_action('wp_ajax_nopriv_fpn_clear_cache', array($this, 'clear_cache'));
         register_activation_hook(__FILE__, array($this, 'activate'));
         register_deactivation_hook(__FILE__, array($this, 'deactivate'));
     }
