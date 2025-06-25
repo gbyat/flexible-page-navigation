@@ -1,3 +1,9 @@
+## 2025-06-25 12:53:53 - Enhance version comparison logic to ensure updates are only shown for newer versions by stripping 'v' prefix from version tags.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 12:53:43 - Release v1.1.7
 
 ### Changed Files:
