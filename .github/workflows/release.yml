@@ -31,25 +31,25 @@ jobs:
       - name: Create ZIP file
         run: |
           # Create a temporary directory for the plugin
-          mkdir -p temp/flexible-page-navigation
+          mkdir -p temp
 
-          # Copy plugin files to the correct folder structure
-          cp flexible-page-navigation.php temp/flexible-page-navigation/
-          cp -r build temp/flexible-page-navigation/ 2>/dev/null || true
-          cp -r languages temp/flexible-page-navigation/ 2>/dev/null || true
-          cp README.md temp/flexible-page-navigation/ 2>/dev/null || true
-          cp CHANGELOG.md temp/flexible-page-navigation/ 2>/dev/null || true
-          cp LICENSE temp/flexible-page-navigation/ 2>/dev/null || true
+          # Copy plugin files directly to temp (no subfolder)
+          cp flexible-page-navigation.php temp/
+          cp -r build temp/ 2>/dev/null || true
+          cp -r languages temp/ 2>/dev/null || true
+          cp README.md temp/ 2>/dev/null || true
+          cp CHANGELOG.md temp/ 2>/dev/null || true
+          cp LICENSE temp/ 2>/dev/null || true
 
-          # Create ZIP file with the correct folder name
+          # Create ZIP file from temp directory contents
           cd temp
-          zip -r ../plugin.zip flexible-page-navigation/
+          zip -r ../flexible-page-navigation.zip .
           cd ..
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: plugin.zip
+          files: flexible-page-navigation.zip
           generate_release_notes: true
           draft: false
           prerelease: false

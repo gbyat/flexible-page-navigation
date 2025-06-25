@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Fix GitHub permissions: Add contents write permission for releases (2025-06-25)
+
+### Added
+- Fix GitHub permissions: Add contents write permission for releases (2025-06-25)
 - Fix ZIP filename: Use generic name to avoid GitHub auto-renaming (2025-06-25)
 
 ### Added
