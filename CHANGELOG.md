@@ -1,3 +1,8 @@
+## 2025-06-25 11:55:25 - 1.0.4
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 11:55:24 - Refactor release scripts in package.json to use console.log for version retrieval and add annotated tags for releases.
 
 ### Changed Files:
