@@ -1,3 +1,9 @@
+## 2025-06-25 11:57:47 - Enhance release script to remove existing tags before creating new ones, ensuring clean versioning.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 11:57:37 - Release v1.0.5
 
 ### Changed Files:
