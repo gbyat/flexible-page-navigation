@@ -1,3 +1,9 @@
+## 2025-06-25 12:12:46 - Add copy-webpack-plugin to package.json and webpack.config.js for asset copying
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 12:12:32 - Release v1.0.6
 
 ### Changed Files:
