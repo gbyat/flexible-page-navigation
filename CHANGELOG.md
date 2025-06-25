@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Test changelog generation with improved hook - 2025-06-25 11:42:52
+
 ## [1.0.0] - 2025-06-25 10:30:00
 
 ### Added
