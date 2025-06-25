@@ -1,3 +1,9 @@
+## 2025-06-25 12:37:02 - Rename block in JSON configuration from "page-navigation" to "flexible-nav" for improved clarity.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 12:36:53 - Release v1.1.3
 
 ### Changed Files:
