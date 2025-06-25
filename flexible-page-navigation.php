@@ -87,9 +87,18 @@ class FPN_GitHub_Updater
             return $transient;
         }
 
+        // Get current version and new version
+        $current_version = $this->plugin['Version'];
+        $new_version = ltrim($this->github_response->tag_name, 'v'); // Remove 'v' prefix if present
+
+        // Only show update if new version is actually newer
+        if (version_compare($current_version, $new_version, '>=')) {
+            return $transient;
+        }
+
         $plugin_data = array(
             'slug' => $this->basename,
-            'new_version' => $this->github_response->tag_name,
+            'new_version' => $new_version,
             'url' => $this->plugin['PluginURI'],
             'package' => $this->github_response->zipball_url,
         );
