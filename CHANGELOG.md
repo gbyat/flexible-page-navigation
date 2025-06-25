@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Fix release workflow: Plugin files now directly in ZIP root (2025-06-25)
+
+### Added
+- Fix release workflow: Plugin files now directly in ZIP root (2025-06-25)
 - Initial commit: Flexible Page Navigation WordPress Plugin v1.0.0 (2025-06-25)
 
 ---
