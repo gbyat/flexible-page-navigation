@@ -1,3 +1,8 @@
+## 2025-06-25 12:36:53 - Release v1.1.3
+
+### Changed Files:
+- `src/block.json`
+
 ## 2025-06-25 12:31:51 - 1.1.3
 
 ### Changed Files:
