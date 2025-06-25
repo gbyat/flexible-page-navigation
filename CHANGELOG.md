@@ -1,3 +1,9 @@
+## 2025-06-25 11:52:00 - Update release script in package.json to use the current version from package.json instead of npm run version --silent
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 11:51:47 - Release v$(npm run version --silent)
 
 ### Changed Files:
