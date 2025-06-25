@@ -1,3 +1,8 @@
+## 2025-06-25 12:12:48 - 1.1.0
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 12:12:46 - Add copy-webpack-plugin to package.json and webpack.config.js for asset copying
 
 ### Changed Files:
