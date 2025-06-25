@@ -242,28 +242,43 @@ class Flexible_Page_Navigation
 
     private function settings_tab()
     {
-        if (isset($_POST['submit'])) {
-            update_option('fpn_github_token', sanitize_text_field($_POST['github_token']));
-            echo '<div class="notice notice-success"><p>' . __('Settings saved!', 'flexible-page-navigation') . '</p></div>';
+        // Handle form submission
+        if (isset($_POST['submit']) && isset($_POST['github_token'])) {
+            $token = sanitize_text_field($_POST['github_token']);
+            update_option('fpn_github_token', $token);
+            echo '<div class="notice notice-success is-dismissible"><p>' . __('GitHub token saved successfully!', 'flexible-page-navigation') . '</p></div>';
         }
 
+        // Get current token
         $github_token = get_option('fpn_github_token', '');
     ?>
+        <h2><?php _e('GitHub Settings', 'flexible-page-navigation'); ?></h2>
         <form method="post" action="">
+            <?php wp_nonce_field('fpn_settings', 'fpn_nonce'); ?>
             <table class="form-table">
                 <tr>
                     <th scope="row">
-                        <label for="github_token"><?php _e('GitHub Token', 'flexible-page-navigation'); ?></label>
+                        <label for="github_token"><?php _e('GitHub Personal Access Token', 'flexible-page-navigation'); ?></label>
                     </th>
                     <td>
                         <input type="password" id="github_token" name="github_token" value="<?php echo esc_attr($github_token); ?>" class="regular-text" />
+                        <button type="button" id="show-github-token" class="button"><?php _e('Show Token', 'flexible-page-navigation'); ?></button>
                         <p class="description">
-                            <?php _e('Enter your GitHub personal access token for automatic updates.', 'flexible-page-navigation'); ?>
+                            <?php _e('Enter your GitHub personal access token for automatic updates. The token should have "repo" permissions.', 'flexible-page-navigation'); ?>
                         </p>
+                        <?php if ($github_token): ?>
+                            <p class="description">
+                                <span style="color: green;">✓ <?php _e('Token is set', 'flexible-page-navigation'); ?></span>
+                            </p>
+                        <?php else: ?>
+                            <p class="description">
+                                <span style="color: red;">✗ <?php _e('Token is not set', 'flexible-page-navigation'); ?></span>
+                            </p>
+                        <?php endif; ?>
                     </td>
                 </tr>
             </table>
-            <?php submit_button(); ?>
+            <?php submit_button(__('Save Settings', 'flexible-page-navigation')); ?>
         </form>
     <?php
     }
