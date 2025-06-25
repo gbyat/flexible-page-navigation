@@ -1,3 +1,9 @@
+## 2025-06-25 12:46:36 - Add block editor asset enqueueing for flexible page navigation
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 12:46:28 - Release v1.1.5
 
 ### Changed Files:
