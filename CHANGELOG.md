@@ -1,3 +1,8 @@
+## 2025-06-25 12:23:48 - Release v1.1.1
+
+### Changed Files:
+- `src/admin.js`
+
 ## 2025-06-25 12:15:58 - 1.1.1
 
 ### Changed Files:

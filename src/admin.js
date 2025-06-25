@@ -182,12 +182,8 @@
         // Clear previous error styling
         $('.form-table input').removeClass('error');
 
-        // Validate GitHub token format (basic check)
-        if (token && !/^[a-zA-Z0-9]{40}$/.test(token)) {
-            $('#github_token').addClass('error');
-            errors.push('GitHub token should be 40 characters long and contain only letters and numbers.');
-            isValid = false;
-        }
+        // No validation for GitHub token - accept any format
+        // Removed the 40-character validation to allow all token formats
 
         // Show errors if any
         if (!isValid) {
