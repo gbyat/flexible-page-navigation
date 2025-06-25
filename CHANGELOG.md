@@ -1,3 +1,8 @@
+## 2025-06-25 12:57:34 - 1.1.9
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 12:57:33 - Clear plugin data cache and refresh plugin properties after update installation
 
 ### Changed Files:
