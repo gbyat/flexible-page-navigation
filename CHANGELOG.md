@@ -1,3 +1,9 @@
+## 2025-06-25 11:53:55 - Enhance release scripts in package.json to automatically push changes and tags to the main branch after versioning.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 11:53:46 - Release v$(node -p require('./package.json').version)
 
 ### Changed Files:
