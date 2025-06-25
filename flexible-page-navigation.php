@@ -146,6 +146,12 @@ class FPN_GitHub_Updater
         $wp_filesystem->move($result['destination'], $install_directory);
         $result['destination'] = $install_directory;
 
+        // Clear plugin data cache to force reload of plugin information
+        delete_plugins_cache();
+
+        // Refresh plugin data
+        $this->set_plugin_properties();
+
         if ($this->active) {
             $activate = activate_plugin($this->basename);
         }
