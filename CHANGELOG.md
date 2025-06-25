@@ -1,3 +1,8 @@
+## 2025-06-25 12:41:24 - 1.1.5
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 12:41:22 - Rename block registration from "navigation" to "flexible-nav" for consistency in block naming.
 
 ### Changed Files:
