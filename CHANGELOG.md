@@ -1,3 +1,8 @@
+## 2025-06-25 12:31:51 - 1.1.3
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 12:31:49 - Update block registration and rename block in JSON configuration for flexible page navigation
 
 ### Changed Files:
