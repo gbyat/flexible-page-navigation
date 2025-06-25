@@ -1,3 +1,8 @@
+## 2025-06-25 11:57:49 - 1.0.6
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 11:57:47 - Enhance release script to remove existing tags before creating new ones, ensuring clean versioning.
 
 ### Changed Files:
