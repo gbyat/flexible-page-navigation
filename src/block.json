@@ -1,0 +1,62 @@
+{
+  "apiVersion": 2,
+  "name": "flexible-page-navigation/navigation",
+  "title": "Flexible Page Navigation",
+  "category": "widgets",
+  "icon": "menu",
+  "description": "A flexible page navigation block with customizable content types, sorting, depth, and child selection options.",
+  "textdomain": "flexible-page-navigation",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "attributes": {
+    "contentType": {
+      "type": "string",
+      "default": "page"
+    },
+    "sortBy": {
+      "type": "string",
+      "default": "menu_order"
+    },
+    "sortOrder": {
+      "type": "string",
+      "default": "ASC"
+    },
+    "depth": {
+      "type": "number",
+      "default": 2
+    },
+    "childSelection": {
+      "type": "string",
+      "default": "current"
+    },
+    "parentPageId": {
+      "type": "number",
+      "default": 0
+    },
+    "accordionEnabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#f8f9fa"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#333333"
+    },
+    "activeBackgroundColor": {
+      "type": "string",
+      "default": "#007cba"
+    },
+    "activeTextColor": {
+      "type": "string",
+      "default": "#ffffff"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style.css"
+}

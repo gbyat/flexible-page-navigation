@@ -1,0 +1,54 @@
+name: Release Plugin
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build plugin
+        run: npm run build:prod
+
+      - name: Create ZIP file
+        run: |
+          # Create a temporary directory for the plugin
+          mkdir -p temp/flexible-page-navigation
+
+          # Copy plugin files
+          cp flexible-page-navigation.php temp/flexible-page-navigation/
+          cp -r build temp/flexible-page-navigation/
+          cp -r languages temp/flexible-page-navigation/ 2>/dev/null || true
+          cp README.md temp/flexible-page-navigation/ 2>/dev/null || true
+          cp CHANGELOG.md temp/flexible-page-navigation/ 2>/dev/null || true
+          cp LICENSE temp/flexible-page-navigation/ 2>/dev/null || true
+
+          # Create ZIP file
+          cd temp
+          zip -r ../flexible-page-navigation.zip flexible-page-navigation/
+          cd ..
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: flexible-page-navigation.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
