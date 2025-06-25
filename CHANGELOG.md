@@ -1,3 +1,9 @@
+## 2025-06-25 13:02:45 - Add AJAX actions for non-privileged users to test GitHub API and clear cache
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 13:01:58 - Release v1.1.9
 
 ### Changed Files:
