@@ -1,3 +1,8 @@
+## 2025-06-25 11:49:13 - 1.0.1
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 11:49:11 - Test pre-commit hook from Zimm-Woo-Catalogue
 
 ### Changed Files:
