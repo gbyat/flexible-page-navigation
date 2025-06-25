@@ -1,3 +1,8 @@
+## 2025-06-25 12:53:55 - 1.1.8
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 12:53:53 - Enhance version comparison logic to ensure updates are only shown for newer versions by stripping 'v' prefix from version tags.
 
 ### Changed Files:
