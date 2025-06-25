@@ -1,3 +1,8 @@
+## 2025-06-25 12:37:03 - 1.1.4
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 12:37:02 - Rename block in JSON configuration from "page-navigation" to "flexible-nav" for improved clarity.
 
 ### Changed Files:
