@@ -16,7 +16,7 @@ import {
 import { useState, useEffect } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 
-registerBlockType('flexible-page-navigation/navigation', {
+registerBlockType('flexible-page-navigation/flexible-nav', {
     edit: function Edit({ attributes, setAttributes }) {
         const {
             contentType,

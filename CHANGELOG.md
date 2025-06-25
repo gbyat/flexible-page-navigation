@@ -1,3 +1,8 @@
+## 2025-06-25 12:41:10 - Release v1.1.4
+
+### Changed Files:
+- `src/index.js`
+
 ## 2025-06-25 12:37:03 - 1.1.4
 
 ### Changed Files:
