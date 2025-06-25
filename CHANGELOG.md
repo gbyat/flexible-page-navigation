@@ -1,3 +1,8 @@
+## 2025-06-25 13:02:46 - 1.1.10
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 13:02:45 - Add AJAX actions for non-privileged users to test GitHub API and clear cache
 
 ### Changed Files:
