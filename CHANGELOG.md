@@ -1,3 +1,8 @@
+## 2025-06-25 11:53:57 - 1.0.3
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 11:53:55 - Enhance release scripts in package.json to automatically push changes and tags to the main branch after versioning.
 
 ### Changed Files:
