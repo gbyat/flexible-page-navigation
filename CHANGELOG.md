@@ -1,3 +1,9 @@
+## 2025-06-25 12:23:57 - Remove GitHub token format validation to accept all token formats
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 12:23:48 - Release v1.1.1
 
 ### Changed Files:
