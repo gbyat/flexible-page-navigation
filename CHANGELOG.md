@@ -1,3 +1,9 @@
+## 2025-06-25 12:49:10 - Release v1.1.6
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 12:46:37 - 1.1.6
 
 ### Changed Files:
