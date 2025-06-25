@@ -1,3 +1,8 @@
+## 2025-06-25 12:15:58 - 1.1.1
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 12:15:56 - Enhance GitHub token settings: Added token visibility toggle, improved success message, and updated descriptions for better user guidance.
 
 ### Changed Files:
