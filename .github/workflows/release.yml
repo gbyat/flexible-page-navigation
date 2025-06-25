@@ -40,15 +40,16 @@ jobs:
 
           # Create ZIP file with the correct folder name
           cd temp
-          zip -r ../flexible-page-navigation.zip flexible-page-navigation/
+          zip -r ../plugin.zip flexible-page-navigation/
           cd ..
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: flexible-page-navigation.zip
+          files: plugin.zip
           generate_release_notes: true
           draft: false
           prerelease: false
+          name: "Release ${{ github.ref_name }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Fix ZIP structure: Create proper folder name without version suffix (2025-06-25)
+
+### Added
+- Fix ZIP structure: Create proper folder name without version suffix (2025-06-25)
 - Fix release workflow: Plugin files now directly in ZIP root (2025-06-25)
 
 ### Added
