@@ -1,3 +1,9 @@
+## 2025-06-25 11:56:32 - Refactor release scripts in package.json to call an external script for versioning and tagging, improving maintainability.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 11:56:22 - Release v$(node -e console.log(require('./package.json').version))
 
 ### Changed Files:
