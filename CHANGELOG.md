@@ -1,3 +1,9 @@
+## 2025-06-25 12:15:56 - Enhance GitHub token settings: Added token visibility toggle, improved success message, and updated descriptions for better user guidance.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 12:15:34 - Release v1.1.0
 
 ### Changed Files:
