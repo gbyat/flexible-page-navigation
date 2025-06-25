@@ -7,9 +7,9 @@
     "build": "webpack --mode=development",
     "build:prod": "webpack --mode=production",
     "start": "webpack --watch --mode=development",
-    "release:patch": "npm version patch && npm run build:prod && git add . && git commit -m \"Release v$(node -p \"require('./package.json').version\")\" && git tag v$(node -p \"require('./package.json').version\")",
-    "release:minor": "npm version minor && npm run build:prod && git add . && git commit -m \"Release v$(npm run version --silent)\" && git tag v$(npm run version --silent)",
-    "release:major": "npm version major && npm run build:prod && git add . && git commit -m \"Release v$(npm run version --silent)\" && git tag v$(npm run version --silent)",
+    "release:patch": "npm version patch && npm run build:prod && git add . && git commit -m \"Release v$(node -p \"require('./package.json').version\")\" && git tag v$(node -p \"require('./package.json').version\") && git push origin main && git push origin v$(node -p \"require('./package.json').version\")",
+    "release:minor": "npm version minor && npm run build:prod && git add . && git commit -m \"Release v$(node -p \"require('./package.json').version\")\" && git tag v$(node -p \"require('./package.json').version\") && git push origin main && git push origin v$(node -p \"require('./package.json').version\")",
+    "release:major": "npm version major && npm run build:prod && git add . && git commit -m \"Release v$(node -p \"require('./package.json').version\")\" && git tag v$(node -p \"require('./package.json').version\") && git push origin main && git push origin v$(node -p \"require('./package.json').version\")",
     "version": "node scripts/sync-version.js"
   },
   "keywords": [
