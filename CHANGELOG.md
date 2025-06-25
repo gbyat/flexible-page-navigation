@@ -1,3 +1,8 @@
+## 2025-06-25 12:46:37 - 1.1.6
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 12:46:36 - Add block editor asset enqueueing for flexible page navigation
 
 ### Changed Files:
