@@ -1,3 +1,9 @@
+## 2025-06-25 12:31:49 - Update block registration and rename block in JSON configuration for flexible page navigation
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 12:31:39 - Release v1.1.2
 
 ### Changed Files:
