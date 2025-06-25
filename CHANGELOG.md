@@ -1,3 +1,8 @@
+## 2025-06-25 11:55:14 - Release v$(node -p require('./package.json').version)
+
+### Changed Files:
+- `package.json`
+
 ## 2025-06-25 11:53:57 - 1.0.3
 
 ### Changed Files:
