@@ -1,3 +1,9 @@
+## 2025-06-25 12:41:22 - Rename block registration from "navigation" to "flexible-nav" for consistency in block naming.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-25 12:41:10 - Release v1.1.4
 
 ### Changed Files:
