@@ -1,3 +1,10 @@
+## 2025-06-25 12:12:32 - Release v1.0.6
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+- `webpack.config.js`
+
 ## 2025-06-25 11:57:49 - 1.0.6
 
 ### Changed Files:
