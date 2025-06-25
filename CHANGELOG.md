@@ -1,3 +1,8 @@
+## 2025-06-25 11:52:01 - 1.0.2
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-25 11:52:00 - Update release script in package.json to use the current version from package.json instead of npm run version --silent
 
 ### Changed Files:
