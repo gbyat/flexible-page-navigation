@@ -4,7 +4,9 @@
  * Plugin Name: Flexible Page Navigation
  * Plugin URI: https://github.com/gbyat/flexible-page-navigation
  * Description: A flexible page navigation block for WordPress with customizable content types, sorting, depth, and child selection options.
- * Version: 1.2.0
+ * Version: 1.3.0
+ * Requires at least: 5.0
+ * Tested up to: 6.4
  * Author: Gabriele Laesser
  * License: GPL v2 or later
  * Text Domain: flexible-page-navigation
@@ -17,7 +19,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Plugin constants
-define('FPN_VERSION', '1.2.0');
+define('FPN_VERSION', '1.3.0');
 define('FPN_PLUGIN_FILE', __FILE__);
 define('FPN_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('FPN_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -205,13 +207,24 @@ class Flexible_Page_Navigation
     {
         load_plugin_textdomain('flexible-page-navigation', false, dirname(plugin_basename(__FILE__)) . '/languages');
 
+        // Debug: Check if block.json exists
+        $block_json_path = FPN_PLUGIN_DIR . 'build/block.json';
+        if (!file_exists($block_json_path)) {
+            error_log('Flexible Page Navigation: block.json not found at ' . $block_json_path);
+            return;
+        }
+
         // Register block
-        register_block_type(FPN_PLUGIN_DIR . 'build/block.json', array(
+        $result = register_block_type($block_json_path, array(
             'render_callback' => array($this, 'render_navigation_block'),
         ));
 
-        // Enqueue block editor assets
-        add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
+        // Debug: Check if block registration was successful
+        if (!$result) {
+            error_log('Flexible Page Navigation: Failed to register block');
+        } else {
+            error_log('Flexible Page Navigation: Block registered successfully');
+        }
     }
 
     public function add_admin_menu()
@@ -440,36 +453,29 @@ class Flexible_Page_Navigation
         ));
     }
 
-    public function enqueue_block_editor_assets()
-    {
-        wp_enqueue_script(
-            'flexible-page-navigation-block-editor',
-            FPN_PLUGIN_URL . 'build/index.js',
-            array('wp-blocks', 'wp-block-editor', 'wp-components', 'wp-element', 'wp-i18n'),
-            FPN_VERSION
-        );
-
-        wp_enqueue_style(
-            'flexible-page-navigation-block-editor',
-            FPN_PLUGIN_URL . 'build/index.css',
-            array(),
-            FPN_VERSION
-        );
-    }
-
     public function render_navigation_block($attributes)
     {
         $content_type = isset($attributes['contentType']) ? $attributes['contentType'] : 'pages';
         $sort_by = isset($attributes['sortBy']) ? $attributes['sortBy'] : 'menu_order';
         $sort_order = isset($attributes['sortOrder']) ? $attributes['sortOrder'] : 'ASC';
-        $depth = isset($attributes['depth']) ? intval($attributes['depth']) : 2;
+        $depth = isset($attributes['depth']) ? intval($attributes['depth']) : 3;
         $child_selection = isset($attributes['childSelection']) ? $attributes['childSelection'] : 'current';
         $parent_page_id = isset($attributes['parentPageId']) ? intval($attributes['parentPageId']) : 0;
-        $accordion_enabled = isset($attributes['accordionEnabled']) ? $attributes['accordionEnabled'] : true;
+        $accordion_enabled = $attributes['accordionEnabled'] ?? true;
+        $column_layout = $attributes['columnLayout'] ?? 'single';
         $background_color = isset($attributes['backgroundColor']) ? $attributes['backgroundColor'] : '#f8f9fa';
         $text_color = isset($attributes['textColor']) ? $attributes['textColor'] : '#333333';
         $active_background_color = isset($attributes['activeBackgroundColor']) ? $attributes['activeBackgroundColor'] : '#007cba';
         $active_text_color = isset($attributes['activeTextColor']) ? $attributes['activeTextColor'] : '#ffffff';
+        $active_padding = $attributes['activePadding'] ?? 8;
+        $child_active_background_color = isset($attributes['childActiveBackgroundColor']) ? $attributes['childActiveBackgroundColor'] : '#e8f4fd';
+        $child_active_text_color = isset($attributes['childActiveTextColor']) ? $attributes['childActiveTextColor'] : '#333333';
+        $separator_enabled = $attributes['separatorEnabled'] ?? true;
+        $separator_width = $attributes['separatorWidth'] ?? 2;
+        $separator_color = isset($attributes['separatorColor']) ? $attributes['separatorColor'] : '#e0e0e0';
+        $separator_padding = $attributes['separatorPadding'] ?? 20;
+        $hover_effect = isset($attributes['hoverEffect']) ? $attributes['hoverEffect'] : 'underline';
+        $hover_background_color = isset($attributes['hoverBackgroundColor']) ? $attributes['hoverBackgroundColor'] : 'rgba(0, 0, 0, 0.1)';
 
         // Get current page ID
         $current_page_id = get_queried_object_id();
@@ -502,23 +508,58 @@ class Flexible_Page_Navigation
             return '<div class="fpn-navigation fpn-no-pages">' . __('No pages found.', 'flexible-page-navigation') . '</div>';
         }
 
-        // Build navigation HTML
-        $output = '<div class="fpn-navigation" data-accordion="' . ($accordion_enabled ? 'true' : 'false') . '">';
-        $output .= '<style>';
-        $output .= '.fpn-navigation { background-color: ' . esc_attr($background_color) . '; color: ' . esc_attr($text_color) . '; padding: 1rem; }';
-        $output .= '.fpn-navigation .fpn-item a { color: ' . esc_attr($text_color) . '; }';
-        $output .= '.fpn-navigation .fpn-item.fpn-active > a { background-color: ' . esc_attr($active_background_color) . '; color: ' . esc_attr($active_text_color) . '; }';
-        $output .= '.fpn-navigation .fpn-item.fpn-active-parent > a { background-color: ' . esc_attr($active_background_color) . '; color: ' . esc_attr($active_text_color) . '; }';
-        $output .= '</style>';
+        // Build navigation HTML with unique block ID
+        $block_id = 'fpn-block-' . uniqid();
+        $output = '<div id="' . $block_id . '" class="fpn-navigation fpn-layout-' . esc_attr($column_layout) . '" data-accordion="' . ($accordion_enabled ? 'true' : 'false') . '" data-columns="' . esc_attr($column_layout) . '" data-hover="' . esc_attr($hover_effect) . '">';
 
-        $output .= $this->build_navigation_tree($pages, $current_page_id, $depth, 0);
+        // Only add color styles if they are set (not default)
+        if ($background_color !== '#f8f9fa' || $text_color !== '#333333' || $active_background_color !== '#007cba' || $active_text_color !== '#ffffff' || $child_active_background_color !== '#e8f4fd' || $child_active_text_color !== '#333333' || $separator_enabled !== true || $separator_width !== 2 || $separator_color !== '#e0e0e0' || $separator_padding !== 20 || $hover_background_color !== 'rgba(0, 0, 0, 0.1)') {
+            $output .= '<style>';
+            if ($background_color !== '#f8f9fa') {
+                $output .= '#' . $block_id . ' { background-color: ' . esc_attr($background_color) . '; }';
+            }
+            if ($text_color !== '#333333') {
+                $output .= '#' . $block_id . ' .fpn-item a { color: ' . esc_attr($text_color) . '; }';
+            }
+            if ($active_background_color !== '#007cba' || $active_text_color !== '#ffffff') {
+                $output .= '#' . $block_id . ' .fpn-depth-0 > .fpn-item.fpn-active > a { background-color: ' . esc_attr($active_background_color) . '; color: ' . esc_attr($active_text_color) . '; }';
+                $output .= '#' . $block_id . ' .fpn-depth-0 > .fpn-item.fpn-active-parent > a { background-color: ' . esc_attr($active_background_color) . '; color: ' . esc_attr($active_text_color) . '; }';
+            }
+            if ($child_active_background_color !== '#e8f4fd' || $child_active_text_color !== '#333333') {
+                $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item.fpn-active > a, #' . $block_id . ' .fpn-depth-2 > .fpn-item.fpn-active > a, #' . $block_id . ' .fpn-depth-3 > .fpn-item.fpn-active > a, #' . $block_id . ' .fpn-depth-4 > .fpn-item.fpn-active > a { background-color: ' . esc_attr($child_active_background_color) . '; color: ' . esc_attr($child_active_text_color) . '; }';
+                $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item.fpn-active-parent > a, #' . $block_id . ' .fpn-depth-2 > .fpn-item.fpn-active-parent > a, #' . $block_id . ' .fpn-depth-3 > .fpn-item.fpn-active-parent > a, #' . $block_id . ' .fpn-depth-4 > .fpn-item.fpn-active-parent > a { background-color: ' . esc_attr($child_active_background_color) . '; color: ' . esc_attr($child_active_text_color) . '; }';
+            }
+            if ($hover_background_color !== 'rgba(0, 0, 0, 0.1)') {
+                $output .= '#' . $block_id . ' { --fpn-hover-bg: ' . esc_attr($hover_background_color) . '; }';
+            }
+            if ($separator_enabled !== true || $separator_width !== 2 || $separator_color !== '#e0e0e0' || $separator_padding !== 20) {
+                // Always apply padding to submenu items
+                $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a { padding-left: ' . $separator_padding . 'px; }';
+                $output .= '#' . $block_id . ' .fpn-depth-2 > .fpn-item > a { padding-left: ' . ($separator_padding * 2) . 'px; }';
+                $output .= '#' . $block_id . ' .fpn-depth-3 > .fpn-item > a { padding-left: ' . ($separator_padding * 3) . 'px; }';
+                $output .= '#' . $block_id . ' .fpn-depth-4 > .fpn-item > a { padding-left: ' . ($separator_padding * 4) . 'px; }';
+
+                // Apply border-left only if separator is enabled
+                if ($separator_enabled) {
+                    $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
+                    $output .= '#' . $block_id . ' .fpn-depth-2 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
+                    $output .= '#' . $block_id . ' .fpn-depth-3 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
+                    $output .= '#' . $block_id . ' .fpn-depth-4 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
+                } else {
+                    $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a, #' . $block_id . ' .fpn-depth-2 > .fpn-item > a, #' . $block_id . ' .fpn-depth-3 > .fpn-item > a, #' . $block_id . ' .fpn-depth-4 > .fpn-item > a { border-left: none; }';
+                }
+            }
+            $output .= '</style>';
+        }
+
+        $output .= $this->build_navigation_tree($pages, $current_page_id, $depth, 0, $accordion_enabled, $active_padding);
 
         $output .= '</div>';
 
         return $output;
     }
 
-    private function build_navigation_tree($pages, $current_page_id, $max_depth, $current_depth)
+    private function build_navigation_tree($pages, $current_page_id, $max_depth, $current_depth, $accordion_enabled = true, $active_padding = 8)
     {
         if ($current_depth >= $max_depth) {
             return '';
@@ -528,8 +569,20 @@ class Flexible_Page_Navigation
 
         foreach ($pages as $page) {
             $is_active = ($page->ID == $current_page_id);
-            $has_children = $this->has_children($page->ID);
             $is_parent_active = $this->is_parent_active($page->ID, $current_page_id);
+            $has_children = $this->has_children($page->ID, $page->post_type);
+
+            // Only apply active class to level 0 items when on the page or its children
+            $active_class = '';
+            if ($current_depth === 0 && ($is_active || $is_parent_active)) {
+                $active_class = ' fpn-active';
+            }
+
+            // Apply active padding as inline style
+            $active_style = '';
+            if ($current_depth === 0 && ($is_active || $is_parent_active)) {
+                $active_style = ' style="padding: ' . $active_padding . 'px;"';
+            }
 
             $classes = array('fpn-item');
             if ($is_active) {
@@ -543,9 +596,18 @@ class Flexible_Page_Navigation
             }
 
             $output .= '<li class="' . implode(' ', $classes) . '">';
-            $output .= '<a href="' . get_permalink($page->ID) . '">' . esc_html($page->post_title) . '</a>';
 
-            if ($has_children && $current_depth < $max_depth - 1) {
+            $output .= '<a href="' . get_permalink($page->ID) . '"' . $active_class . $active_style . '>' . esc_html($page->post_title) . '</a>';
+
+            // Only show toggle button for items with children starting from depth 1 (second level) when accordion is enabled
+            if ($this->has_children($page->ID, $page->post_type) && $current_depth >= 1 && $accordion_enabled) {
+                $output .= '<button class="fpn-toggle" aria-label="' . __('Toggle submenu', 'flexible-page-navigation') . '" aria-expanded="false">';
+                $output .= '<span class="fpn-toggle-icon fpn-toggle-plus">+</span>';
+                $output .= '<span class="fpn-toggle-icon fpn-toggle-minus">×</span>';
+                $output .= '</button>';
+            }
+
+            if ($this->has_children($page->ID, $page->post_type) && $current_depth < $max_depth - 1) {
                 $children = get_posts(array(
                     'post_type' => $page->post_type,
                     'post_status' => 'publish',
@@ -556,7 +618,7 @@ class Flexible_Page_Navigation
                 ));
 
                 if (!empty($children)) {
-                    $output .= $this->build_navigation_tree($children, $current_page_id, $max_depth, $current_depth + 1);
+                    $output .= $this->build_navigation_tree($children, $current_page_id, $max_depth, $current_depth + 1, $accordion_enabled, $active_padding);
                 }
             }
 
@@ -567,10 +629,10 @@ class Flexible_Page_Navigation
         return $output;
     }
 
-    private function has_children($page_id)
+    private function has_children($page_id, $post_type = 'page')
     {
         $children = get_posts(array(
-            'post_type' => 'page',
+            'post_type' => $post_type,
             'post_status' => 'publish',
             'posts_per_page' => 1,
             'post_parent' => $page_id,

@@ -36,6 +36,7 @@ jobs:
           # Copy plugin files directly to temp (no subfolder)
           cp flexible-page-navigation.php temp/
           cp -r build temp/ 2>/dev/null || true
+          cp -r assets temp/ 2>/dev/null || true
           cp -r languages temp/ 2>/dev/null || true
           cp README.md temp/ 2>/dev/null || true
           cp CHANGELOG.md temp/ 2>/dev/null || true

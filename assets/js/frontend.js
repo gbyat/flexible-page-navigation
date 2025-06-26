@@ -17,34 +17,56 @@
         const navigations = document.querySelectorAll('.fpn-navigation[data-accordion="true"]');
 
         navigations.forEach(function (navigation) {
-            const itemsWithChildren = navigation.querySelectorAll('.fpn-item.fpn-has-children');
+            const toggleButtons = navigation.querySelectorAll('.fpn-toggle');
 
-            itemsWithChildren.forEach(function (item) {
-                const link = item.querySelector('a');
+            toggleButtons.forEach(function (button) {
+                const item = button.closest('.fpn-item');
 
-                if (link) {
-                    // Add click event listener
-                    link.addEventListener('click', function (e) {
-                        // Don't prevent default if it's a real link
-                        if (link.href && link.href !== '#' && link.href !== window.location.href) {
-                            return;
-                        }
-
+                if (item) {
+                    // Add click event listener to toggle button
+                    button.addEventListener('click', function (e) {
                         e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
                         toggleAccordion(item);
+                        return false;
                     });
 
                     // Add keyboard support
-                    link.addEventListener('keydown', function (e) {
+                    button.addEventListener('keydown', function (e) {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
                             toggleAccordion(item);
+                            return false;
                         }
                     });
+
+                    // Prevent link click when clicking on toggle button
+                    const link = item.querySelector('a');
+                    if (link) {
+                        link.addEventListener('click', function (e) {
+                            // If the click originated from the toggle button, prevent link navigation
+                            if (e.target.closest('.fpn-toggle')) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                return false;
+                            }
+                        });
+                    }
                 }
             });
 
-            // Auto-expand active items and their parents
+            // Auto-expand active items and their parents (only for items with toggle buttons)
+            autoExpandActiveItems(navigation);
+        });
+
+        // Handle non-accordion navigation (accordion=false)
+        const nonAccordionNavigations = document.querySelectorAll('.fpn-navigation[data-accordion="false"]');
+
+        nonAccordionNavigations.forEach(function (navigation) {
+            // Auto-expand active items only - no click functionality needed
             autoExpandActiveItems(navigation);
         });
     }
@@ -54,6 +76,8 @@
      */
     function toggleAccordion(item) {
         const isExpanded = item.classList.contains('fpn-expanded');
+        console.log('Toggling item:', item);
+        console.log('Is expanded:', isExpanded);
 
         if (isExpanded) {
             collapseItem(item);
@@ -66,12 +90,20 @@
      * Expand accordion item
      */
     function expandItem(item) {
+        console.log('Expanding item:', item);
         item.classList.add('fpn-expanded');
 
         // Add ARIA attributes for accessibility
-        const link = item.querySelector('a');
-        if (link) {
-            link.setAttribute('aria-expanded', 'true');
+        const toggleButton = item.querySelector('.fpn-toggle');
+        if (toggleButton) {
+            toggleButton.setAttribute('aria-expanded', 'true');
+        }
+
+        // Check if children are visible
+        const children = item.querySelector('ul');
+        if (children) {
+            console.log('Children element:', children);
+            console.log('Children display style:', children.style.display);
         }
 
         // Trigger custom event
@@ -88,9 +120,9 @@
         item.classList.remove('fpn-expanded');
 
         // Add ARIA attributes for accessibility
-        const link = item.querySelector('a');
-        if (link) {
-            link.setAttribute('aria-expanded', 'false');
+        const toggleButton = item.querySelector('.fpn-toggle');
+        if (toggleButton) {
+            toggleButton.setAttribute('aria-expanded', 'false');
         }
 
         // Trigger custom event
@@ -104,19 +136,28 @@
      * Auto-expand active items and their parents
      */
     function autoExpandActiveItems(navigation) {
+        const isAccordion = navigation.getAttribute('data-accordion') === 'true';
         const activeItems = navigation.querySelectorAll('.fpn-item.fpn-active, .fpn-item.fpn-active-parent');
 
         activeItems.forEach(function (item) {
-            // Expand the item itself
-            if (item.classList.contains('fpn-has-children')) {
-                expandItem(item);
-            }
+            if (isAccordion) {
+                // Only expand items that have toggle buttons (depth 1 and above)
+                if (item.classList.contains('fpn-has-children') && item.querySelector('.fpn-toggle')) {
+                    expandItem(item);
+                }
 
-            // Expand all parent items
-            let parent = item.parentElement.closest('.fpn-item.fpn-has-children');
-            while (parent) {
-                expandItem(parent);
-                parent = parent.parentElement.closest('.fpn-item.fpn-has-children');
+                // Expand all parent items that have toggle buttons
+                let parent = item.parentElement.closest('.fpn-item.fpn-has-children');
+                while (parent) {
+                    if (parent.querySelector('.fpn-toggle')) {
+                        expandItem(parent);
+                    }
+                    parent = parent.parentElement.closest('.fpn-item.fpn-has-children');
+                }
+            } else {
+                // When accordion is false, active parents automatically show their children
+                // No need to manually expand - CSS handles the visibility
+                console.log('Accordion disabled - active items will show children automatically');
             }
         });
     }

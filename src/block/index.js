@@ -26,23 +26,72 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
             childSelection,
             parentPageId,
             accordionEnabled,
+            columnLayout,
+            showActiveIndicator,
+            separator,
+            hoverEffect,
             backgroundColor,
             textColor,
             activeBackgroundColor,
             activeTextColor,
+            activePadding,
+            childActiveBackgroundColor,
+            childActiveTextColor,
+            separatorEnabled,
+            separatorWidth,
+            separatorColor,
+            separatorPadding,
+            hoverBackgroundColor,
         } = attributes;
 
-        const [pages, setPages] = useState([]);
         const [loading, setLoading] = useState(true);
+        const [postTypes, setPostTypes] = useState([]);
 
         useEffect(() => {
-            // Fetch pages for parent page selection
-            apiFetch({ path: '/wp/v2/pages?per_page=100&status=publish' })
-                .then((fetchedPages) => {
-                    setPages(fetchedPages);
-                    setLoading(false);
+            // Fetch all public post types using a different approach
+            apiFetch({ path: '/wp/v2/posts?per_page=1' })
+                .then(() => {
+                    // If we can access posts, let's try to get all post types
+                    // We'll use a custom approach by checking what post types are available
+                    const builtInTypes = [
+                        { label: __('Pages', 'flexible-page-navigation'), value: 'page' },
+                        { label: __('Posts', 'flexible-page-navigation'), value: 'post' },
+                    ];
+
+                    // Try to fetch from different endpoints to discover custom post types
+                    const customTypes = [];
+
+                    // Common custom post type names to check
+                    const commonTypes = ['wiki', 'product', 'event', 'portfolio', 'team', 'testimonial', 'faq', 'service'];
+
+                    const checkTypePromises = commonTypes.map(type =>
+                        apiFetch({ path: `/wp/v2/${type}?per_page=1` })
+                            .then(() => ({ label: type.charAt(0).toUpperCase() + type.slice(1), value: type }))
+                            .catch(() => null)
+                    );
+
+                    Promise.all(checkTypePromises)
+                        .then(results => {
+                            const validTypes = results.filter(result => result !== null);
+                            console.log('Discovered custom types:', validTypes);
+
+                            const allTypes = [...builtInTypes, ...validTypes];
+                            console.log('Final all types:', allTypes);
+                            setPostTypes(allTypes);
+                            setLoading(false);
+                        })
+                        .catch(() => {
+                            console.log('Using fallback types');
+                            setPostTypes(builtInTypes);
+                            setLoading(false);
+                        });
                 })
                 .catch(() => {
+                    // Fallback to default types if API fails
+                    setPostTypes([
+                        { label: __('Pages', 'flexible-page-navigation'), value: 'page' },
+                        { label: __('Posts', 'flexible-page-navigation'), value: 'post' },
+                    ]);
                     setLoading(false);
                 });
         }, []);
@@ -57,11 +106,6 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                 borderRadius: '4px',
             },
         });
-
-        const contentTypes = [
-            { label: __('Pages', 'flexible-page-navigation'), value: 'page' },
-            { label: __('Posts', 'flexible-page-navigation'), value: 'post' },
-        ];
 
         const sortOptions = [
             { label: __('Menu Order', 'flexible-page-navigation'), value: 'menu_order' },
@@ -80,12 +124,11 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
             { label: __('Custom Page', 'flexible-page-navigation'), value: 'custom' },
         ];
 
-        const pageOptions = [
-            { label: __('-- Select Page --', 'flexible-page-navigation'), value: 0 },
-            ...pages.map((page) => ({
-                label: page.title.rendered,
-                value: page.id,
-            })),
+        const columnLayoutOptions = [
+            { label: __('Single Column', 'flexible-page-navigation'), value: 'single' },
+            { label: __('2 Columns', 'flexible-page-navigation'), value: '2-columns' },
+            { label: __('3 Columns', 'flexible-page-navigation'), value: '3-columns' },
+            { label: __('4 Columns', 'flexible-page-navigation'), value: '4-columns' },
         ];
 
         return (
@@ -95,7 +138,7 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                         <SelectControl
                             label={__('Content Type', 'flexible-page-navigation')}
                             value={contentType}
-                            options={contentTypes}
+                            options={postTypes}
                             onChange={(value) => setAttributes({ contentType: value })}
                         />
 
@@ -121,6 +164,15 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                             max={5}
                         />
 
+                        <RangeControl
+                            label={__('Active Item Padding', 'flexible-page-navigation')}
+                            value={activePadding}
+                            onChange={(value) => setAttributes({ activePadding: value })}
+                            min={0}
+                            max={20}
+                            help={__('Padding for active navigation items (in pixels)', 'flexible-page-navigation')}
+                        />
+
                         <SelectControl
                             label={__('Child Selection', 'flexible-page-navigation')}
                             value={childSelection}
@@ -129,12 +181,13 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                         />
 
                         {childSelection === 'custom' && (
-                            <SelectControl
-                                label={__('Parent Page', 'flexible-page-navigation')}
-                                value={parentPageId}
-                                options={pageOptions}
-                                onChange={(value) => setAttributes({ parentPageId: parseInt(value) })}
-                                disabled={loading}
+                            <TextControl
+                                label={__('Parent Post ID', 'flexible-page-navigation')}
+                                value={parentPageId || ''}
+                                onChange={(value) => setAttributes({ parentPageId: parseInt(value) || 0 })}
+                                help={__('Enter the ID of the parent post/page (any post type)', 'flexible-page-navigation')}
+                                type="number"
+                                min="0"
                             />
                         )}
 
@@ -143,6 +196,79 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                             checked={accordionEnabled}
                             onChange={(value) => setAttributes({ accordionEnabled: value })}
                             help={__('Enable accordion functionality for top-level items', 'flexible-page-navigation')}
+                        />
+
+                        <SelectControl
+                            label={__('Column Layout', 'flexible-page-navigation')}
+                            value={columnLayout}
+                            options={columnLayoutOptions}
+                            onChange={(value) => setAttributes({ columnLayout: value })}
+                            help={__('Choose how many columns to display the navigation in', 'flexible-page-navigation')}
+                        />
+
+                        <ToggleControl
+                            label={__('Show Active Indicator', 'flexible-page-navigation')}
+                            checked={showActiveIndicator}
+                            onChange={(value) => setAttributes({ showActiveIndicator: value })}
+                            help={__('Show visual indicator for active page', 'flexible-page-navigation')}
+                        />
+
+                        <SelectControl
+                            label={__('Hover Effect', 'flexible-page-navigation')}
+                            value={hoverEffect}
+                            options={[
+                                { label: __('None', 'flexible-page-navigation'), value: 'none' },
+                                { label: __('Underline', 'flexible-page-navigation'), value: 'underline' },
+                                { label: __('Background', 'flexible-page-navigation'), value: 'background' },
+                                { label: __('Scale', 'flexible-page-navigation'), value: 'scale' },
+                            ]}
+                            onChange={(value) => setAttributes({ hoverEffect: value })}
+                            help={__('Choose hover effect for navigation items', 'flexible-page-navigation')}
+                        />
+
+                        {hoverEffect === 'background' && (
+                            <div>
+                                <label>{__('Hover Background Color', 'flexible-page-navigation')}</label>
+                                <ColorPalette
+                                    value={hoverBackgroundColor}
+                                    onChange={(value) => setAttributes({ hoverBackgroundColor: value })}
+                                />
+                            </div>
+                        )}
+
+                        <ToggleControl
+                            label={__('Enable Separator Lines', 'flexible-page-navigation')}
+                            checked={separatorEnabled}
+                            onChange={(value) => setAttributes({ separatorEnabled: value })}
+                            help={__('Show separator lines for submenu items', 'flexible-page-navigation')}
+                        />
+
+                        <RangeControl
+                            label={__('Separator Width', 'flexible-page-navigation')}
+                            value={separatorWidth}
+                            onChange={(value) => setAttributes({ separatorWidth: value })}
+                            min={1}
+                            max={10}
+                            help={__('Width of separator lines in pixels', 'flexible-page-navigation')}
+                            disabled={!separatorEnabled}
+                        />
+
+                        <div>
+                            <label>{__('Separator Color', 'flexible-page-navigation')}</label>
+                            <ColorPalette
+                                value={separatorColor}
+                                onChange={(value) => setAttributes({ separatorColor: value })}
+                                disabled={!separatorEnabled}
+                            />
+                        </div>
+
+                        <RangeControl
+                            label={__('Submenu Padding', 'flexible-page-navigation')}
+                            value={separatorPadding}
+                            onChange={(value) => setAttributes({ separatorPadding: value })}
+                            min={10}
+                            max={50}
+                            help={__('Left padding for submenu items in pixels', 'flexible-page-navigation')}
                         />
                     </PanelBody>
 
@@ -178,6 +304,22 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                                 onChange={(value) => setAttributes({ activeTextColor: value })}
                             />
                         </div>
+
+                        <div>
+                            <label>{__('Child Active Background Color', 'flexible-page-navigation')}</label>
+                            <ColorPalette
+                                value={childActiveBackgroundColor}
+                                onChange={(value) => setAttributes({ childActiveBackgroundColor: value })}
+                            />
+                        </div>
+
+                        <div>
+                            <label>{__('Child Active Text Color', 'flexible-page-navigation')}</label>
+                            <ColorPalette
+                                value={childActiveTextColor}
+                                onChange={(value) => setAttributes({ childActiveTextColor: value })}
+                            />
+                        </div>
                     </PanelBody>
                 </InspectorControls>
 
@@ -192,20 +334,15 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                         <p>
                             {__('Child Selection:', 'flexible-page-navigation')} {childSelection}
                             {childSelection === 'custom' && parentPageId > 0 && (
-                                <span> - {pages.find(p => p.id === parentPageId)?.title?.rendered || __('Unknown Page', 'flexible-page-navigation')}</span>
+                                <span> - {__('Parent ID:', 'flexible-page-navigation')} {parentPageId}</span>
                             )}
                         </p>
                         <p>
                             {__('Accordion:', 'flexible-page-navigation')} {accordionEnabled ? __('Enabled', 'flexible-page-navigation') : __('Disabled', 'flexible-page-navigation')}
                         </p>
-                        <div className="fpn-color-preview">
-                            <div className="fpn-color-sample" style={{ backgroundColor: backgroundColor, color: textColor }}>
-                                {__('Normal State', 'flexible-page-navigation')}
-                            </div>
-                            <div className="fpn-color-sample" style={{ backgroundColor: activeBackgroundColor, color: activeTextColor }}>
-                                {__('Active State', 'flexible-page-navigation')}
-                            </div>
-                        </div>
+                        <p>
+                            {__('Layout:', 'flexible-page-navigation')} {columnLayout.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        </p>
                     </div>
                 </div>
             </>

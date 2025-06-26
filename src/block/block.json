@@ -25,7 +25,7 @@
     },
     "depth": {
       "type": "number",
-      "default": 2
+      "default": 3
     },
     "childSelection": {
       "type": "string",
@@ -38,6 +38,22 @@
     "accordionEnabled": {
       "type": "boolean",
       "default": true
+    },
+    "columnLayout": {
+      "type": "string",
+      "default": "single"
+    },
+    "showActiveIndicator": {
+      "type": "boolean",
+      "default": true
+    },
+    "separator": {
+      "type": "string",
+      "default": "none"
+    },
+    "hoverEffect": {
+      "type": "string",
+      "default": "underline"
     },
     "backgroundColor": {
       "type": "string",
@@ -54,6 +70,38 @@
     "activeTextColor": {
       "type": "string",
       "default": "#ffffff"
+    },
+    "activePadding": {
+      "type": "number",
+      "default": 8
+    },
+    "childActiveBackgroundColor": {
+      "type": "string",
+      "default": "#e8f4fd"
+    },
+    "childActiveTextColor": {
+      "type": "string",
+      "default": "#333333"
+    },
+    "separatorEnabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "separatorWidth": {
+      "type": "number",
+      "default": 2
+    },
+    "separatorColor": {
+      "type": "string",
+      "default": "#e0e0e0"
+    },
+    "separatorPadding": {
+      "type": "number",
+      "default": 20
+    },
+    "hoverBackgroundColor": {
+      "type": "string",
+      "default": "rgba(0, 0, 0, 0.1)"
     }
   },
   "editorScript": "file:./index.js",

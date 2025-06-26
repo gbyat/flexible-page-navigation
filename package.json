@@ -1,12 +1,13 @@
 {
   "name": "flexible-page-navigation",
-  "version": "1.2.0",
-  "description": "A flexible page navigation block for WordPress with customizable content types, sorting, depth, and child selection options.",
+  "version": "1.3.0",
+  "description": "A flexible page navigation block with customizable content types, sorting, depth, and child selection options.",
   "main": "flexible-page-navigation.php",
   "scripts": {
     "build": "webpack --mode=development",
     "build:prod": "webpack --mode=production",
     "start": "webpack --watch --mode=development",
+    "deploy": "node scripts/deploy.js",
     "release:patch": "npm version patch && npm run build:prod && node scripts/release.js",
     "release:minor": "npm version minor && npm run build:prod && node scripts/release.js",
     "release:major": "npm version major && npm run build:prod && node scripts/release.js",
@@ -37,6 +38,7 @@
     "babel-loader": "^10.0.0",
     "copy-webpack-plugin": "^13.0.0",
     "css-loader": "^6.8.0",
+    "fs-extra": "^11.3.0",
     "mini-css-extract-plugin": "^2.7.0",
     "style-loader": "^3.3.0",
     "webpack": "^5.88.0",
