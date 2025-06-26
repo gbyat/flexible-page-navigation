@@ -1,3 +1,9 @@
+## 2025-06-26 08:18:12 - Add success message for deleted transients and enhance cache information display in debug tab
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-26 08:18:04 - Release v1.1.11
 
 ### Changed Files:
