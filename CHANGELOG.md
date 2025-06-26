@@ -1,3 +1,8 @@
+## 2025-06-26 08:18:13 - 1.1.12
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-26 08:18:12 - Add success message for deleted transients and enhance cache information display in debug tab
 
 ### Changed Files:
