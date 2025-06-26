@@ -1,3 +1,9 @@
+## 2025-06-26 09:35:55 - Remove obsolete delete_plugins_cache() call, fix fatal error, bump version to 1.1.14
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-26 09:33:23 - Fix critical error - simplify AJAX handlers and debug tab - version 1.1.13
 
 ### Changed Files:
