@@ -1,3 +1,8 @@
+## 2025-06-26 08:18:04 - Release v1.1.11
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-26 08:14:19 - 1.1.11
 
 ### Changed Files:
