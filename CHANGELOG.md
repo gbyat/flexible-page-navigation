@@ -1,3 +1,8 @@
+## 2025-06-26 09:35:56 - 1.1.15
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-26 09:35:55 - Remove obsolete delete_plugins_cache() call, fix fatal error, bump version to 1.1.14
 
 ### Changed Files:
