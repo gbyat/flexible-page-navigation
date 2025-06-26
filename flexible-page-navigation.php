@@ -4,7 +4,7 @@
  * Plugin Name: Flexible Page Navigation
  * Plugin URI: https://github.com/gbyat/flexible-page-navigation
  * Description: A flexible page navigation block for WordPress with customizable content types, sorting, depth, and child selection options.
- * Version: 1.1.15
+ * Version: 1.2.0
  * Author: Gabriele Laesser
  * License: GPL v2 or later
  * Text Domain: flexible-page-navigation
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Plugin constants
-define('FPN_VERSION', '1.1.15');
+define('FPN_VERSION', '1.2.0');
 define('FPN_PLUGIN_FILE', __FILE__);
 define('FPN_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('FPN_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -337,6 +337,11 @@ class Flexible_Page_Navigation
 
     public function test_github_api()
     {
+        // Check if user has permissions
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(__('Insufficient permissions', 'flexible-page-navigation'));
+        }
+
         // Verify nonce
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'fpn_nonce')) {
             wp_send_json_error(__('Security check failed', 'flexible-page-navigation'));
@@ -352,28 +357,49 @@ class Flexible_Page_Navigation
                 'Authorization' => 'token ' . $token,
                 'Accept' => 'application/vnd.github.v3+json',
             ),
+            'timeout' => 30,
         );
 
         $response = wp_remote_get('https://api.github.com/repos/' . FPN_GITHUB_REPO . '/releases/latest', $args);
 
         if (is_wp_error($response)) {
-            wp_send_json_error($response->get_error_message());
+            wp_send_json_error('HTTP Error: ' . $response->get_error_message());
+        }
+
+        $response_code = wp_remote_retrieve_response_code($response);
+        if ($response_code !== 200) {
+            wp_send_json_error('GitHub API returned error code: ' . $response_code);
         }
 
         $body = json_decode(wp_remote_retrieve_body($response));
+        if (!$body) {
+            wp_send_json_error('Invalid response from GitHub API');
+        }
+
         wp_send_json_success($body);
     }
 
     public function clear_cache()
     {
+        // Check if user has permissions
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(__('Insufficient permissions', 'flexible-page-navigation'));
+        }
+
         // Verify nonce
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'fpn_nonce')) {
             wp_send_json_error(__('Security check failed', 'flexible-page-navigation'));
         }
 
         // Delete the GitHub updater transient
-        delete_transient('fpn_github_updater_' . plugin_basename(__FILE__));
-        wp_send_json_success(__('Cache cleared successfully', 'flexible-page-navigation'));
+        $transient_name = 'fpn_github_updater_' . plugin_basename(__FILE__);
+        $deleted = delete_transient($transient_name);
+
+        if ($deleted) {
+            wp_send_json_success(__('Cache cleared successfully', 'flexible-page-navigation'));
+        } else {
+            wp_send_json_success(__('Cache was already empty', 'flexible-page-navigation'));
+        }
     }
 
     public function enqueue_frontend_scripts()
@@ -387,7 +413,7 @@ class Flexible_Page_Navigation
 
         wp_enqueue_script(
             'flexible-page-navigation-frontend',
-            FPN_PLUGIN_URL . 'build/frontend.js',
+            FPN_PLUGIN_URL . 'assets/js/frontend.js',
             array(),
             FPN_VERSION,
             true
@@ -402,7 +428,7 @@ class Flexible_Page_Navigation
 
         wp_enqueue_script(
             'flexible-page-navigation-admin',
-            FPN_PLUGIN_URL . 'build/admin.js',
+            FPN_PLUGIN_URL . 'assets/js/admin.js',
             array('jquery'),
             FPN_VERSION,
             true

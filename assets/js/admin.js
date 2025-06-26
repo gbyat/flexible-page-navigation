@@ -39,6 +39,17 @@
         const button = $('#test-github-api');
         const resultDiv = $('#api-test-result');
 
+        // Check if fpn_ajax is available
+        if (typeof fpn_ajax === 'undefined') {
+            resultDiv.html(`
+                <div class="notice notice-error">
+                    <p><strong>JavaScript Error!</strong></p>
+                    <p>AJAX configuration not loaded. Please refresh the page.</p>
+                </div>
+            `);
+            return;
+        }
+
         // Disable button and show loading
         button.prop('disabled', true).text('Testing...');
         resultDiv.html('<div class="notice notice-info"><p>Testing GitHub API connection...</p></div>');
@@ -51,6 +62,7 @@
                 nonce: fpn_ajax.nonce
             },
             success: function (response) {
+                console.log('GitHub API Response:', response);
                 if (response.success) {
                     const data = response.data;
                     resultDiv.html(`
@@ -71,10 +83,13 @@
                 }
             },
             error: function (xhr, status, error) {
+                console.error('GitHub API Error:', { xhr, status, error });
                 resultDiv.html(`
                     <div class="notice notice-error">
                         <p><strong>GitHub API Test Failed!</strong></p>
+                        <p>Status: ${status}</p>
                         <p>Error: ${error}</p>
+                        <p>Response: ${xhr.responseText}</p>
                     </div>
                 `);
             },
@@ -91,6 +106,17 @@
         const button = $('#clear-cache');
         const resultDiv = $('#api-test-result');
 
+        // Check if fpn_ajax is available
+        if (typeof fpn_ajax === 'undefined') {
+            resultDiv.html(`
+                <div class="notice notice-error">
+                    <p><strong>JavaScript Error!</strong></p>
+                    <p>AJAX configuration not loaded. Please refresh the page.</p>
+                </div>
+            `);
+            return;
+        }
+
         // Disable button and show loading
         button.prop('disabled', true).text('Clearing...');
         resultDiv.html('<div class="notice notice-info"><p>Clearing cache...</p></div>');
@@ -103,6 +129,7 @@
                 nonce: fpn_ajax.nonce
             },
             success: function (response) {
+                console.log('Clear Cache Response:', response);
                 if (response.success) {
                     resultDiv.html(`
                         <div class="notice notice-success">
@@ -120,10 +147,13 @@
                 }
             },
             error: function (xhr, status, error) {
+                console.error('Clear Cache Error:', { xhr, status, error });
                 resultDiv.html(`
                     <div class="notice notice-error">
                         <p><strong>Cache Clear Failed!</strong></p>
+                        <p>Status: ${status}</p>
                         <p>Error: ${error}</p>
+                        <p>Response: ${xhr.responseText}</p>
                     </div>
                 `);
             },

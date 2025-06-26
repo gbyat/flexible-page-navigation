@@ -1,3 +1,10 @@
+## 2025-06-26 10:02:57 - Release v1.1.15
+
+### Changed Files:
+- `flexible-page-navigation.php`
+- `package.json`
+- `webpack.config.js`
+
 ## 2025-06-26 09:35:56 - 1.1.15
 
 ### Changed Files:

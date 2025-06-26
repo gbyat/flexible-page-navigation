@@ -1,15 +1,13 @@
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
 
     return {
         entry: {
-            index: './src/index.js',
-            frontend: './src/frontend.js',
-            admin: './src/admin.js',
+            index: './src/block/index.js',
         },
         output: {
             path: path.resolve(__dirname, 'build'),
@@ -31,7 +29,7 @@ module.exports = (env, argv) => {
                 {
                     test: /\.css$/,
                     use: [
-                        isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+                        MiniCssExtractPlugin.loader,
                         'css-loader',
                     ],
                 },
@@ -41,32 +39,31 @@ module.exports = (env, argv) => {
             new MiniCssExtractPlugin({
                 filename: '[name].css',
             }),
-            new CopyWebpackPlugin({
+            new CopyPlugin({
                 patterns: [
-                    { from: 'src/block.json', to: '.' },
-                    { from: 'src/index.css', to: '.' },
-                    { from: 'src/style.css', to: '.' },
+                    {
+                        from: 'src/block/block.json',
+                        to: 'block.json',
+                    },
+                    {
+                        from: 'src/block/index.css',
+                        to: 'index.css',
+                    },
+                    {
+                        from: 'src/block/style.css',
+                        to: 'style.css',
+                    },
                 ],
             }),
         ],
         externals: {
             '@wordpress/blocks': ['wp', 'blocks'],
+            '@wordpress/i18n': ['wp', 'i18n'],
             '@wordpress/block-editor': ['wp', 'blockEditor'],
             '@wordpress/components': ['wp', 'components'],
-            '@wordpress/compose': ['wp', 'compose'],
-            '@wordpress/data': ['wp', 'data'],
             '@wordpress/element': ['wp', 'element'],
-            '@wordpress/i18n': ['wp', 'i18n'],
-            '@wordpress/rich-text': ['wp', 'richText'],
             '@wordpress/api-fetch': ['wp', 'apiFetch'],
-            'jquery': 'jQuery',
-        },
-        resolve: {
-            extensions: ['.js', '.jsx', '.css'],
         },
         devtool: isProduction ? false : 'source-map',
-        optimization: {
-            minimize: isProduction,
-        },
     };
 }; 
