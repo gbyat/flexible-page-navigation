@@ -4,7 +4,7 @@
  * Plugin Name: Flexible Page Navigation
  * Plugin URI: https://github.com/gbyat/flexible-page-navigation
  * Description: A flexible page navigation block for WordPress with customizable content types, sorting, depth, and child selection options.
- * Version: 1.1.12
+ * Version: 1.1.13
  * Author: Gabriele Laesser
  * License: GPL v2 or later
  * Text Domain: flexible-page-navigation
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Plugin constants
-define('FPN_VERSION', '1.1.12');
+define('FPN_VERSION', '1.1.13');
 define('FPN_PLUGIN_FILE', __FILE__);
 define('FPN_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('FPN_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -305,10 +305,6 @@ class Flexible_Page_Navigation
 
     private function debug_tab()
     {
-        // Show success message if transients were deleted
-        if (isset($_GET['transients_deleted']) && $_GET['transients_deleted'] == '1') {
-            echo '<div class="notice notice-success is-dismissible"><p>' . __('Transients deleted successfully!', 'flexible-page-navigation') . '</p></div>';
-        }
     ?>
         <h2><?php _e('Debug Information', 'flexible-page-navigation'); ?></h2>
 
@@ -325,33 +321,6 @@ class Flexible_Page_Navigation
             <tr>
                 <td><strong><?php _e('GitHub Token', 'flexible-page-navigation'); ?></strong></td>
                 <td><?php echo get_option('fpn_github_token') ? __('Set', 'flexible-page-navigation') : __('Not set', 'flexible-page-navigation'); ?></td>
-            </tr>
-            <tr>
-                <td><strong><?php _e('Plugin Basename', 'flexible-page-navigation'); ?></strong></td>
-                <td><?php echo plugin_basename(__FILE__); ?></td>
-            </tr>
-        </table>
-
-        <h3><?php _e('Cache Information', 'flexible-page-navigation'); ?></h3>
-        <?php
-        $transient_name = 'fpn_github_updater_' . plugin_basename(__FILE__);
-        $transient_value = get_transient($transient_name);
-        ?>
-        <table class="widefat">
-            <tr>
-                <td><strong><?php _e('Transient Name', 'flexible-page-navigation'); ?></strong></td>
-                <td><code><?php echo esc_html($transient_name); ?></code></td>
-            </tr>
-            <tr>
-                <td><strong><?php _e('Transient Status', 'flexible-page-navigation'); ?></strong></td>
-                <td>
-                    <?php if ($transient_value !== false): ?>
-                        <span style="color: green;">✓ <?php _e('Cached data exists', 'flexible-page-navigation'); ?></span>
-                        <br><small><?php _e('Last updated:', 'flexible-page-navigation'); ?> <?php echo date('Y-m-d H:i:s', time() - (get_option('_transient_timeout_' . $transient_name) - time())); ?></small>
-                    <?php else: ?>
-                        <span style="color: orange;">○ <?php _e('No cached data', 'flexible-page-navigation'); ?></span>
-                    <?php endif; ?>
-                </td>
             </tr>
         </table>
 
@@ -386,7 +355,6 @@ class Flexible_Page_Navigation
                 'Authorization' => 'token ' . $token,
                 'Accept' => 'application/vnd.github.v3+json',
             ),
-            'timeout' => 15,
         );
 
         $response = wp_remote_get('https://api.github.com/repos/' . FPN_GITHUB_REPO . '/releases/latest', $args);
@@ -395,16 +363,7 @@ class Flexible_Page_Navigation
             wp_send_json_error($response->get_error_message());
         }
 
-        $response_code = wp_remote_retrieve_response_code($response);
-        if ($response_code !== 200) {
-            wp_send_json_error(sprintf(__('GitHub API returned error code: %d', 'flexible-page-navigation'), $response_code));
-        }
-
         $body = json_decode(wp_remote_retrieve_body($response));
-        if (!$body) {
-            wp_send_json_error(__('Invalid response from GitHub API', 'flexible-page-navigation'));
-        }
-
         wp_send_json_success($body);
     }
 
@@ -416,14 +375,8 @@ class Flexible_Page_Navigation
         }
 
         // Delete the GitHub updater transient
-        $transient_name = 'fpn_github_updater_' . plugin_basename(__FILE__);
-        $deleted = delete_transient($transient_name);
-
-        if ($deleted) {
-            wp_send_json_success(__('Cache cleared successfully', 'flexible-page-navigation'));
-        } else {
-            wp_send_json_success(__('Cache was already empty', 'flexible-page-navigation'));
-        }
+        delete_transient('fpn_github_updater_' . plugin_basename(__FILE__));
+        wp_send_json_success(__('Cache cleared successfully', 'flexible-page-navigation'));
     }
 
     public function enqueue_frontend_scripts()

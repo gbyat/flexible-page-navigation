@@ -1,3 +1,9 @@
+## 2025-06-26 09:29:47 - Fix AJAX handlers and improve debug tab - version 1.1.12
+
+### Changed Files:
+- `flexible-page-navigation.php`
+- `package.json`
+
 ## 2025-06-26 08:24:37 - Fix AJAX handlers and improve debug tab - version 1.1.12
 
 ### Changed Files:
