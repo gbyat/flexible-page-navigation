@@ -1,3 +1,8 @@
+## 2025-06-26 13:54:32 - Release v1.3.0: Major improvements to navigation block
+
+### Changed Files:
+- `README.md`
+
 ## 2025-06-26 13:34:20 - Restructure project: separate block, admin, and frontend assets - version 1.2.0
 
 ### Changed Files:

@@ -1,6 +1,8 @@
 # Flexible Page Navigation
 
-Ein professionelles WordPress-Plugin für flexible Seiten-Navigation mit automatischem GitHub-Update-System, CI/CD-Pipeline und moderner Entwicklungsumgebung.
+Ein WordPress-Plugin für flexible Seiten-Navigation - entwickelt als Test- und Trainingsprojekt für moderne WordPress-Plugin-Entwicklung mit automatischem GitHub-Update-System, CI/CD-Pipeline und moderner Entwicklungsumgebung.
+
+> **Hinweis**: Dieses Plugin wurde als Lernprojekt entwickelt, um moderne WordPress-Plugin-Entwicklung, GitHub Actions, CI/CD-Pipelines und Gutenberg-Block-Entwicklung zu erlernen und zu testen. Es ist funktional und einsatzbereit, aber primär für Bildungszwecke konzipiert.
 
 ## 🚀 Features
 
@@ -261,10 +263,49 @@ Das Changelog wird automatisch über Git Hooks generiert. Jeder Commit wird auto
 
 GPL v2 oder später - siehe LICENSE Datei für Details.
 
-## 🙏 Credits
+## 🎓 Lernziele & Erkenntnisse
 
-Dieses Plugin basiert auf bewährten Praktiken für WordPress-Plugin-Entwicklung und automatische Update-Systeme.
+Dieses Projekt wurde entwickelt, um folgende Technologien und Konzepte zu erlernen und zu testen:
+
+### **WordPress Plugin Development**
+
+- Moderne Plugin-Architektur mit OOP
+- Gutenberg Block-Entwicklung
+- WordPress Hooks und Filters
+- Admin Interface Entwicklung
+
+### **CI/CD & DevOps**
+
+- GitHub Actions für automatische Releases
+- Automatische Version-Management
+- Build-Pipelines mit Webpack
+- Deployment-Automatisierung
+
+### **Frontend Development**
+
+- React-basierte Block-Editor-Komponenten
+- CSS-Module und Styling-Strategien
+- JavaScript Event-Handling
+- Responsive Design
+
+### **Backend Development**
+
+- PHP 8+ Features und Best Practices
+- REST API Integration
+- Caching-Strategien
+- Security (Nonces, Sanitization)
+
+### **Version Control & Collaboration**
+
+- Git Workflows
+- Automated Changelog Generation
+- Release Management
+- Code Quality Tools
 
 ---
 
-**Hinweis:** Dies ist ein professionelles Plugin mit vollständiger Funktionalität für flexible Seiten-Navigation in WordPress.
+**Hinweis:** Dieses Plugin ist vollständig funktional und einsatzbereit, wurde aber primär als Lernprojekt entwickelt. Es demonstriert moderne WordPress-Plugin-Entwicklung und kann als Referenz für ähnliche Projekte dienen.
+
+```
+
+```
