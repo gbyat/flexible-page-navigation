@@ -1,3 +1,14 @@
+## 2025-06-26 09:33:23 - Fix critical error - simplify AJAX handlers and debug tab - version 1.1.13
+
+### Changed Files:
+- `CHANGELOG.md`
+- `flexible-page-navigation.php`
+- `package.json`
+
+## 2025-06-26 09:29:55 - Fix critical error - simplify AJAX handlers and debug tab - version 1.1.13
+
+### Changed Files:
+
 ## 2025-06-26 09:29:47 - Fix AJAX handlers and improve debug tab - version 1.1.12
 
 ### Changed Files:

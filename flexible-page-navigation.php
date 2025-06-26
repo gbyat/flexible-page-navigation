@@ -4,7 +4,7 @@
  * Plugin Name: Flexible Page Navigation
  * Plugin URI: https://github.com/gbyat/flexible-page-navigation
  * Description: A flexible page navigation block for WordPress with customizable content types, sorting, depth, and child selection options.
- * Version: 1.1.13
+ * Version: 1.1.14
  * Author: Gabriele Laesser
  * License: GPL v2 or later
  * Text Domain: flexible-page-navigation
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Plugin constants
-define('FPN_VERSION', '1.1.13');
+define('FPN_VERSION', '1.1.14');
 define('FPN_PLUGIN_FILE', __FILE__);
 define('FPN_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('FPN_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -145,9 +145,6 @@ class FPN_GitHub_Updater
         $install_directory = plugin_dir_path($this->file);
         $wp_filesystem->move($result['destination'], $install_directory);
         $result['destination'] = $install_directory;
-
-        // Clear plugin data cache to force reload of plugin information
-        delete_plugins_cache();
 
         // Refresh plugin data
         $this->set_plugin_properties();
