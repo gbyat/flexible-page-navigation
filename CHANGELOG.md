@@ -1,3 +1,12 @@
+## 2025-06-26 08:24:37 - Fix AJAX handlers and improve debug tab - version 1.1.12
+
+### Changed Files:
+- `CHANGELOG.md`
+
+## 2025-06-26 08:24:31 - Release v1.1.12
+
+### Changed Files:
+
 ## 2025-06-26 08:18:13 - 1.1.12
 
 ### Changed Files:
