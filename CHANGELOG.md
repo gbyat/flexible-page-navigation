@@ -1,3 +1,8 @@
+## 2025-06-27 09:28:11 - 1.4.3
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-27 09:28:10 - Release v1.4.2: Patch - ensure correct version in main plugin file
 
 ### Changed Files:
