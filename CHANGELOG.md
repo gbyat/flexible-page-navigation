@@ -1,3 +1,9 @@
+## 2025-06-27 09:55:25 - Prepare for release: add build directory and all changes
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-27 09:55:18 - Fix release script: Force add build directory for consistent releases
 
 ### Changed Files:
