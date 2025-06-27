@@ -42,32 +42,44 @@ jobs:
           # Create a temporary directory for the plugin
           mkdir -p temp
 
-          # Copy plugin files directly to temp (no subfolder)
+          # Copy main PHP file (same as deploy)
           cp flexible-page-navigation.php temp/
 
-          # Copy build directory (ensure it exists)
+          # Copy build directory (same as deploy)
           if [ -d "build" ]; then
             cp -r build temp/
-            echo "Build directory copied successfully"
+            echo "✅ Copied build/"
           else
             echo "ERROR: Build directory not found!"
             exit 1
           fi
 
-          # Copy other directories if they exist
-          cp -r assets temp/ 2>/dev/null || echo "Assets directory not found (optional)"
-          cp -r languages temp/ 2>/dev/null || echo "Languages directory not found (optional)"
+          # Copy assets/js directory (same as deploy)
+          if [ -d "assets/js" ]; then
+            mkdir -p temp/assets
+            cp -r assets/js temp/assets/
+            echo "✅ Copied assets/js/"
+          else
+            echo "⚠️  Assets/js directory not found (optional)"
+          fi
 
-          # Copy documentation files
-          cp README.md temp/ 2>/dev/null || echo "README.md not found"
-          cp CHANGELOG.md temp/ 2>/dev/null || echo "CHANGELOG.md not found"
-          cp LICENSE temp/ 2>/dev/null || echo "LICENSE not found"
+          # Copy documentation files (same as deploy)
+          for doc in README.md CHANGELOG.md LICENSE; do
+            if [ -f "$doc" ]; then
+              cp "$doc" temp/
+              echo "✅ Copied $doc"
+            else
+              echo "⚠️  Documentation not found: $doc"
+            fi
+          done
 
           # Debug - List temp directory contents
           echo "=== Temp directory contents ==="
           ls -la temp/
           echo "=== Temp/build contents ==="
           ls -la temp/build/ || echo "Temp/build not found"
+          echo "=== Temp/assets contents ==="
+          ls -la temp/assets/ || echo "Temp/assets not found"
 
           # Create ZIP file from temp directory contents
           cd temp
