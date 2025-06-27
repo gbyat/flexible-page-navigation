@@ -1,3 +1,8 @@
+## 2025-06-27 09:09:56 - Release v1.4.0: Recursive Accordion and UI Improvements
+
+### Changed Files:
+- `.github/workflows/release.yml`
+
 ## 2025-06-27 09:01:28 - Update README: Remove 'professionell' and declare as learning project
 
 ### Changed Files:

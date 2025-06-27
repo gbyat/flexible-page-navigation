@@ -28,6 +28,15 @@ jobs:
       - name: Build plugin
         run: npm run build:prod
 
+      - name: Debug - List files
+        run: |
+          echo "=== Current directory ==="
+          ls -la
+          echo "=== Build directory ==="
+          ls -la build/ || echo "Build directory not found"
+          echo "=== Assets directory ==="
+          ls -la assets/ || echo "Assets directory not found"
+
       - name: Create ZIP file
         run: |
           # Create a temporary directory for the plugin
@@ -35,17 +44,39 @@ jobs:
 
           # Copy plugin files directly to temp (no subfolder)
           cp flexible-page-navigation.php temp/
-          cp -r build temp/ 2>/dev/null || true
-          cp -r assets temp/ 2>/dev/null || true
-          cp -r languages temp/ 2>/dev/null || true
-          cp README.md temp/ 2>/dev/null || true
-          cp CHANGELOG.md temp/ 2>/dev/null || true
-          cp LICENSE temp/ 2>/dev/null || true
+
+          # Copy build directory (ensure it exists)
+          if [ -d "build" ]; then
+            cp -r build temp/
+            echo "Build directory copied successfully"
+          else
+            echo "ERROR: Build directory not found!"
+            exit 1
+          fi
+
+          # Copy other directories if they exist
+          cp -r assets temp/ 2>/dev/null || echo "Assets directory not found (optional)"
+          cp -r languages temp/ 2>/dev/null || echo "Languages directory not found (optional)"
+
+          # Copy documentation files
+          cp README.md temp/ 2>/dev/null || echo "README.md not found"
+          cp CHANGELOG.md temp/ 2>/dev/null || echo "CHANGELOG.md not found"
+          cp LICENSE temp/ 2>/dev/null || echo "LICENSE not found"
+
+          # Debug - List temp directory contents
+          echo "=== Temp directory contents ==="
+          ls -la temp/
+          echo "=== Temp/build contents ==="
+          ls -la temp/build/ || echo "Temp/build not found"
 
           # Create ZIP file from temp directory contents
           cd temp
           zip -r ../flexible-page-navigation.zip .
           cd ..
+
+          # Debug - Check ZIP contents
+          echo "=== ZIP file contents ==="
+          unzip -l flexible-page-navigation.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
