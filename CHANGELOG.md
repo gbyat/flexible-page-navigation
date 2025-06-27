@@ -1,3 +1,9 @@
+## 2025-06-27 09:28:10 - Release v1.4.2: Patch - ensure correct version in main plugin file
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-27 09:23:14 - Synchronize release workflow with deploy script for consistency
 
 ### Changed Files:
