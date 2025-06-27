@@ -4,7 +4,7 @@
  * Plugin Name: Flexible Page Navigation
  * Plugin URI: https://github.com/gbyat/flexible-page-navigation
  * Description: A flexible page navigation block for WordPress with customizable content types, sorting, depth, and child selection options.
- * Version: 1.4.0
+ * Version: 1.4.2
  * Requires at least: 5.0
  * Tested up to: 6.4
  * Author: Gabriele Laesser
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Plugin constants
-define('FPN_VERSION', '1.4.0');
+define('FPN_VERSION', '1.4.2');
 define('FPN_PLUGIN_FILE', __FILE__);
 define('FPN_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('FPN_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -214,6 +214,33 @@ class Flexible_Page_Navigation
             return;
         }
 
+        // Debug: Check if index.js exists
+        $index_js_path = FPN_PLUGIN_DIR . 'build/index.js';
+        if (!file_exists($index_js_path)) {
+            error_log('Flexible Page Navigation: index.js not found at ' . $index_js_path);
+            return;
+        }
+
+        // Debug: Check if index.css exists
+        $index_css_path = FPN_PLUGIN_DIR . 'build/index.css';
+        if (!file_exists($index_css_path)) {
+            error_log('Flexible Page Navigation: index.css not found at ' . $index_css_path);
+            return;
+        }
+
+        // Debug: Check if style.css exists
+        $style_css_path = FPN_PLUGIN_DIR . 'build/style.css';
+        if (!file_exists($style_css_path)) {
+            error_log('Flexible Page Navigation: style.css not found at ' . $style_css_path);
+            return;
+        }
+
+        // Debug: Log file sizes
+        error_log('Flexible Page Navigation: block.json size: ' . filesize($block_json_path));
+        error_log('Flexible Page Navigation: index.js size: ' . filesize($index_js_path));
+        error_log('Flexible Page Navigation: index.css size: ' . filesize($index_css_path));
+        error_log('Flexible Page Navigation: style.css size: ' . filesize($style_css_path));
+
         // Register block
         $result = register_block_type($block_json_path, array(
             'render_callback' => array($this, 'render_navigation_block'),
@@ -224,6 +251,14 @@ class Flexible_Page_Navigation
             error_log('Flexible Page Navigation: Failed to register block');
         } else {
             error_log('Flexible Page Navigation: Block registered successfully');
+
+            // Debug: Check if block is available
+            $blocks = get_block_types();
+            if (isset($blocks['flexible-page-navigation/flexible-nav'])) {
+                error_log('Flexible Page Navigation: Block found in registry');
+            } else {
+                error_log('Flexible Page Navigation: Block NOT found in registry');
+            }
         }
     }
 

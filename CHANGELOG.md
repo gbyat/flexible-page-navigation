@@ -1,3 +1,10 @@
+## 2025-06-27 09:23:14 - Synchronize release workflow with deploy script for consistency
+
+### Changed Files:
+- `flexible-page-navigation.php`
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-27 09:14:18 - Fix release workflow: Add debugging and ensure build directory is included
 
 ### Changed Files:
