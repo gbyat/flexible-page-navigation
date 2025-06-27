@@ -1,3 +1,8 @@
+## 2025-06-27 09:55:27 - 1.4.4
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-06-27 09:55:25 - Prepare for release: add build directory and all changes
 
 ### Changed Files:
