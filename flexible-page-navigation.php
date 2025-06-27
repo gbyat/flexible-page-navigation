@@ -191,7 +191,7 @@ class Flexible_Page_Navigation
 
     private function __construct()
     {
-        add_action('init', array($this, 'init'));
+        add_action('plugins_loaded', array($this, 'init'));
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_scripts'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -205,6 +205,12 @@ class Flexible_Page_Navigation
 
     public function init()
     {
+        // Check WordPress version
+        if (version_compare(get_bloginfo('version'), '5.0', '<')) {
+            error_log('Flexible Page Navigation: WordPress 5.0+ required');
+            return;
+        }
+
         load_plugin_textdomain('flexible-page-navigation', false, dirname(plugin_basename(__FILE__)) . '/languages');
 
         // Debug: Check if block.json exists
@@ -252,12 +258,16 @@ class Flexible_Page_Navigation
         } else {
             error_log('Flexible Page Navigation: Block registered successfully');
 
-            // Debug: Check if block is available
-            $blocks = get_block_types();
-            if (isset($blocks['flexible-page-navigation/flexible-nav'])) {
-                error_log('Flexible Page Navigation: Block found in registry');
+            // Debug: Check if block is available (WordPress 5.0+ compatible)
+            if (function_exists('get_block_types')) {
+                $blocks = get_block_types();
+                if (isset($blocks['flexible-page-navigation/flexible-nav'])) {
+                    error_log('Flexible Page Navigation: Block found in registry');
+                } else {
+                    error_log('Flexible Page Navigation: Block NOT found in registry');
+                }
             } else {
-                error_log('Flexible Page Navigation: Block NOT found in registry');
+                error_log('Flexible Page Navigation: get_block_types() not available (WordPress < 5.0)');
             }
         }
     }
@@ -350,6 +360,24 @@ class Flexible_Page_Navigation
 
     private function debug_tab()
     {
+        // Check block registration status (WordPress 5.0+ compatible)
+        $block_registered = false;
+        if (function_exists('get_block_types')) {
+            $blocks = get_block_types();
+            $block_registered = isset($blocks['flexible-page-navigation/flexible-nav']);
+        }
+
+        // Check if build files exist
+        $block_json_exists = file_exists(FPN_PLUGIN_DIR . 'build/block.json');
+        $index_js_exists = file_exists(FPN_PLUGIN_DIR . 'build/index.js');
+        $index_css_exists = file_exists(FPN_PLUGIN_DIR . 'build/index.css');
+        $style_css_exists = file_exists(FPN_PLUGIN_DIR . 'build/style.css');
+
+        // Get file sizes
+        $block_json_size = $block_json_exists ? filesize(FPN_PLUGIN_DIR . 'build/block.json') : 0;
+        $index_js_size = $index_js_exists ? filesize(FPN_PLUGIN_DIR . 'build/index.js') : 0;
+        $index_css_size = $index_css_exists ? filesize(FPN_PLUGIN_DIR . 'build/index.css') : 0;
+        $style_css_size = $style_css_exists ? filesize(FPN_PLUGIN_DIR . 'build/style.css') : 0;
     ?>
         <h2><?php _e('Debug Information', 'flexible-page-navigation'); ?></h2>
 
@@ -366,6 +394,38 @@ class Flexible_Page_Navigation
             <tr>
                 <td><strong><?php _e('GitHub Token', 'flexible-page-navigation'); ?></strong></td>
                 <td><?php echo get_option('fpn_github_token') ? __('Set', 'flexible-page-navigation') : __('Not set', 'flexible-page-navigation'); ?></td>
+            </tr>
+        </table>
+
+        <h3><?php _e('Block Registration Status', 'flexible-page-navigation'); ?></h3>
+        <table class="widefat">
+            <tr>
+                <td><strong><?php _e('Block Registered', 'flexible-page-navigation'); ?></strong></td>
+                <td><?php echo $block_registered ? '<span style="color: green;">✓ Yes</span>' : '<span style="color: red;">✗ No</span>'; ?></td>
+            </tr>
+            <tr>
+                <td><strong><?php _e('Block Name', 'flexible-page-navigation'); ?></strong></td>
+                <td>flexible-page-navigation/flexible-nav</td>
+            </tr>
+        </table>
+
+        <h3><?php _e('Build Files Status', 'flexible-page-navigation'); ?></h3>
+        <table class="widefat">
+            <tr>
+                <td><strong>build/block.json</strong></td>
+                <td><?php echo $block_json_exists ? '<span style="color: green;">✓ Exists</span> (' . $block_json_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
+            </tr>
+            <tr>
+                <td><strong>build/index.js</strong></td>
+                <td><?php echo $index_js_exists ? '<span style="color: green;">✓ Exists</span> (' . $index_js_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
+            </tr>
+            <tr>
+                <td><strong>build/index.css</strong></td>
+                <td><?php echo $index_css_exists ? '<span style="color: green;">✓ Exists</span> (' . $index_css_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
+            </tr>
+            <tr>
+                <td><strong>build/style.css</strong></td>
+                <td><?php echo $style_css_exists ? '<span style="color: green;">✓ Exists</span> (' . $style_css_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
             </tr>
         </table>
 

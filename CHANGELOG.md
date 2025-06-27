@@ -1,3 +1,12 @@
+## 2025-06-27 09:55:18 - Fix release script: Force add build directory for consistent releases
+
+### Changed Files:
+- `build/block.json`
+- `build/index.css`
+- `build/index.js`
+- `build/style.css`
+- `flexible-page-navigation.php`
+
 ## 2025-06-27 09:54:18 - Release v1.4.3
 
 ### Changed Files:
