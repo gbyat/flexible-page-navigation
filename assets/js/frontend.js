@@ -141,7 +141,7 @@
 
         activeItems.forEach(function (item) {
             if (isAccordion) {
-                // Only expand items that have toggle buttons (depth 1 and above)
+                // Expand all items that have toggle buttons (any level with children)
                 if (item.classList.contains('fpn-has-children') && item.querySelector('.fpn-toggle')) {
                     expandItem(item);
                 }
@@ -158,6 +158,35 @@
                 // When accordion is false, active parents automatically show their children
                 // No need to manually expand - CSS handles the visibility
                 console.log('Accordion disabled - active items will show children automatically');
+            }
+        });
+
+        // Update toggle button states after auto-expansion
+        updateToggleButtonStates(navigation);
+    }
+
+    /**
+     * Update toggle button states based on actual visibility of children
+     */
+    function updateToggleButtonStates(navigation) {
+        const toggleButtons = navigation.querySelectorAll('.fpn-toggle');
+
+        toggleButtons.forEach(function (button) {
+            const item = button.closest('.fpn-item');
+            if (item) {
+                const children = item.querySelector('ul');
+                if (children) {
+                    const isVisible = children.style.display !== 'none' &&
+                        getComputedStyle(children).display !== 'none';
+
+                    if (isVisible) {
+                        button.setAttribute('aria-expanded', 'true');
+                        item.classList.add('fpn-expanded');
+                    } else {
+                        button.setAttribute('aria-expanded', 'false');
+                        item.classList.remove('fpn-expanded');
+                    }
+                }
             }
         });
     }

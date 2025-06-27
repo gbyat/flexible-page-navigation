@@ -1,11 +1,56 @@
+## 2025-06-27 09:01:28 - Update README: Remove 'professionell' and declare as learning project
+
+### Changed Files:
+- `CHANGELOG.md`
+- `assets/js/frontend.js`
+- `flexible-page-navigation.php`
+- `package.json`
+- `src/block/block.json`
+- `src/block/index.js`
+- `src/block/style.css`
+
+## 2025-06-27 - Release v1.4.0: Recursive Accordion and UI Improvements
+
+### New Features:
+
+- **Recursive Accordion**: Toggle buttons now work on all levels (depth 1+) with proper recursive functionality
+- **Smart Toggle Button Logic**: Toggle buttons only appear when children can actually be displayed (within depth limit)
+- **Improved Toggle Button Icons**: Plus (+) and X (×) icons now correctly reflect the actual visibility state
+- **Enhanced UI Labels**: Renamed "Separator Lines" to "Left Border Lines" for clarity
+- **Logical UI Grouping**: Active Item Padding now only appears when Show Active Indicator is enabled
+
+### Bug Fixes:
+
+- **Fixed Separator Lines**: Left border lines now properly apply when enabled
+- **Corrected CSS Selectors**: Direct child selectors for better performance and accuracy
+- **Toggle Button Visibility**: Fixed icon display issues on nested accordion levels
+- **Accordion State Management**: Improved JavaScript logic for expand/collapse states
+
+### Technical Improvements:
+
+- **CSS Optimization**: More specific selectors for better performance
+- **JavaScript Enhancement**: Added `updateToggleButtonStates()` function for accurate state management
+- **Inline CSS**: Separator and padding styles now always apply correctly
+- **Block ID Versioning**: Added version suffix to prevent cache conflicts
+
+### Changed Files:
+
+- `src/block/index.js` - UI improvements and logical grouping
+- `src/block/style.css` - Recursive accordion CSS and toggle button fixes
+- `assets/js/frontend.js` - Enhanced accordion functionality and state management
+- `flexible-page-navigation.php` - Fixed separator logic and inline CSS
+- `package.json` - Version bump to 1.4.0
+
 ## 2025-06-26 13:54:32 - Release v1.3.0: Major improvements to navigation block
 
 ### Changed Files:
+
 - `README.md`
 
 ## 2025-06-26 13:34:20 - Restructure project: separate block, admin, and frontend assets - version 1.2.0
 
 ### Changed Files:
+
 - `.github/workflows/release.yml`
 - `CHANGELOG.md`
 - `assets/js/frontend.js`

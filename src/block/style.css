@@ -173,27 +173,41 @@
     opacity: 0;
 }
 
-.fpn-item.fpn-has-children.fpn-expanded .fpn-toggle-plus {
+.fpn-item.fpn-has-children.fpn-expanded > .fpn-toggle .fpn-toggle-plus {
     display: none;
     opacity: 0;
 }
 
-.fpn-item.fpn-has-children.fpn-expanded .fpn-toggle-minus {
+.fpn-item.fpn-has-children.fpn-expanded > .fpn-toggle .fpn-toggle-minus {
     display: block;
     opacity: 1;
 }
 
-/* Accordion Functionality - simplified rules */
-.fpn-navigation[data-accordion="true"] .fpn-depth-2 {
-    display: none !important; /* Hide third level by default */
+/* Recursive Accordion Functionality - hide only depth 2+ by default */
+.fpn-navigation[data-accordion="true"] .fpn-item .fpn-depth-2,
+.fpn-navigation[data-accordion="true"] .fpn-item .fpn-depth-3,
+.fpn-navigation[data-accordion="true"] .fpn-item .fpn-depth-4 {
+    display: none !important; /* Hide depth 2+ by default */
 }
 
-.fpn-navigation[data-accordion="true"] .fpn-item.fpn-expanded .fpn-depth-2 {
+/* Show sublevels when parent is expanded - more specific selectors */
+.fpn-navigation[data-accordion="true"] .fpn-item.fpn-expanded > .fpn-depth-2,
+.fpn-navigation[data-accordion="true"] .fpn-item.fpn-expanded > .fpn-depth-3,
+.fpn-navigation[data-accordion="true"] .fpn-item.fpn-expanded > .fpn-depth-4 {
     display: block !important; /* Show when parent is expanded */
     animation: fpn-slide-down 0.3s ease-out;
 }
 
-.fpn-navigation[data-accordion="false"] .fpn-depth-2 {
+/* Also handle nested expanded items */
+.fpn-navigation[data-accordion="true"] .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-3,
+.fpn-navigation[data-accordion="true"] .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-4 {
+    display: block !important;
+}
+
+.fpn-navigation[data-accordion="false"] .fpn-item .fpn-depth-1,
+.fpn-navigation[data-accordion="false"] .fpn-item .fpn-depth-2,
+.fpn-navigation[data-accordion="false"] .fpn-item .fpn-depth-3,
+.fpn-navigation[data-accordion="false"] .fpn-item .fpn-depth-4 {
     display: none; /* Hide by default when accordion is false */
 }
 
@@ -215,12 +229,12 @@
     display: none;
 }
 
-/* Toggle button visibility - only show for depth 1 and above */
+/* Toggle button visibility - show for depth 1+ with children */
 .fpn-toggle {
     display: none; /* Hide by default */
 }
 
-/* Show toggle buttons only for depth 1 and above (second level) */
+/* Show toggle buttons for depth 1+ items with children */
 .fpn-depth-1 .fpn-item.fpn-has-children .fpn-toggle,
 .fpn-depth-2 .fpn-item.fpn-has-children .fpn-toggle,
 .fpn-depth-3 .fpn-item.fpn-has-children .fpn-toggle,
@@ -228,40 +242,26 @@
     display: flex;
 }
 
-/* Depth-based styling with gray lines */
+/* Depth-based styling - basic structure only, styling handled by inline CSS */
 .fpn-depth-0 > .fpn-item > a {
     font-size: 16px;
     font-weight: 600;
-    padding-left: 0;
-    border-left: none;
 }
 
 .fpn-depth-1 > .fpn-item > a {
     font-size: 14px;
-    padding-left: 20px;
-    border-left: 2px solid #e0e0e0;
-    margin-left: 0;
 }
 
 .fpn-depth-2 > .fpn-item > a {
     font-size: 13px;
-    padding-left: 40px;
-    border-left: 2px solid #e0e0e0;
-    margin-left: 0;
 }
 
 .fpn-depth-3 > .fpn-item > a {
     font-size: 12px;
-    padding-left: 60px;
-    border-left: 2px solid #e0e0e0;
-    margin-left: 0;
 }
 
 .fpn-depth-4 > .fpn-item > a {
     font-size: 11px;
-    padding-left: 80px;
-    border-left: 2px solid #e0e0e0;
-    margin-left: 0;
 }
 
 /* Animations */

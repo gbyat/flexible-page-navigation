@@ -4,7 +4,7 @@
  * Plugin Name: Flexible Page Navigation
  * Plugin URI: https://github.com/gbyat/flexible-page-navigation
  * Description: A flexible page navigation block for WordPress with customizable content types, sorting, depth, and child selection options.
- * Version: 1.3.0
+ * Version: 1.4.0
  * Requires at least: 5.0
  * Tested up to: 6.4
  * Author: Gabriele Laesser
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Plugin constants
-define('FPN_VERSION', '1.3.0');
+define('FPN_VERSION', '1.4.0');
 define('FPN_PLUGIN_FILE', __FILE__);
 define('FPN_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('FPN_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -460,6 +460,7 @@ class Flexible_Page_Navigation
         $sort_order = isset($attributes['sortOrder']) ? $attributes['sortOrder'] : 'ASC';
         $depth = isset($attributes['depth']) ? intval($attributes['depth']) : 3;
         $child_selection = isset($attributes['childSelection']) ? $attributes['childSelection'] : 'current';
+        $menu_display_mode = isset($attributes['menuDisplayMode']) ? $attributes['menuDisplayMode'] : 'children';
         $parent_page_id = isset($attributes['parentPageId']) ? intval($attributes['parentPageId']) : 0;
         $accordion_enabled = $attributes['accordionEnabled'] ?? true;
         $column_layout = $attributes['columnLayout'] ?? 'single';
@@ -480,41 +481,69 @@ class Flexible_Page_Navigation
         // Get current page ID
         $current_page_id = get_queried_object_id();
 
-        // Determine parent page for navigation
-        $nav_parent_id = 0;
-        if ($child_selection === 'custom' && $parent_page_id > 0) {
-            $nav_parent_id = $parent_page_id;
-        } elseif ($child_selection === 'current') {
-            $nav_parent_id = $current_page_id;
+        // Get pages based on menu display mode
+        $pages = array();
+        if ($menu_display_mode === 'children') {
+            // Show children only
+            $nav_parent_id = 0;
+            if ($child_selection === 'custom' && $parent_page_id > 0) {
+                $nav_parent_id = $parent_page_id;
+            } elseif ($child_selection === 'current') {
+                $nav_parent_id = $current_page_id;
+            }
+
+            if ($nav_parent_id > 0) {
+                $pages = get_posts(array(
+                    'post_type' => $content_type,
+                    'post_status' => 'publish',
+                    'posts_per_page' => -1,
+                    'orderby' => $sort_by,
+                    'order' => $sort_order,
+                    'hierarchical' => true,
+                    'post_parent' => $nav_parent_id,
+                ));
+            }
+        } else {
+            // Show all items - get only top-level items to avoid duplicates
+            $pages = get_posts(array(
+                'post_type' => $content_type,
+                'post_status' => 'publish',
+                'posts_per_page' => -1,
+                'orderby' => $sort_by,
+                'order' => $sort_order,
+                'hierarchical' => true,
+                'post_parent' => 0, // Only top-level items
+            ));
         }
-
-        // Get pages
-        $args = array(
-            'post_type' => $content_type,
-            'post_status' => 'publish',
-            'posts_per_page' => -1,
-            'orderby' => $sort_by,
-            'order' => $sort_order,
-            'hierarchical' => true,
-        );
-
-        if ($nav_parent_id > 0) {
-            $args['post_parent'] = $nav_parent_id;
-        }
-
-        $pages = get_posts($args);
 
         if (empty($pages)) {
             return '<div class="fpn-navigation fpn-no-pages">' . __('No pages found.', 'flexible-page-navigation') . '</div>';
         }
 
         // Build navigation HTML with unique block ID
-        $block_id = 'fpn-block-' . uniqid();
+        $block_id = 'fpn-block-' . uniqid() . '-v3';
         $output = '<div id="' . $block_id . '" class="fpn-navigation fpn-layout-' . esc_attr($column_layout) . '" data-accordion="' . ($accordion_enabled ? 'true' : 'false') . '" data-columns="' . esc_attr($column_layout) . '" data-hover="' . esc_attr($hover_effect) . '">';
 
+        // Add inline styles including recursive accordion functionality
+        $output .= '<style>';
+
+        // Recursive accordion CSS - force this to load
+        if ($accordion_enabled) {
+            // Depth 0 and 1 are always visible, only hide depth 2+ by default
+            $output .= '#' . $block_id . ' .fpn-item .fpn-depth-2, #' . $block_id . ' .fpn-item .fpn-depth-3, #' . $block_id . ' .fpn-item .fpn-depth-4 { display: none !important; }';
+            // Show sublevels when parent is expanded - more specific selectors
+            $output .= '#' . $block_id . ' .fpn-item.fpn-expanded > .fpn-depth-2, #' . $block_id . ' .fpn-item.fpn-expanded > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-expanded > .fpn-depth-4 { display: block !important; }';
+            // Also handle nested expanded items
+            $output .= '#' . $block_id . ' .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-4 { display: block !important; }';
+        } else {
+            $output .= '#' . $block_id . ' .fpn-item .fpn-depth-1, #' . $block_id . ' .fpn-item .fpn-depth-2, #' . $block_id . ' .fpn-item .fpn-depth-3, #' . $block_id . ' .fpn-item .fpn-depth-4 { display: none; }';
+        }
+
+        // Toggle button visibility - only for depth 1 and above
+        $output .= '#' . $block_id . ' .fpn-depth-1 .fpn-item.fpn-has-children .fpn-toggle, #' . $block_id . ' .fpn-depth-2 .fpn-item.fpn-has-children .fpn-toggle, #' . $block_id . ' .fpn-depth-3 .fpn-item.fpn-has-children .fpn-toggle, #' . $block_id . ' .fpn-depth-4 .fpn-item.fpn-has-children .fpn-toggle { display: flex !important; }';
+
         // Only add color styles if they are set (not default)
-        if ($background_color !== '#f8f9fa' || $text_color !== '#333333' || $active_background_color !== '#007cba' || $active_text_color !== '#ffffff' || $child_active_background_color !== '#e8f4fd' || $child_active_text_color !== '#333333' || $separator_enabled !== true || $separator_width !== 2 || $separator_color !== '#e0e0e0' || $separator_padding !== 20 || $hover_background_color !== 'rgba(0, 0, 0, 0.1)') {
-            $output .= '<style>';
+        if ($background_color !== '#f8f9fa' || $text_color !== '#333333' || $active_background_color !== '#007cba' || $active_text_color !== '#ffffff' || $child_active_background_color !== '#e8f4fd' || $child_active_text_color !== '#333333' || $hover_background_color !== 'rgba(0, 0, 0, 0.1)') {
             if ($background_color !== '#f8f9fa') {
                 $output .= '#' . $block_id . ' { background-color: ' . esc_attr($background_color) . '; }';
             }
@@ -532,25 +561,25 @@ class Flexible_Page_Navigation
             if ($hover_background_color !== 'rgba(0, 0, 0, 0.1)') {
                 $output .= '#' . $block_id . ' { --fpn-hover-bg: ' . esc_attr($hover_background_color) . '; }';
             }
-            if ($separator_enabled !== true || $separator_width !== 2 || $separator_color !== '#e0e0e0' || $separator_padding !== 20) {
-                // Always apply padding to submenu items
-                $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a { padding-left: ' . $separator_padding . 'px; }';
-                $output .= '#' . $block_id . ' .fpn-depth-2 > .fpn-item > a { padding-left: ' . ($separator_padding * 2) . 'px; }';
-                $output .= '#' . $block_id . ' .fpn-depth-3 > .fpn-item > a { padding-left: ' . ($separator_padding * 3) . 'px; }';
-                $output .= '#' . $block_id . ' .fpn-depth-4 > .fpn-item > a { padding-left: ' . ($separator_padding * 4) . 'px; }';
-
-                // Apply border-left only if separator is enabled
-                if ($separator_enabled) {
-                    $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
-                    $output .= '#' . $block_id . ' .fpn-depth-2 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
-                    $output .= '#' . $block_id . ' .fpn-depth-3 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
-                    $output .= '#' . $block_id . ' .fpn-depth-4 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
-                } else {
-                    $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a, #' . $block_id . ' .fpn-depth-2 > .fpn-item > a, #' . $block_id . ' .fpn-depth-3 > .fpn-item > a, #' . $block_id . ' .fpn-depth-4 > .fpn-item > a { border-left: none; }';
-                }
-            }
-            $output .= '</style>';
         }
+
+        // Always apply separator and padding styles
+        $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a { padding-left: ' . $separator_padding . 'px; }';
+        $output .= '#' . $block_id . ' .fpn-depth-2 > .fpn-item > a { padding-left: ' . ($separator_padding * 2) . 'px; }';
+        $output .= '#' . $block_id . ' .fpn-depth-3 > .fpn-item > a { padding-left: ' . ($separator_padding * 3) . 'px; }';
+        $output .= '#' . $block_id . ' .fpn-depth-4 > .fpn-item > a { padding-left: ' . ($separator_padding * 4) . 'px; }';
+
+        // Apply border-left only if separator is enabled
+        if ($separator_enabled) {
+            $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
+            $output .= '#' . $block_id . ' .fpn-depth-2 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
+            $output .= '#' . $block_id . ' .fpn-depth-3 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
+            $output .= '#' . $block_id . ' .fpn-depth-4 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
+        } else {
+            $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a, #' . $block_id . ' .fpn-depth-2 > .fpn-item > a, #' . $block_id . ' .fpn-depth-3 > .fpn-item > a, #' . $block_id . ' .fpn-depth-4 > .fpn-item > a { border-left: none; }';
+        }
+
+        $output .= '</style>';
 
         $output .= $this->build_navigation_tree($pages, $current_page_id, $depth, 0, $accordion_enabled, $active_padding);
 
@@ -599,8 +628,9 @@ class Flexible_Page_Navigation
 
             $output .= '<a href="' . get_permalink($page->ID) . '"' . $active_class . $active_style . '>' . esc_html($page->post_title) . '</a>';
 
-            // Only show toggle button for items with children starting from depth 1 (second level) when accordion is enabled
-            if ($this->has_children($page->ID, $page->post_type) && $current_depth >= 1 && $accordion_enabled) {
+            // Add toggle button for items with children when accordion is enabled, but only for depth 1 and above
+            // AND only if the children will actually be displayed (within depth limit)
+            if ($this->has_children($page->ID, $page->post_type) && $accordion_enabled && $current_depth >= 1 && $current_depth < $max_depth - 1) {
                 $output .= '<button class="fpn-toggle" aria-label="' . __('Toggle submenu', 'flexible-page-navigation') . '" aria-expanded="false">';
                 $output .= '<span class="fpn-toggle-icon fpn-toggle-plus">+</span>';
                 $output .= '<span class="fpn-toggle-icon fpn-toggle-minus">×</span>';

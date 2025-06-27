@@ -31,6 +31,10 @@
       "type": "string",
       "default": "current"
     },
+    "menuDisplayMode": {
+      "type": "string",
+      "default": "children"
+    },
     "parentPageId": {
       "type": "number",
       "default": 0

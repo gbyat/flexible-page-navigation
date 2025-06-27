@@ -24,6 +24,7 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
             sortOrder,
             depth,
             childSelection,
+            menuDisplayMode,
             parentPageId,
             accordionEnabled,
             columnLayout,
@@ -164,31 +165,37 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                             max={5}
                         />
 
-                        <RangeControl
-                            label={__('Active Item Padding', 'flexible-page-navigation')}
-                            value={activePadding}
-                            onChange={(value) => setAttributes({ activePadding: value })}
-                            min={0}
-                            max={20}
-                            help={__('Padding for active navigation items (in pixels)', 'flexible-page-navigation')}
-                        />
-
                         <SelectControl
-                            label={__('Child Selection', 'flexible-page-navigation')}
-                            value={childSelection}
-                            options={childSelectionOptions}
-                            onChange={(value) => setAttributes({ childSelection: value })}
+                            label={__('Menu Display Mode', 'flexible-page-navigation')}
+                            value={menuDisplayMode}
+                            options={[
+                                { label: __('Show Children Only', 'flexible-page-navigation'), value: 'children' },
+                                { label: __('Show All Items', 'flexible-page-navigation'), value: 'all' },
+                            ]}
+                            onChange={(value) => setAttributes({ menuDisplayMode: value })}
+                            help={__('Choose whether to show only children or all items of the selected content type', 'flexible-page-navigation')}
                         />
 
-                        {childSelection === 'custom' && (
-                            <TextControl
-                                label={__('Parent Post ID', 'flexible-page-navigation')}
-                                value={parentPageId || ''}
-                                onChange={(value) => setAttributes({ parentPageId: parseInt(value) || 0 })}
-                                help={__('Enter the ID of the parent post/page (any post type)', 'flexible-page-navigation')}
-                                type="number"
-                                min="0"
-                            />
+                        {menuDisplayMode === 'children' && (
+                            <>
+                                <SelectControl
+                                    label={__('Child Selection', 'flexible-page-navigation')}
+                                    value={childSelection}
+                                    options={childSelectionOptions}
+                                    onChange={(value) => setAttributes({ childSelection: value })}
+                                />
+
+                                {childSelection === 'custom' && (
+                                    <TextControl
+                                        label={__('Parent Post ID', 'flexible-page-navigation')}
+                                        value={parentPageId || ''}
+                                        onChange={(value) => setAttributes({ parentPageId: parseInt(value) || 0 })}
+                                        help={__('Enter the ID of the parent post/page (any post type)', 'flexible-page-navigation')}
+                                        type="number"
+                                        min="0"
+                                    />
+                                )}
+                            </>
                         )}
 
                         <ToggleControl
@@ -212,6 +219,17 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                             onChange={(value) => setAttributes({ showActiveIndicator: value })}
                             help={__('Show visual indicator for active page', 'flexible-page-navigation')}
                         />
+
+                        {showActiveIndicator && (
+                            <RangeControl
+                                label={__('Active Item Padding', 'flexible-page-navigation')}
+                                value={activePadding}
+                                onChange={(value) => setAttributes({ activePadding: value })}
+                                min={0}
+                                max={20}
+                                help={__('Padding for active navigation items (in pixels)', 'flexible-page-navigation')}
+                            />
+                        )}
 
                         <SelectControl
                             label={__('Hover Effect', 'flexible-page-navigation')}
@@ -237,24 +255,24 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                         )}
 
                         <ToggleControl
-                            label={__('Enable Separator Lines', 'flexible-page-navigation')}
+                            label={__('Enable Left Border Lines', 'flexible-page-navigation')}
                             checked={separatorEnabled}
                             onChange={(value) => setAttributes({ separatorEnabled: value })}
-                            help={__('Show separator lines for submenu items', 'flexible-page-navigation')}
+                            help={__('Show left border lines for submenu items to indicate hierarchy', 'flexible-page-navigation')}
                         />
 
                         <RangeControl
-                            label={__('Separator Width', 'flexible-page-navigation')}
+                            label={__('Border Line Width', 'flexible-page-navigation')}
                             value={separatorWidth}
                             onChange={(value) => setAttributes({ separatorWidth: value })}
                             min={1}
                             max={10}
-                            help={__('Width of separator lines in pixels', 'flexible-page-navigation')}
+                            help={__('Width of left border lines in pixels', 'flexible-page-navigation')}
                             disabled={!separatorEnabled}
                         />
 
                         <div>
-                            <label>{__('Separator Color', 'flexible-page-navigation')}</label>
+                            <label>{__('Border Line Color', 'flexible-page-navigation')}</label>
                             <ColorPalette
                                 value={separatorColor}
                                 onChange={(value) => setAttributes({ separatorColor: value })}
@@ -263,12 +281,12 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                         </div>
 
                         <RangeControl
-                            label={__('Submenu Padding', 'flexible-page-navigation')}
+                            label={__('Submenu Indentation', 'flexible-page-navigation')}
                             value={separatorPadding}
                             onChange={(value) => setAttributes({ separatorPadding: value })}
                             min={10}
                             max={50}
-                            help={__('Left padding for submenu items in pixels', 'flexible-page-navigation')}
+                            help={__('Left padding/indentation for submenu items in pixels', 'flexible-page-navigation')}
                         />
                     </PanelBody>
 
