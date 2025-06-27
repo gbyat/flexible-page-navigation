@@ -1,3 +1,8 @@
+## 2025-06-27 09:54:18 - Release v1.4.3
+
+### Changed Files:
+- `scripts/release.js`
+
 ## 2025-06-27 09:28:11 - 1.4.3
 
 ### Changed Files:

@@ -10,8 +10,12 @@ const version = packageData.version;
 console.log(`🚀 Creating release v${version}...`);
 
 try {
-    // Add all changes
-    console.log('📦 Adding files to git...');
+    // Force add build directory (even if it's in .gitignore)
+    console.log('📦 Adding build directory to git...');
+    execSync('git add -f build/', { stdio: 'inherit' });
+
+    // Add all other changes
+    console.log('📦 Adding other files to git...');
     execSync('git add .', { stdio: 'inherit' });
 
     // Commit with version
