@@ -1,3 +1,9 @@
+## 2025-06-28 09:17:59 - Update CHANGELOG.md to include new main menu item styling options
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-28 09:17:39 - Add main menu item styling options
 
 ### Changed Files:
