@@ -1,3 +1,9 @@
+## 2025-06-28 09:18:00 - 1.4.5
+
+### Changed Files:
+- `build/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-06-28 09:17:59 - Update CHANGELOG.md to include new main menu item styling options
 
 ### Changed Files:
