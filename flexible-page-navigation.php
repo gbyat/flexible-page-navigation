@@ -285,6 +285,11 @@ class Flexible_Page_Navigation
 
     public function admin_page()
     {
+        // Check user permissions
+        if (!current_user_can('manage_options')) {
+            wp_die(__('Insufficient permissions', 'flexible-page-navigation'));
+        }
+
         $active_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'settings';
 ?>
         <div class="wrap">
@@ -295,19 +300,16 @@ class Flexible_Page_Navigation
                     <?php _e('Settings', 'flexible-page-navigation'); ?>
                 </a>
                 <a href="?page=flexible-page-navigation&tab=debug" class="nav-tab <?php echo $active_tab === 'debug' ? 'nav-tab-active' : ''; ?>">
-                    <?php _e('Debug Info', 'flexible-page-navigation'); ?>
+                    <?php _e('Debug', 'flexible-page-navigation'); ?>
                 </a>
             </nav>
 
             <div class="tab-content">
                 <?php
-                switch ($active_tab) {
-                    case 'settings':
-                        $this->settings_tab();
-                        break;
-                    case 'debug':
-                        $this->debug_tab();
-                        break;
+                if ($active_tab === 'settings') {
+                    $this->settings_tab();
+                } elseif ($active_tab === 'debug') {
+                    $this->debug_tab();
                 }
                 ?>
             </div>
@@ -319,6 +321,16 @@ class Flexible_Page_Navigation
     {
         // Handle form submission
         if (isset($_POST['submit']) && isset($_POST['github_token'])) {
+            // Verify nonce for security
+            if (!wp_verify_nonce($_POST['fpn_nonce'], 'fpn_settings')) {
+                wp_die(__('Security check failed', 'flexible-page-navigation'));
+            }
+
+            // Check user permissions
+            if (!current_user_can('manage_options')) {
+                wp_die(__('Insufficient permissions', 'flexible-page-navigation'));
+            }
+
             $token = sanitize_text_field($_POST['github_token']);
             update_option('fpn_github_token', $token);
             echo '<div class="notice notice-success is-dismissible"><p>' . __('GitHub token saved successfully!', 'flexible-page-navigation') . '</p></div>';
