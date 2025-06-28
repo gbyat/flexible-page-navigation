@@ -1,3 +1,12 @@
+## 2025-06-28 09:17:39 - Add main menu item styling options
+
+### Changed Files:
+- `CHANGELOG.md`
+
+## 2025-06-28 09:17:03 - Add main menu item styling options: font weight, size, and color
+
+### Changed Files:
+
 ## 2025-06-28 09:16:54 - Release v1.4.4
 
 ### Changed Files:
