@@ -634,7 +634,14 @@ class Flexible_Page_Navigation
             // Also handle nested expanded items
             $output .= '#' . $block_id . ' .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-4 { display: block !important; }';
         } else {
+            // Non-accordion mode: show all items, but hide children of non-active parents
             $output .= '#' . $block_id . ' .fpn-item .fpn-depth-1, #' . $block_id . ' .fpn-item .fpn-depth-2, #' . $block_id . ' .fpn-item .fpn-depth-3, #' . $block_id . ' .fpn-item .fpn-depth-4 { display: none; }';
+            // Show children of active parents
+            $output .= '#' . $block_id . ' .fpn-item.fpn-active > .fpn-depth-1, #' . $block_id . ' .fpn-item.fpn-active > .fpn-depth-2, #' . $block_id . ' .fpn-item.fpn-active > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
+            $output .= '#' . $block_id . ' .fpn-item.fpn-active-parent > .fpn-depth-1, #' . $block_id . ' .fpn-item.fpn-active-parent > .fpn-depth-2, #' . $block_id . ' .fpn-item.fpn-active-parent > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-active-parent > .fpn-depth-4 { display: block; }';
+            // Show children of active children (nested active items)
+            $output .= '#' . $block_id . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-2, #' . $block_id . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
+            $output .= '#' . $block_id . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-2, #' . $block_id . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
         }
 
         // Toggle button visibility - only for depth 1 and above

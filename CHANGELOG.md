@@ -1,3 +1,9 @@
+## 2025-06-28 09:31:03 - Release v1.4.5
+
+### Changed Files:
+- `build/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-06-28 09:18:00 - 1.4.5
 
 ### Changed Files:
