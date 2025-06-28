@@ -1,3 +1,12 @@
+## 2025-06-28 10:20:48 - Improve accessibility: Add navigation landmark, ARIA attributes, and screen reader support
+
+### Changed Files:
+- `CHANGELOG.md`
+
+## 2025-06-28 10:20:26 - Enhance Flexible Page Navigation: update HTML structure for accessibility, improve ARIA attributes for navigation links and toggle buttons, and refactor JavaScript to manage ARIA states for expanded/collapsed menus.
+
+### Changed Files:
+
 ## 2025-06-28 10:20:06 - Release v1.4.7
 
 ### Changed Files:
