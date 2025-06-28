@@ -1,3 +1,8 @@
+## 2025-06-28 10:11:55 - Enhance admin page security: add user permission checks and nonce verification for form submissions in Flexible Page Navigation.
+
+### Changed Files:
+- `build/index.js`
+
 ## 2025-06-28 10:10:59 - Release v1.4.6
 
 ### Changed Files:
