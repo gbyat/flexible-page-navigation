@@ -1,3 +1,12 @@
+## 2025-06-28 10:12:32 - Security improvements: Add nonce verification and capability checks
+
+### Changed Files:
+- `CHANGELOG.md`
+
+## 2025-06-28 10:12:10 - Refactor Flexible Page Navigation block: implement dynamic block registration, enhance post type fetching, and improve editor settings with new options for content type, sorting, and styling.
+
+### Changed Files:
+
 ## 2025-06-28 10:11:55 - Enhance admin page security: add user permission checks and nonce verification for form submissions in Flexible Page Navigation.
 
 ### Changed Files:
