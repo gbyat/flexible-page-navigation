@@ -1,6 +1,6 @@
 {
   "name": "flexible-page-navigation",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "description": "A flexible page navigation block with customizable content types, sorting, depth, and child selection options.",
   "main": "flexible-page-navigation.php",
   "scripts": {
