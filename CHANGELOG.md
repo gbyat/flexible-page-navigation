@@ -1,3 +1,9 @@
+## 2025-06-28 10:12:46 - 1.4.7
+
+### Changed Files:
+- `build/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-06-28 10:12:44 - Security improvements: Add nonce verification and capability checks
 
 ### Changed Files:
