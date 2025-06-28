@@ -1,3 +1,9 @@
+## 2025-06-28 09:31:10 - Enhance flexible page navigation: update CSS for non-accordion mode to show active parent and child items, and improve JavaScript for dynamic block registration and post type fetching.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-28 09:31:03 - Release v1.4.5
 
 ### Changed Files:
