@@ -99,6 +99,12 @@
             toggleButton.setAttribute('aria-expanded', 'true');
         }
 
+        // Update link ARIA attributes
+        const link = item.querySelector('a');
+        if (link && link.hasAttribute('aria-expanded')) {
+            link.setAttribute('aria-expanded', 'true');
+        }
+
         // Check if children are visible
         const children = item.querySelector('ul');
         if (children) {
@@ -123,6 +129,12 @@
         const toggleButton = item.querySelector('.fpn-toggle');
         if (toggleButton) {
             toggleButton.setAttribute('aria-expanded', 'false');
+        }
+
+        // Update link ARIA attributes
+        const link = item.querySelector('a');
+        if (link && link.hasAttribute('aria-expanded')) {
+            link.setAttribute('aria-expanded', 'false');
         }
 
         // Trigger custom event

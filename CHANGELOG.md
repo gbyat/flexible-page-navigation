@@ -1,3 +1,10 @@
+## 2025-06-28 10:20:06 - Release v1.4.7
+
+### Changed Files:
+- `assets/js/frontend.js`
+- `build/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-06-28 10:12:46 - 1.4.7
 
 ### Changed Files:

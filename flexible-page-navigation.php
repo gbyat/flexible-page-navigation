@@ -632,7 +632,7 @@ class Flexible_Page_Navigation
 
         // Build navigation HTML with unique block ID
         $block_id = 'fpn-block-' . uniqid() . '-v3';
-        $output = '<div id="' . $block_id . '" class="fpn-navigation fpn-layout-' . esc_attr($column_layout) . '" data-accordion="' . ($accordion_enabled ? 'true' : 'false') . '" data-columns="' . esc_attr($column_layout) . '" data-hover="' . esc_attr($hover_effect) . '">';
+        $output = '<nav id="' . $block_id . '" class="fpn-navigation fpn-layout-' . esc_attr($column_layout) . '" role="navigation" aria-label="' . __('Page Navigation', 'flexible-page-navigation') . '" data-accordion="' . ($accordion_enabled ? 'true' : 'false') . '" data-columns="' . esc_attr($column_layout) . '" data-hover="' . esc_attr($hover_effect) . '">';
 
         // Add inline styles including recursive accordion functionality
         $output .= '<style>';
@@ -715,18 +715,30 @@ class Flexible_Page_Navigation
 
         $output .= $this->build_navigation_tree($pages, $current_page_id, $depth, 0, $accordion_enabled, $active_padding);
 
-        $output .= '</div>';
+        $output .= '</nav>';
 
         return $output;
     }
 
-    private function build_navigation_tree($pages, $current_page_id, $max_depth, $current_depth, $accordion_enabled = true, $active_padding = 8)
+    private function build_navigation_tree($pages, $current_page_id, $max_depth, $current_depth, $accordion_enabled = true, $active_padding = 8, $parent_id = 0)
     {
         if ($current_depth >= $max_depth) {
             return '';
         }
 
-        $output = '<ul class="fpn-list fpn-depth-' . $current_depth . '">';
+        $list_id = $parent_id > 0 ? 'fpn-submenu-' . $parent_id : '';
+        $list_attributes = array('class="fpn-list fpn-depth-' . $current_depth . '"');
+
+        if ($list_id) {
+            $list_attributes[] = 'id="' . $list_id . '"';
+        }
+
+        if ($current_depth > 0) {
+            $list_attributes[] = 'role="group"';
+            $list_attributes[] = 'aria-label="' . __('Submenu', 'flexible-page-navigation') . '"';
+        }
+
+        $output = '<ul ' . implode(' ', $list_attributes) . '>';
 
         foreach ($pages as $page) {
             $is_active = ($page->ID == $current_page_id);
@@ -758,14 +770,41 @@ class Flexible_Page_Navigation
 
             $output .= '<li class="' . implode(' ', $classes) . '">';
 
-            $output .= '<a href="' . get_permalink($page->ID) . '"' . $active_class . $active_style . '>' . esc_html($page->post_title) . '</a>';
+            // Build link with proper ARIA attributes
+            $link_attributes = array();
+            $link_attributes[] = 'href="' . get_permalink($page->ID) . '"';
+
+            // Add aria-current for current page
+            if ($is_active) {
+                $link_attributes[] = 'aria-current="page"';
+            }
+
+            // Add aria-expanded for items with children
+            if ($has_children) {
+                $link_attributes[] = 'aria-expanded="false"';
+                $link_attributes[] = 'aria-haspopup="true"';
+            }
+
+            // Add active class and style
+            if ($active_class) {
+                $link_attributes[] = 'class="' . trim($active_class) . '"';
+            }
+            if ($active_style) {
+                $link_attributes[] = 'style="' . trim($active_style) . '"';
+            }
+
+            $output .= '<a ' . implode(' ', $link_attributes) . '>' . esc_html($page->post_title) . '</a>';
 
             // Add toggle button for items with children when accordion is enabled, but only for depth 1 and above
             // AND only if the children will actually be displayed (within depth limit)
             if ($this->has_children($page->ID, $page->post_type) && $accordion_enabled && $current_depth >= 1 && $current_depth < $max_depth - 1) {
-                $output .= '<button class="fpn-toggle" aria-label="' . __('Toggle submenu', 'flexible-page-navigation') . '" aria-expanded="false">';
-                $output .= '<span class="fpn-toggle-icon fpn-toggle-plus">+</span>';
-                $output .= '<span class="fpn-toggle-icon fpn-toggle-minus">×</span>';
+                $toggle_label = sprintf(
+                    __('Toggle submenu for %s', 'flexible-page-navigation'),
+                    esc_attr($page->post_title)
+                );
+                $output .= '<button class="fpn-toggle" aria-label="' . $toggle_label . '" aria-expanded="false" aria-controls="fpn-submenu-' . $page->ID . '">';
+                $output .= '<span class="fpn-toggle-icon fpn-toggle-plus" aria-hidden="true">+</span>';
+                $output .= '<span class="fpn-toggle-icon fpn-toggle-minus" aria-hidden="true">×</span>';
                 $output .= '</button>';
             }
 
@@ -780,7 +819,7 @@ class Flexible_Page_Navigation
                 ));
 
                 if (!empty($children)) {
-                    $output .= $this->build_navigation_tree($children, $current_page_id, $max_depth, $current_depth + 1, $accordion_enabled, $active_padding);
+                    $output .= $this->build_navigation_tree($children, $current_page_id, $max_depth, $current_depth + 1, $accordion_enabled, $active_padding, $page->ID);
                 }
             }
 
