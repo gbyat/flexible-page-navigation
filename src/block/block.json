@@ -106,6 +106,18 @@
     "hoverBackgroundColor": {
       "type": "string",
       "default": "rgba(0, 0, 0, 0.1)"
+    },
+    "mainItemFontWeight": {
+      "type": "string",
+      "default": "600"
+    },
+    "mainItemFontSize": {
+      "type": "number",
+      "default": 16
+    },
+    "mainItemTextColor": {
+      "type": "string",
+      "default": "#333333"
     }
   },
   "editorScript": "file:./index.js",

@@ -43,6 +43,9 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
             separatorColor,
             separatorPadding,
             hoverBackgroundColor,
+            mainItemFontWeight,
+            mainItemFontSize,
+            mainItemTextColor,
         } = attributes;
 
         const [loading, setLoading] = useState(true);
@@ -288,6 +291,39 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                             max={50}
                             help={__('Left padding/indentation for submenu items in pixels', 'flexible-page-navigation')}
                         />
+                    </PanelBody>
+
+                    <PanelBody title={__('Main Menu Items (Level 0)', 'flexible-page-navigation')} initialOpen={false}>
+                        <SelectControl
+                            label={__('Font Weight', 'flexible-page-navigation')}
+                            value={mainItemFontWeight}
+                            options={[
+                                { label: __('Normal', 'flexible-page-navigation'), value: '400' },
+                                { label: __('Medium', 'flexible-page-navigation'), value: '500' },
+                                { label: __('Semi Bold', 'flexible-page-navigation'), value: '600' },
+                                { label: __('Bold', 'flexible-page-navigation'), value: '700' },
+                                { label: __('Extra Bold', 'flexible-page-navigation'), value: '800' },
+                            ]}
+                            onChange={(value) => setAttributes({ mainItemFontWeight: value })}
+                            help={__('Font weight for main menu items (level 0)', 'flexible-page-navigation')}
+                        />
+
+                        <RangeControl
+                            label={__('Font Size', 'flexible-page-navigation')}
+                            value={mainItemFontSize}
+                            onChange={(value) => setAttributes({ mainItemFontSize: value })}
+                            min={12}
+                            max={24}
+                            help={__('Font size for main menu items in pixels', 'flexible-page-navigation')}
+                        />
+
+                        <div>
+                            <label>{__('Text Color', 'flexible-page-navigation')}</label>
+                            <ColorPalette
+                                value={mainItemTextColor}
+                                onChange={(value) => setAttributes({ mainItemTextColor: value })}
+                            />
+                        </div>
                     </PanelBody>
 
                     <PanelBody title={__('Colors', 'flexible-page-navigation')} initialOpen={false}>

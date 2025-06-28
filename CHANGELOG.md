@@ -1,3 +1,12 @@
+## 2025-06-28 09:16:54 - Release v1.4.4
+
+### Changed Files:
+- `build/block.json`
+- `build/index.js`
+- `flexible-page-navigation.php`
+- `src/block/block.json`
+- `src/block/index.js`
+
 ## 2025-06-27 09:55:27 - 1.4.4
 
 ### Changed Files:

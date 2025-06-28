@@ -572,6 +572,9 @@ class Flexible_Page_Navigation
         $separator_padding = $attributes['separatorPadding'] ?? 20;
         $hover_effect = isset($attributes['hoverEffect']) ? $attributes['hoverEffect'] : 'underline';
         $hover_background_color = isset($attributes['hoverBackgroundColor']) ? $attributes['hoverBackgroundColor'] : 'rgba(0, 0, 0, 0.1)';
+        $main_item_font_weight = isset($attributes['mainItemFontWeight']) ? $attributes['mainItemFontWeight'] : '600';
+        $main_item_font_size = isset($attributes['mainItemFontSize']) ? intval($attributes['mainItemFontSize']) : 16;
+        $main_item_text_color = isset($attributes['mainItemTextColor']) ? $attributes['mainItemTextColor'] : '#333333';
 
         // Get current page ID
         $current_page_id = get_queried_object_id();
@@ -656,6 +659,21 @@ class Flexible_Page_Navigation
             if ($hover_background_color !== 'rgba(0, 0, 0, 0.1)') {
                 $output .= '#' . $block_id . ' { --fpn-hover-bg: ' . esc_attr($hover_background_color) . '; }';
             }
+        }
+
+        // Main menu items (depth-0) styling
+        if ($main_item_font_weight !== '600' || $main_item_font_size !== 16 || $main_item_text_color !== '#333333') {
+            $output .= '#' . $block_id . ' .fpn-depth-0 > .fpn-item > a {';
+            if ($main_item_font_weight !== '600') {
+                $output .= ' font-weight: ' . esc_attr($main_item_font_weight) . ';';
+            }
+            if ($main_item_font_size !== 16) {
+                $output .= ' font-size: ' . $main_item_font_size . 'px;';
+            }
+            if ($main_item_text_color !== '#333333') {
+                $output .= ' color: ' . esc_attr($main_item_text_color) . ';';
+            }
+            $output .= ' }';
         }
 
         // Always apply separator and padding styles
