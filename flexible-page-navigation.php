@@ -123,6 +123,22 @@ class FPN_GitHub_Updater
             return $result;
         }
 
+        // Get changelog from CHANGELOG.md if available
+        $changelog = '';
+        $changelog_file = FPN_PLUGIN_DIR . 'CHANGELOG.md';
+        if (file_exists($changelog_file)) {
+            $changelog_content = file_get_contents($changelog_file);
+            if ($changelog_content) {
+                // Parse changelog and format for WordPress
+                $changelog = $this->format_changelog_for_popup($changelog_content);
+            }
+        }
+
+        // If no changelog from file, use GitHub release body
+        if (empty($changelog)) {
+            $changelog = $this->github_response->body ?: __('No changelog available.', 'flexible-page-navigation');
+        }
+
         $plugin_data = array(
             'name' => $this->plugin['Name'],
             'slug' => $this->basename,
@@ -133,12 +149,80 @@ class FPN_GitHub_Updater
             'homepage' => $this->plugin['PluginURI'],
             'short_description' => $this->plugin['Description'],
             'sections' => array(
-                'description' => $this->github_response->body,
+                'description' => $this->plugin['Description'],
+                'changelog' => $changelog,
+                'installation' => $this->get_installation_instructions(),
+                'screenshots' => $this->get_screenshots_section(),
             ),
             'download_link' => $this->github_response->zipball_url,
+            'requires' => '5.0',
+            'tested' => '6.4',
+            'requires_php' => '7.4',
         );
 
         return (object) $plugin_data;
+    }
+
+    /**
+     * Format changelog content for WordPress plugin popup
+     */
+    private function format_changelog_for_popup($changelog_content)
+    {
+        // Convert markdown to HTML for WordPress
+        $changelog = $changelog_content;
+
+        // Convert headers
+        $changelog = preg_replace('/^### (.*)$/m', '<h3>$1</h3>', $changelog);
+        $changelog = preg_replace('/^## (.*)$/m', '<h2>$1</h2>', $changelog);
+        $changelog = preg_replace('/^# (.*)$/m', '<h1>$1</h1>', $changelog);
+
+        // Convert lists
+        $changelog = preg_replace('/^- (.*)$/m', '<li>$1</li>', $changelog);
+        $changelog = preg_replace('/^\* (.*)$/m', '<li>$1</li>', $changelog);
+
+        // Wrap lists in ul tags
+        $changelog = preg_replace('/(<li>.*<\/li>)/s', '<ul>$1</ul>', $changelog);
+
+        // Convert bold text
+        $changelog = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $changelog);
+
+        // Convert code
+        $changelog = preg_replace('/`(.*?)`/', '<code>$1</code>', $changelog);
+
+        // Convert line breaks
+        $changelog = nl2br($changelog);
+
+        return $changelog;
+    }
+
+    /**
+     * Get installation instructions
+     */
+    private function get_installation_instructions()
+    {
+        return '<h3>' . __('Installation', 'flexible-page-navigation') . '</h3>
+        <ol>
+            <li>' . __('Upload the plugin files to the /wp-content/plugins/flexible-page-navigation directory, or install the plugin through the WordPress plugins screen directly.', 'flexible-page-navigation') . '</li>
+            <li>' . __('Activate the plugin through the \'Plugins\' screen in WordPress.', 'flexible-page-navigation') . '</li>
+            <li>' . __('Use the Settings->Flexible Page Navigation screen to configure the plugin.', 'flexible-page-navigation') . '</li>
+            <li>' . __('Add the Flexible Page Navigation block to your pages or posts.', 'flexible-page-navigation') . '</li>
+        </ol>';
+    }
+
+    /**
+     * Get screenshots section
+     */
+    private function get_screenshots_section()
+    {
+        return '<h3>' . __('Features', 'flexible-page-navigation') . '</h3>
+        <ul>
+            <li><strong>' . __('Flexible Navigation Block', 'flexible-page-navigation') . '</strong> - ' . __('Gutenberg block for creating custom navigation menus.', 'flexible-page-navigation') . '</li>
+            <li><strong>' . __('Content Type Selection', 'flexible-page-navigation') . '</strong> - ' . __('Choose between Pages, Posts, or Custom Post Types.', 'flexible-page-navigation') . '</li>
+            <li><strong>' . __('Accordion Functionality', 'flexible-page-navigation') . '</strong> - ' . __('Expandable/collapsible submenu items.', 'flexible-page-navigation') . '</li>
+            <li><strong>' . __('Custom Styling', 'flexible-page-navigation') . '</strong> - ' . __('Full control over colors, fonts, and layout.', 'flexible-page-navigation') . '</li>
+            <li><strong>' . __('Accessibility', 'flexible-page-navigation') . '</strong> - ' . __('WCAG compliant with ARIA attributes and keyboard navigation.', 'flexible-page-navigation') . '</li>
+            <li><strong>' . __('Responsive Design', 'flexible-page-navigation') . '</strong> - ' . __('Works perfectly on all devices.', 'flexible-page-navigation') . '</li>
+        </ul>';
     }
 
     public function after_install($response, $hook_extra, $result)
