@@ -1,3 +1,9 @@
+## 2025-06-29 14:54:57 - 1.4.10
+
+### Changed Files:
+- `build/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-06-29 14:54:56 - Improve plugin popup formatting: Compact changelog, README in description, no H2 headings
 
 ### Changed Files:
