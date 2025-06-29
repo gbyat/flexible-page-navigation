@@ -1,3 +1,9 @@
+## 2025-06-29 14:54:56 - Improve plugin popup formatting: Compact changelog, README in description, no H2 headings
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-29 14:54:43 - Release v1.4.9
 
 ### Changed Files:
