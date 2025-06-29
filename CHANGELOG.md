@@ -1,3 +1,9 @@
+## 2025-06-29 11:53:24 - 1.4.9
+
+### Changed Files:
+- `build/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-06-29 11:53:23 - Improve plugin details popup: Add changelog, installation guide, and features section
 
 ### Changed Files:
