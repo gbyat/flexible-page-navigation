@@ -1,3 +1,9 @@
+## 2025-06-29 11:53:23 - Improve plugin details popup: Add changelog, installation guide, and features section
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-06-29 11:53:04 - Release v1.4.8
 
 ### Changed Files:
