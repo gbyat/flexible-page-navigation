@@ -139,6 +139,16 @@ class FPN_GitHub_Updater
             $changelog = $this->github_response->body ?: __('No changelog available.', 'flexible-page-navigation');
         }
 
+        // Get README content for description
+        $description = $this->plugin['Description'];
+        $readme_file = FPN_PLUGIN_DIR . 'README.md';
+        if (file_exists($readme_file)) {
+            $readme_content = file_get_contents($readme_file);
+            if ($readme_content) {
+                $description = $this->format_readme_for_popup($readme_content);
+            }
+        }
+
         $plugin_data = array(
             'name' => $this->plugin['Name'],
             'slug' => $this->basename,
@@ -149,7 +159,7 @@ class FPN_GitHub_Updater
             'homepage' => $this->plugin['PluginURI'],
             'short_description' => $this->plugin['Description'],
             'sections' => array(
-                'description' => $this->plugin['Description'],
+                'description' => $description,
                 'changelog' => $changelog,
                 'installation' => $this->get_installation_instructions(),
                 'screenshots' => $this->get_screenshots_section(),
@@ -171,10 +181,10 @@ class FPN_GitHub_Updater
         // Convert markdown to HTML for WordPress
         $changelog = $changelog_content;
 
-        // Convert headers
-        $changelog = preg_replace('/^### (.*)$/m', '<h3>$1</h3>', $changelog);
-        $changelog = preg_replace('/^## (.*)$/m', '<h2>$1</h2>', $changelog);
-        $changelog = preg_replace('/^# (.*)$/m', '<h1>$1</h1>', $changelog);
+        // Convert headers - only keep H3, remove H1 and H2
+        $changelog = preg_replace('/^### (.*)$/m', '<strong>$1</strong>', $changelog);
+        $changelog = preg_replace('/^## (.*)$/m', '<strong>$1</strong>', $changelog);
+        $changelog = preg_replace('/^# (.*)$/m', '<strong>$1</strong>', $changelog);
 
         // Convert lists
         $changelog = preg_replace('/^- (.*)$/m', '<li>$1</li>', $changelog);
@@ -189,6 +199,15 @@ class FPN_GitHub_Updater
         // Convert code
         $changelog = preg_replace('/`(.*?)`/', '<code>$1</code>', $changelog);
 
+        // Remove "Changed files" lines
+        $changelog = preg_replace('/.*changed files.*\n?/i', '', $changelog);
+
+        // Limit line breaks to maximum 2 consecutive
+        $changelog = preg_replace('/\n{3,}/', "\n\n", $changelog);
+
+        // Add extra line break after version descriptions (after </ul>)
+        $changelog = preg_replace('/(<\/ul>)\n/', "$1\n\n", $changelog);
+
         // Convert line breaks
         $changelog = nl2br($changelog);
 
@@ -196,11 +215,46 @@ class FPN_GitHub_Updater
     }
 
     /**
+     * Format README content for WordPress plugin popup
+     */
+    private function format_readme_for_popup($readme_content)
+    {
+        // Convert markdown to HTML for WordPress
+        $readme = $readme_content;
+
+        // Convert headers to strong tags
+        $readme = preg_replace('/^### (.*)$/m', '<strong>$1</strong>', $readme);
+        $readme = preg_replace('/^## (.*)$/m', '<strong>$1</strong>', $readme);
+        $readme = preg_replace('/^# (.*)$/m', '<strong>$1</strong>', $readme);
+
+        // Convert lists
+        $readme = preg_replace('/^- (.*)$/m', '<li>$1</li>', $readme);
+        $readme = preg_replace('/^\* (.*)$/m', '<li>$1</li>', $readme);
+
+        // Wrap lists in ul tags
+        $readme = preg_replace('/(<li>.*<\/li>)/s', '<ul>$1</ul>', $readme);
+
+        // Convert bold text
+        $readme = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $readme);
+
+        // Convert code
+        $readme = preg_replace('/`(.*?)`/', '<code>$1</code>', $readme);
+
+        // Limit line breaks to maximum 2 consecutive
+        $readme = preg_replace('/\n{3,}/', "\n\n", $readme);
+
+        // Convert line breaks
+        $readme = nl2br($readme);
+
+        return $readme;
+    }
+
+    /**
      * Get installation instructions
      */
     private function get_installation_instructions()
     {
-        return '<h3>' . __('Installation', 'flexible-page-navigation') . '</h3>
+        return '<strong>' . __('Installation', 'flexible-page-navigation') . '</strong><br><br>
         <ol>
             <li>' . __('Upload the plugin files to the /wp-content/plugins/flexible-page-navigation directory, or install the plugin through the WordPress plugins screen directly.', 'flexible-page-navigation') . '</li>
             <li>' . __('Activate the plugin through the \'Plugins\' screen in WordPress.', 'flexible-page-navigation') . '</li>
@@ -214,7 +268,7 @@ class FPN_GitHub_Updater
      */
     private function get_screenshots_section()
     {
-        return '<h3>' . __('Features', 'flexible-page-navigation') . '</h3>
+        return '<strong>' . __('Features', 'flexible-page-navigation') . '</strong><br><br>
         <ul>
             <li><strong>' . __('Flexible Navigation Block', 'flexible-page-navigation') . '</strong> - ' . __('Gutenberg block for creating custom navigation menus.', 'flexible-page-navigation') . '</li>
             <li><strong>' . __('Content Type Selection', 'flexible-page-navigation') . '</strong> - ' . __('Choose between Pages, Posts, or Custom Post Types.', 'flexible-page-navigation') . '</li>
