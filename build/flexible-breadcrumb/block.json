@@ -1,0 +1,90 @@
+{
+  "apiVersion": 2,
+  "name": "flexible-page-navigation/flexible-breadcrumb",
+  "title": "Flexible Breadcrumb",
+  "category": "widgets",
+  "icon": "arrow-right-alt",
+  "description": "A flexible breadcrumb block with configurable content types, start page, and styling options.",
+  "textdomain": "flexible-page-navigation",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "attributes": {
+    "contentType": {
+      "type": "string",
+      "default": "page"
+    },
+    "startPageId": {
+      "type": "number",
+      "default": 0
+    },
+    "startPageText": {
+      "type": "string",
+      "default": "Home"
+    },
+    "startPageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "showStartLink": {
+      "type": "boolean",
+      "default": true
+    },
+    "separator": {
+      "type": "string",
+      "default": ">"
+    },
+    "separatorColor": {
+      "type": "string",
+      "default": "#666666"
+    },
+    "separatorMargin": {
+      "type": "number",
+      "default": 8
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#333333"
+    },
+    "linkColor": {
+      "type": "string",
+      "default": "#007cba"
+    },
+    "activeColor": {
+      "type": "string",
+      "default": "#666666"
+    },
+    "fontSize": {
+      "type": "number",
+      "default": 14
+    },
+    "fontWeight": {
+      "type": "string",
+      "default": "400"
+    },
+    "padding": {
+      "type": "number",
+      "default": 10
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "transparent"
+    },
+    "borderRadius": {
+      "type": "number",
+      "default": 0
+    },
+    "showCurrentPage": {
+      "type": "boolean",
+      "default": true
+    },
+    "maxDepth": {
+      "type": "number",
+      "default": 5
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style.css"
+}

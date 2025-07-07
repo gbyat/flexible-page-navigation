@@ -1,3 +1,18 @@
+## 2025-07-07 23:35:41 - 1.5.0
+
+### Changed Files:
+- `build/flexible-breadcrumb/block.json`
+- `build/flexible-breadcrumb/index.css`
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-breadcrumb/index.js.map`
+- `build/flexible-breadcrumb/style.css`
+- `build/flexible-nav/block.json`
+- `build/flexible-nav/index.css`
+- `build/flexible-nav/index.js`
+- `build/flexible-nav/index.js.map`
+- `build/flexible-nav/style.css`
+- `flexible-page-navigation.php`
+
 ## 2025-07-07 23:35:34 - Add Flexible Breadcrumb Block with configurable separator margins and universal post type support
 
 ### Changed Files:

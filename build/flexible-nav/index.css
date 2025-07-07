@@ -1,0 +1,96 @@
+/* Editor Styles for Flexible Page Navigation Block */
+
+.fpn-navigation-editor {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    margin: 10px 0;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.fpn-editor-preview {
+    text-align: center;
+}
+
+.fpn-editor-preview h4 {
+    margin: 0 0 15px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.fpn-editor-preview p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.fpn-color-preview {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.fpn-color-sample {
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 100px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+/* Inspector Controls Styling */
+.components-panel__body .components-base-control {
+    margin-bottom: 16px;
+}
+
+.components-panel__body .components-base-control__label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.components-panel__body .components-select-control__input {
+    width: 100%;
+}
+
+.components-panel__body .components-range-control__number {
+    width: 80px;
+}
+
+/* Color Palette Styling */
+.components-color-palette {
+    margin-top: 8px;
+}
+
+.components-color-palette__item {
+    border-radius: 4px;
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.components-color-palette__item:hover {
+    border-color: #007cba;
+}
+
+.components-color-palette__item.is-selected {
+    border-color: #007cba;
+}
+
+/* Toggle Control Styling */
+.components-toggle-control .components-base-control__field {
+    margin-bottom: 0;
+}
+
+.components-toggle-control .components-form-toggle {
+    margin-right: 12px;
+}
+
+/* Help Text Styling */
+.components-toggle-control .components-base-control__help {
+    margin-top: 8px;
+    color: #666;
+    font-style: italic;
+} 

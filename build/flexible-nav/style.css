@@ -1,0 +1,438 @@
+/* Frontend Styles for Flexible Page Navigation */
+
+.fpn-navigation {
+    line-height: 1.6;
+}
+
+.fpn-navigation ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.fpn-navigation li {
+    margin: 0;
+    padding: 0;
+}
+
+.fpn-navigation a {
+    display: block;
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: all 0.2s ease;
+}
+
+/* Active formatting only for level 0 items when on the page or its children */
+.fpn-navigation > ul > li > a.fpn-active {
+    font-weight: bold;
+}
+
+/* Remove active formatting from deeper levels */
+.fpn-navigation ul ul a.fpn-active {
+    font-weight: normal;
+    text-decoration: none;
+}
+
+.fpn-navigation.fpn-no-pages {
+    text-align: center;
+    padding: 2rem;
+    font-style: italic;
+    color: #666;
+}
+
+.fpn-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.fpn-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.fpn-item {
+    position: relative;
+    border-bottom: none;
+    background: transparent;
+}
+
+.fpn-item:last-child {
+    border-bottom: none;
+}
+
+.fpn-item a {
+    display: block;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    font-weight: normal;
+    color: var(--fpn-link-color, inherit);
+    background: transparent;
+}
+
+.fpn-item a:hover {
+    background-color: var(--fpn-hover-bg, transparent);
+    transform: none;
+    text-decoration: underline;
+    color: var(--fpn-hover-color, inherit);
+}
+
+/* Active formatting only for level 0 items */
+.fpn-depth-0 > .fpn-item.fpn-active > a {
+    font-weight: bold;
+    position: relative;
+    background: var(--fpn-active-bg, transparent);
+    color: var(--fpn-active-color, #333);
+}
+
+/* Remove active formatting from deeper levels */
+.fpn-depth-1 > .fpn-item.fpn-active > a,
+.fpn-depth-2 > .fpn-item.fpn-active > a,
+.fpn-depth-3 > .fpn-item.fpn-active > a,
+.fpn-depth-4 > .fpn-item.fpn-active > a {
+    font-weight: normal;
+    background: transparent;
+    color: inherit;
+}
+
+/* Active parent formatting only for level 0 items */
+.fpn-navigation .fpn-depth-0 > .fpn-active-parent > a {
+    font-weight: bold;
+}
+
+/* Remove active parent formatting from deeper levels */
+.fpn-depth-1 > .fpn-item.fpn-active-parent > a,
+.fpn-depth-2 > .fpn-item.fpn-active-parent > a,
+.fpn-depth-3 > .fpn-item.fpn-active-parent > a,
+.fpn-depth-4 > .fpn-item.fpn-active-parent > a {
+    font-weight: normal;
+    text-decoration: none;
+}
+
+/* Only show toggle button for depth 2 and above (third level) */
+.fpn-item.fpn-has-children > a {
+    position: relative;
+    padding-right: 16px; /* Default padding for items without toggle */
+}
+
+/* Toggle button styling */
+.fpn-toggle {
+    position: absolute;
+    right: 8px;
+    top: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    color: inherit;
+    font-size: 14px;
+    line-height: 1;
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 10;
+}
+
+/* Add extra padding to links that have toggle buttons - using depth-based approach */
+.fpn-depth-1 .fpn-item.fpn-has-children > a,
+.fpn-depth-2 .fpn-item.fpn-has-children > a,
+.fpn-depth-3 .fpn-item.fpn-has-children > a,
+.fpn-depth-4 .fpn-item.fpn-has-children > a {
+    padding-right: 40px;
+}
+
+/* Toggle button styling */
+.fpn-toggle:hover {
+    background-color: transparent;
+    color: #666;
+}
+
+.fpn-toggle:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.fpn-toggle-icon {
+    transition: opacity 0.3s ease;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.fpn-toggle-minus {
+    display: none;
+    opacity: 0;
+}
+
+.fpn-item.fpn-has-children.fpn-expanded > .fpn-toggle .fpn-toggle-plus {
+    display: none;
+    opacity: 0;
+}
+
+.fpn-item.fpn-has-children.fpn-expanded > .fpn-toggle .fpn-toggle-minus {
+    display: block;
+    opacity: 1;
+}
+
+/* Recursive Accordion Functionality - hide only depth 2+ by default */
+.fpn-navigation[data-accordion="true"] .fpn-item .fpn-depth-2,
+.fpn-navigation[data-accordion="true"] .fpn-item .fpn-depth-3,
+.fpn-navigation[data-accordion="true"] .fpn-item .fpn-depth-4 {
+    display: none !important; /* Hide depth 2+ by default */
+}
+
+/* Show sublevels when parent is expanded - more specific selectors */
+.fpn-navigation[data-accordion="true"] .fpn-item.fpn-expanded > .fpn-depth-2,
+.fpn-navigation[data-accordion="true"] .fpn-item.fpn-expanded > .fpn-depth-3,
+.fpn-navigation[data-accordion="true"] .fpn-item.fpn-expanded > .fpn-depth-4 {
+    display: block !important; /* Show when parent is expanded */
+    animation: fpn-slide-down 0.3s ease-out;
+}
+
+/* Also handle nested expanded items */
+.fpn-navigation[data-accordion="true"] .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-3,
+.fpn-navigation[data-accordion="true"] .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-4 {
+    display: block !important;
+}
+
+.fpn-navigation[data-accordion="false"] .fpn-item .fpn-depth-1,
+.fpn-navigation[data-accordion="false"] .fpn-item .fpn-depth-2,
+.fpn-navigation[data-accordion="false"] .fpn-item .fpn-depth-3,
+.fpn-navigation[data-accordion="false"] .fpn-item .fpn-depth-4 {
+    display: none; /* Hide by default when accordion is false */
+}
+
+/* Active state styling - cascades through all levels */
+.fpn-item.fpn-active > a,
+.fpn-item.fpn-active-parent > a {
+    font-weight: bold;
+    position: relative;
+}
+
+/* When accordion is false, show children of active items and their parents */
+.fpn-navigation[data-accordion="false"] .fpn-item.fpn-active > ul,
+.fpn-navigation[data-accordion="false"] .fpn-item.fpn-active-parent > ul {
+    display: block;
+}
+
+/* When accordion is false, hide children of non-active, non-parent items */
+.fpn-navigation[data-accordion="false"] .fpn-item:not(.fpn-active):not(.fpn-active-parent) > ul {
+    display: none;
+}
+
+/* Toggle button visibility - show for depth 1+ with children */
+.fpn-toggle {
+    display: none; /* Hide by default */
+}
+
+/* Show toggle buttons for depth 1+ items with children */
+.fpn-depth-1 .fpn-item.fpn-has-children .fpn-toggle,
+.fpn-depth-2 .fpn-item.fpn-has-children .fpn-toggle,
+.fpn-depth-3 .fpn-item.fpn-has-children .fpn-toggle,
+.fpn-depth-4 .fpn-item.fpn-has-children .fpn-toggle {
+    display: flex;
+}
+
+/* Depth-based styling - basic structure only, styling handled by inline CSS */
+.fpn-depth-0 > .fpn-item > a {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.fpn-depth-1 > .fpn-item > a {
+    font-size: 14px;
+}
+
+.fpn-depth-2 > .fpn-item > a {
+    font-size: 13px;
+}
+
+.fpn-depth-3 > .fpn-item > a {
+    font-size: 12px;
+}
+
+.fpn-depth-4 > .fpn-item > a {
+    font-size: 11px;
+}
+
+/* Animations */
+@keyframes fpn-slide-down {
+    from {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        max-height: 1000px;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .fpn-navigation {
+        margin: 10px 0;
+    }
+    
+    .fpn-item a {
+        padding: 10px 12px;
+    }
+    
+    .fpn-depth-1 > .fpn-item > a {
+        padding-left: 20px;
+    }
+    
+    .fpn-depth-2 > .fpn-item > a {
+        padding-left: 28px;
+    }
+    
+    .fpn-depth-3 > .fpn-item > a {
+        padding-left: 36px;
+    }
+    
+    .fpn-depth-4 > .fpn-item > a {
+        padding-left: 44px;
+    }
+}
+
+@media (max-width: 480px) {
+    .fpn-navigation {
+        font-size: 14px;
+    }
+    
+    .fpn-item a {
+        padding: 8px 10px;
+    }
+    
+    .fpn-item.fpn-has-children > a {
+        padding-right: 35px;
+    }
+    
+    .fpn-toggle {
+        right: 6px;
+        min-width: 20px;
+        height: 20px;
+        font-size: 10px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .fpn-navigation {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+    
+    .fpn-item a:hover {
+        transform: none;
+    }
+    
+    .fpn-navigation[data-accordion="true"] .fpn-item.fpn-has-children > ul {
+        display: block;
+    }
+}
+
+/* Accessibility */
+.fpn-item a:focus {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+}
+
+.fpn-item a:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .fpn-navigation {
+        border: 2px solid currentColor;
+    }
+    
+    .fpn-item {
+        border-bottom: 2px solid currentColor;
+    }
+    
+    .fpn-item a:hover {
+        background-color: currentColor;
+        color: #fff;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .fpn-item a,
+    .fpn-item.fpn-has-children > a::after {
+        transition: none;
+    }
+    
+    .fpn-navigation[data-accordion="true"] .fpn-item.fpn-has-children.fpn-expanded > ul {
+        animation: none;
+    }
+}
+
+/* Column Layout Styles */
+.fpn-navigation.fpn-layout-2-columns .fpn-depth-0 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.fpn-navigation.fpn-layout-3-columns .fpn-depth-0 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+}
+
+.fpn-navigation.fpn-layout-4-columns .fpn-depth-0 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* Responsive column layouts */
+@media (max-width: 768px) {
+    .fpn-navigation.fpn-layout-2-columns .fpn-depth-0,
+    .fpn-navigation.fpn-layout-3-columns .fpn-depth-0,
+    .fpn-navigation.fpn-layout-4-columns .fpn-depth-0 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    .fpn-navigation.fpn-layout-4-columns .fpn-depth-0 {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+}
+
+/* Hover Effects */
+.fpn-navigation[data-hover="underline"] .fpn-item a:hover {
+    text-decoration: underline;
+}
+
+.fpn-navigation[data-hover="background"] .fpn-item a:hover {
+    background-color: var(--fpn-hover-bg, rgba(0, 0, 0, 0.1));
+    text-decoration: none;
+}
+
+.fpn-navigation[data-hover="scale"] .fpn-item a:hover {
+    transform: scale(1.02);
+    text-decoration: none;
+}
+
+.fpn-navigation[data-hover="none"] .fpn-item a:hover {
+    text-decoration: none;
+    background-color: transparent;
+    transform: none;
+} 

@@ -1,0 +1,126 @@
+{
+  "apiVersion": 2,
+  "name": "flexible-page-navigation/flexible-nav",
+  "title": "Flexible Page Navigation",
+  "category": "widgets",
+  "icon": "menu",
+  "description": "A flexible page navigation block with customizable content types, sorting, depth, and child selection options.",
+  "textdomain": "flexible-page-navigation",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "attributes": {
+    "contentType": {
+      "type": "string",
+      "default": "page"
+    },
+    "sortBy": {
+      "type": "string",
+      "default": "menu_order"
+    },
+    "sortOrder": {
+      "type": "string",
+      "default": "ASC"
+    },
+    "depth": {
+      "type": "number",
+      "default": 3
+    },
+    "childSelection": {
+      "type": "string",
+      "default": "current"
+    },
+    "menuDisplayMode": {
+      "type": "string",
+      "default": "children"
+    },
+    "parentPageId": {
+      "type": "number",
+      "default": 0
+    },
+    "accordionEnabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "columnLayout": {
+      "type": "string",
+      "default": "single"
+    },
+    "showActiveIndicator": {
+      "type": "boolean",
+      "default": true
+    },
+    "separator": {
+      "type": "string",
+      "default": "none"
+    },
+    "hoverEffect": {
+      "type": "string",
+      "default": "underline"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#f8f9fa"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#333333"
+    },
+    "activeBackgroundColor": {
+      "type": "string",
+      "default": "#007cba"
+    },
+    "activeTextColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "activePadding": {
+      "type": "number",
+      "default": 8
+    },
+    "childActiveBackgroundColor": {
+      "type": "string",
+      "default": "#e8f4fd"
+    },
+    "childActiveTextColor": {
+      "type": "string",
+      "default": "#333333"
+    },
+    "separatorEnabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "separatorWidth": {
+      "type": "number",
+      "default": 2
+    },
+    "separatorColor": {
+      "type": "string",
+      "default": "#e0e0e0"
+    },
+    "separatorPadding": {
+      "type": "number",
+      "default": 20
+    },
+    "hoverBackgroundColor": {
+      "type": "string",
+      "default": "rgba(0, 0, 0, 0.1)"
+    },
+    "mainItemFontWeight": {
+      "type": "string",
+      "default": "600"
+    },
+    "mainItemFontSize": {
+      "type": "number",
+      "default": 16
+    },
+    "mainItemTextColor": {
+      "type": "string",
+      "default": "#333333"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style.css"
+}
