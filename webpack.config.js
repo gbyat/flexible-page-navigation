@@ -7,7 +7,8 @@ module.exports = (env, argv) => {
 
     return {
         entry: {
-            index: './src/block/index.js',
+            'flexible-nav/index': './src/block/flexible-nav/index.js',
+            'flexible-breadcrumb/index': './src/block/flexible-breadcrumb/index.js',
         },
         output: {
             path: path.resolve(__dirname, 'build'),
@@ -41,17 +42,31 @@ module.exports = (env, argv) => {
             }),
             new CopyPlugin({
                 patterns: [
+                    // Flexible Nav Block
                     {
-                        from: 'src/block/block.json',
-                        to: 'block.json',
+                        from: 'src/block/flexible-nav/block.json',
+                        to: 'flexible-nav/block.json',
                     },
                     {
-                        from: 'src/block/index.css',
-                        to: 'index.css',
+                        from: 'src/block/flexible-nav/index.css',
+                        to: 'flexible-nav/index.css',
                     },
                     {
-                        from: 'src/block/style.css',
-                        to: 'style.css',
+                        from: 'src/block/flexible-nav/style.css',
+                        to: 'flexible-nav/style.css',
+                    },
+                    // Flexible Breadcrumb Block
+                    {
+                        from: 'src/block/flexible-breadcrumb/block.json',
+                        to: 'flexible-breadcrumb/block.json',
+                    },
+                    {
+                        from: 'src/block/flexible-breadcrumb/index.css',
+                        to: 'flexible-breadcrumb/index.css',
+                    },
+                    {
+                        from: 'src/block/flexible-breadcrumb/style.css',
+                        to: 'flexible-breadcrumb/style.css',
                     },
                 ],
             }),

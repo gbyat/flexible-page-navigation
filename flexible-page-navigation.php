@@ -351,62 +351,63 @@ class Flexible_Page_Navigation
 
         load_plugin_textdomain('flexible-page-navigation', false, dirname(plugin_basename(__FILE__)) . '/languages');
 
-        // Debug: Check if block.json exists
-        $block_json_path = FPN_PLUGIN_DIR . 'build/block.json';
-        if (!file_exists($block_json_path)) {
-            error_log('Flexible Page Navigation: block.json not found at ' . $block_json_path);
-            return;
-        }
+        // Check and register Flexible Nav Block
+        $nav_block_json_path = FPN_PLUGIN_DIR . 'build/flexible-nav/block.json';
+        $nav_index_js_path = FPN_PLUGIN_DIR . 'build/flexible-nav/index.js';
+        $nav_index_css_path = FPN_PLUGIN_DIR . 'build/flexible-nav/index.css';
+        $nav_style_css_path = FPN_PLUGIN_DIR . 'build/flexible-nav/style.css';
 
-        // Debug: Check if index.js exists
-        $index_js_path = FPN_PLUGIN_DIR . 'build/index.js';
-        if (!file_exists($index_js_path)) {
-            error_log('Flexible Page Navigation: index.js not found at ' . $index_js_path);
-            return;
-        }
-
-        // Debug: Check if index.css exists
-        $index_css_path = FPN_PLUGIN_DIR . 'build/index.css';
-        if (!file_exists($index_css_path)) {
-            error_log('Flexible Page Navigation: index.css not found at ' . $index_css_path);
-            return;
-        }
-
-        // Debug: Check if style.css exists
-        $style_css_path = FPN_PLUGIN_DIR . 'build/style.css';
-        if (!file_exists($style_css_path)) {
-            error_log('Flexible Page Navigation: style.css not found at ' . $style_css_path);
-            return;
-        }
-
-        // Debug: Log file sizes
-        error_log('Flexible Page Navigation: block.json size: ' . filesize($block_json_path));
-        error_log('Flexible Page Navigation: index.js size: ' . filesize($index_js_path));
-        error_log('Flexible Page Navigation: index.css size: ' . filesize($index_css_path));
-        error_log('Flexible Page Navigation: style.css size: ' . filesize($style_css_path));
-
-        // Register block
-        $result = register_block_type($block_json_path, array(
-            'render_callback' => array($this, 'render_navigation_block'),
-        ));
-
-        // Debug: Check if block registration was successful
-        if (!$result) {
-            error_log('Flexible Page Navigation: Failed to register block');
+        if (!file_exists($nav_block_json_path)) {
+            error_log('Flexible Page Navigation: flexible-nav block.json not found at ' . $nav_block_json_path);
         } else {
-            error_log('Flexible Page Navigation: Block registered successfully');
+            // Register Flexible Nav Block
+            $nav_result = register_block_type($nav_block_json_path, array(
+                'render_callback' => array($this, 'render_navigation_block'),
+            ));
 
-            // Debug: Check if block is available (WordPress 5.0+ compatible)
-            if (function_exists('get_block_types')) {
-                $blocks = get_block_types();
-                if (isset($blocks['flexible-page-navigation/flexible-nav'])) {
-                    error_log('Flexible Page Navigation: Block found in registry');
-                } else {
-                    error_log('Flexible Page Navigation: Block NOT found in registry');
-                }
+            if (!$nav_result) {
+                error_log('Flexible Page Navigation: Failed to register flexible-nav block');
             } else {
-                error_log('Flexible Page Navigation: get_block_types() not available (WordPress < 5.0)');
+                error_log('Flexible Page Navigation: Flexible Nav block registered successfully');
             }
+        }
+
+        // Check and register Flexible Breadcrumb Block
+        $breadcrumb_block_json_path = FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/block.json';
+        $breadcrumb_index_js_path = FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/index.js';
+        $breadcrumb_index_css_path = FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/index.css';
+        $breadcrumb_style_css_path = FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/style.css';
+
+        if (!file_exists($breadcrumb_block_json_path)) {
+            error_log('Flexible Page Navigation: flexible-breadcrumb block.json not found at ' . $breadcrumb_block_json_path);
+        } else {
+            // Register Flexible Breadcrumb Block
+            $breadcrumb_result = register_block_type($breadcrumb_block_json_path, array(
+                'render_callback' => array($this, 'render_breadcrumb_block'),
+            ));
+
+            if (!$breadcrumb_result) {
+                error_log('Flexible Page Navigation: Failed to register flexible-breadcrumb block');
+            } else {
+                error_log('Flexible Page Navigation: Flexible Breadcrumb block registered successfully');
+            }
+        }
+
+        // Debug: Check if blocks are available (WordPress 5.0+ compatible)
+        if (function_exists('get_block_types')) {
+            $blocks = get_block_types();
+            if (isset($blocks['flexible-page-navigation/flexible-nav'])) {
+                error_log('Flexible Page Navigation: Flexible Nav block found in registry');
+            } else {
+                error_log('Flexible Page Navigation: Flexible Nav block NOT found in registry');
+            }
+            if (isset($blocks['flexible-page-navigation/flexible-breadcrumb'])) {
+                error_log('Flexible Page Navigation: Flexible Breadcrumb block found in registry');
+            } else {
+                error_log('Flexible Page Navigation: Flexible Breadcrumb block NOT found in registry');
+            }
+        } else {
+            error_log('Flexible Page Navigation: get_block_types() not available (WordPress < 5.0)');
         }
     }
 
@@ -517,17 +518,29 @@ class Flexible_Page_Navigation
             $block_registered = isset($blocks['flexible-page-navigation/flexible-nav']);
         }
 
-        // Check if build files exist
-        $block_json_exists = file_exists(FPN_PLUGIN_DIR . 'build/block.json');
-        $index_js_exists = file_exists(FPN_PLUGIN_DIR . 'build/index.js');
-        $index_css_exists = file_exists(FPN_PLUGIN_DIR . 'build/index.css');
-        $style_css_exists = file_exists(FPN_PLUGIN_DIR . 'build/style.css');
+        // Check if build files exist for Flexible Nav Block
+        $nav_block_json_exists = file_exists(FPN_PLUGIN_DIR . 'build/flexible-nav/block.json');
+        $nav_index_js_exists = file_exists(FPN_PLUGIN_DIR . 'build/flexible-nav/index.js');
+        $nav_index_css_exists = file_exists(FPN_PLUGIN_DIR . 'build/flexible-nav/index.css');
+        $nav_style_css_exists = file_exists(FPN_PLUGIN_DIR . 'build/flexible-nav/style.css');
 
-        // Get file sizes
-        $block_json_size = $block_json_exists ? filesize(FPN_PLUGIN_DIR . 'build/block.json') : 0;
-        $index_js_size = $index_js_exists ? filesize(FPN_PLUGIN_DIR . 'build/index.js') : 0;
-        $index_css_size = $index_css_exists ? filesize(FPN_PLUGIN_DIR . 'build/index.css') : 0;
-        $style_css_size = $style_css_exists ? filesize(FPN_PLUGIN_DIR . 'build/style.css') : 0;
+        // Get file sizes for Flexible Nav Block
+        $nav_block_json_size = $nav_block_json_exists ? filesize(FPN_PLUGIN_DIR . 'build/flexible-nav/block.json') : 0;
+        $nav_index_js_size = $nav_index_js_exists ? filesize(FPN_PLUGIN_DIR . 'build/flexible-nav/index.js') : 0;
+        $nav_index_css_size = $nav_index_css_exists ? filesize(FPN_PLUGIN_DIR . 'build/flexible-nav/index.css') : 0;
+        $nav_style_css_size = $nav_style_css_exists ? filesize(FPN_PLUGIN_DIR . 'build/flexible-nav/style.css') : 0;
+
+        // Check if build files exist for Flexible Breadcrumb Block
+        $breadcrumb_block_json_exists = file_exists(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/block.json');
+        $breadcrumb_index_js_exists = file_exists(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/index.js');
+        $breadcrumb_index_css_exists = file_exists(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/index.css');
+        $breadcrumb_style_css_exists = file_exists(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/style.css');
+
+        // Get file sizes for Flexible Breadcrumb Block
+        $breadcrumb_block_json_size = $breadcrumb_block_json_exists ? filesize(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/block.json') : 0;
+        $breadcrumb_index_js_size = $breadcrumb_index_js_exists ? filesize(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/index.js') : 0;
+        $breadcrumb_index_css_size = $breadcrumb_index_css_exists ? filesize(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/index.css') : 0;
+        $breadcrumb_style_css_size = $breadcrumb_style_css_exists ? filesize(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/style.css') : 0;
     ?>
         <h2><?php _e('Debug Information', 'flexible-page-navigation'); ?></h2>
 
@@ -560,22 +573,44 @@ class Flexible_Page_Navigation
         </table>
 
         <h3><?php _e('Build Files Status', 'flexible-page-navigation'); ?></h3>
+
+        <h4><?php _e('Flexible Nav Block', 'flexible-page-navigation'); ?></h4>
         <table class="widefat">
             <tr>
-                <td><strong>build/block.json</strong></td>
-                <td><?php echo $block_json_exists ? '<span style="color: green;">✓ Exists</span> (' . $block_json_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
+                <td><strong>build/flexible-nav/block.json</strong></td>
+                <td><?php echo $nav_block_json_exists ? '<span style="color: green;">✓ Exists</span> (' . $nav_block_json_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
             </tr>
             <tr>
-                <td><strong>build/index.js</strong></td>
-                <td><?php echo $index_js_exists ? '<span style="color: green;">✓ Exists</span> (' . $index_js_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
+                <td><strong>build/flexible-nav/index.js</strong></td>
+                <td><?php echo $nav_index_js_exists ? '<span style="color: green;">✓ Exists</span> (' . $nav_index_js_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
             </tr>
             <tr>
-                <td><strong>build/index.css</strong></td>
-                <td><?php echo $index_css_exists ? '<span style="color: green;">✓ Exists</span> (' . $index_css_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
+                <td><strong>build/flexible-nav/index.css</strong></td>
+                <td><?php echo $nav_index_css_exists ? '<span style="color: green;">✓ Exists</span> (' . $nav_index_css_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
             </tr>
             <tr>
-                <td><strong>build/style.css</strong></td>
-                <td><?php echo $style_css_exists ? '<span style="color: green;">✓ Exists</span> (' . $style_css_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
+                <td><strong>build/flexible-nav/style.css</strong></td>
+                <td><?php echo $nav_style_css_exists ? '<span style="color: green;">✓ Exists</span> (' . $nav_style_css_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
+            </tr>
+        </table>
+
+        <h4><?php _e('Flexible Breadcrumb Block', 'flexible-page-navigation'); ?></h4>
+        <table class="widefat">
+            <tr>
+                <td><strong>build/flexible-breadcrumb/block.json</strong></td>
+                <td><?php echo $breadcrumb_block_json_exists ? '<span style="color: green;">✓ Exists</span> (' . $breadcrumb_block_json_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
+            </tr>
+            <tr>
+                <td><strong>build/flexible-breadcrumb/index.js</strong></td>
+                <td><?php echo $breadcrumb_index_js_exists ? '<span style="color: green;">✓ Exists</span> (' . $breadcrumb_index_js_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
+            </tr>
+            <tr>
+                <td><strong>build/flexible-breadcrumb/index.css</strong></td>
+                <td><?php echo $breadcrumb_index_css_exists ? '<span style="color: green;">✓ Exists</span> (' . $breadcrumb_index_css_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
+            </tr>
+            <tr>
+                <td><strong>build/flexible-breadcrumb/style.css</strong></td>
+                <td><?php echo $breadcrumb_style_css_exists ? '<span style="color: green;">✓ Exists</span> (' . $breadcrumb_style_css_size . ' bytes)' : '<span style="color: red;">✗ Missing</span>'; ?></td>
             </tr>
         </table>
 
@@ -696,6 +731,134 @@ class Flexible_Page_Navigation
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('fpn_nonce'),
         ));
+    }
+
+    public function render_breadcrumb_block($attributes)
+    {
+        // Get current page/post
+        $current_page_id = get_the_ID();
+        if (!$current_page_id) {
+            return '';
+        }
+
+        // Extract attributes with defaults
+        $start_page_id = isset($attributes['startPageId']) ? intval($attributes['startPageId']) : 0;
+        $start_page_text = isset($attributes['startPageText']) ? $attributes['startPageText'] : 'Home';
+        $start_page_url = isset($attributes['startPageUrl']) ? $attributes['startPageUrl'] : '';
+        $show_start_link = isset($attributes['showStartLink']) ? $attributes['showStartLink'] : true;
+        $separator = isset($attributes['separator']) ? $attributes['separator'] : '>';
+        $separator_color = isset($attributes['separatorColor']) ? $attributes['separatorColor'] : '#666666';
+        $separator_margin = isset($attributes['separatorMargin']) ? intval($attributes['separatorMargin']) : 8;
+        $text_color = isset($attributes['textColor']) ? $attributes['textColor'] : '#333333';
+        $link_color = isset($attributes['linkColor']) ? $attributes['linkColor'] : '#007cba';
+        $active_color = isset($attributes['activeColor']) ? $attributes['activeColor'] : '#666666';
+        $font_size = isset($attributes['fontSize']) ? intval($attributes['fontSize']) : 14;
+        $font_weight = isset($attributes['fontWeight']) ? $attributes['fontWeight'] : '400';
+        $padding = isset($attributes['padding']) ? intval($attributes['padding']) : 10;
+        $background_color = isset($attributes['backgroundColor']) ? $attributes['backgroundColor'] : 'transparent';
+        $border_radius = isset($attributes['borderRadius']) ? intval($attributes['borderRadius']) : 0;
+        $show_current_page = isset($attributes['showCurrentPage']) ? $attributes['showCurrentPage'] : true;
+        $max_depth = isset($attributes['maxDepth']) ? intval($attributes['maxDepth']) : 5;
+
+        // Build breadcrumb trail
+        $breadcrumb_items = array();
+
+        // Add start page if enabled
+        if ($show_start_link) {
+            if ($start_page_id === -1 && !empty($start_page_url)) {
+                // Custom URL
+                $breadcrumb_items[] = array(
+                    'title' => $start_page_text,
+                    'url' => esc_url($start_page_url),
+                    'is_current' => false
+                );
+            } elseif ($start_page_id > 0) {
+                // Specific page
+                $start_page = get_post($start_page_id);
+                if ($start_page && $start_page->post_status === 'publish') {
+                    $breadcrumb_items[] = array(
+                        'title' => $start_page_text,
+                        'url' => get_permalink($start_page_id),
+                        'is_current' => false
+                    );
+                }
+            } else {
+                // Default home link
+                $breadcrumb_items[] = array(
+                    'title' => $start_page_text,
+                    'url' => home_url('/'),
+                    'is_current' => false
+                );
+            }
+        }
+
+        // Build hierarchy trail
+        $current_page = get_post($current_page_id);
+        $trail = array();
+
+        if ($current_page) {
+            $trail[] = $current_page;
+
+            // Get parent pages
+            $parent_id = $current_page->post_parent;
+            $depth = 0;
+
+            while ($parent_id > 0 && $depth < $max_depth) {
+                $parent = get_post($parent_id);
+                if ($parent && $parent->post_status === 'publish') {
+                    array_unshift($trail, $parent);
+                    $parent_id = $parent->post_parent;
+                    $depth++;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        // Add trail items to breadcrumb (excluding current page if not showing)
+        foreach ($trail as $index => $item) {
+            if ($index === count($trail) - 1 && !$show_current_page) {
+                continue; // Skip current page
+            }
+
+            $breadcrumb_items[] = array(
+                'title' => $item->post_title,
+                'url' => get_permalink($item->ID),
+                'is_current' => ($item->ID === $current_page_id)
+            );
+        }
+
+        // Build HTML
+        $container_style = sprintf(
+            'font-size: %dpx; font-weight: %s; padding: %dpx; background-color: %s; border-radius: %dpx; color: %s;',
+            $font_size,
+            $font_weight,
+            $padding,
+            $background_color,
+            $border_radius,
+            $text_color
+        );
+
+        $separator_style = sprintf('color: %s; margin: 0 %dpx;', $separator_color, $separator_margin);
+
+        $html = '<nav class="wp-block-flexible-page-navigation-flexible-breadcrumb" aria-label="Breadcrumb">';
+        $html .= '<div class="breadcrumb-container" style="' . esc_attr($container_style) . '">';
+
+        foreach ($breadcrumb_items as $index => $item) {
+            if ($index > 0) {
+                $html .= '<span class="breadcrumb-separator" style="' . esc_attr($separator_style) . '">' . esc_html($separator) . '</span>';
+            }
+
+            if ($item['is_current']) {
+                $html .= '<span class="breadcrumb-current" style="color: ' . esc_attr($active_color) . ';">' . esc_html($item['title']) . '</span>';
+            } else {
+                $html .= '<a href="' . esc_url($item['url']) . '" class="breadcrumb-link" style="color: ' . esc_attr($link_color) . ';">' . esc_html($item['title']) . '</a>';
+            }
+        }
+
+        $html .= '</div></nav>';
+
+        return $html;
     }
 
     public function render_navigation_block($attributes)

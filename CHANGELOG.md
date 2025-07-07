@@ -1,3 +1,13 @@
+## 2025-07-07 23:33:45 - Release v1.4.10
+
+### Changed Files:
+- `flexible-page-navigation.php`
+- `src/block/flexible-breadcrumb/block.json`
+- `src/block/flexible-breadcrumb/index.css`
+- `src/block/flexible-breadcrumb/index.js`
+- `src/block/flexible-breadcrumb/style.css`
+- `webpack.config.js`
+
 ## 2025-06-29 14:54:57 - 1.4.10
 
 ### Changed Files:
