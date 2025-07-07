@@ -1,3 +1,9 @@
+## 2025-07-07 23:35:34 - Add Flexible Breadcrumb Block with configurable separator margins and universal post type support
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-07-07 23:33:45 - Release v1.4.10
 
 ### Changed Files:
