@@ -45,10 +45,12 @@ jobs:
           # Copy main PHP file (same as deploy)
           cp flexible-page-navigation.php temp/
 
-          # Copy build directory (same as deploy)
+          # Copy build directory with proper structure
           if [ -d "build" ]; then
+            # Ensure build directory structure is preserved
             cp -r build temp/
-            echo "✅ Copied build/"
+            echo "✅ Copied build/ with structure:"
+            find temp/build -type f -name "*.json" -o -name "*.js" -o -name "*.css" | sort
           else
             echo "ERROR: Build directory not found!"
             exit 1
@@ -78,6 +80,10 @@ jobs:
           ls -la temp/
           echo "=== Temp/build contents ==="
           ls -la temp/build/ || echo "Temp/build not found"
+          echo "=== Temp/build/flexible-nav contents ==="
+          ls -la temp/build/flexible-nav/ || echo "Temp/build/flexible-nav not found"
+          echo "=== Temp/build/flexible-breadcrumb contents ==="
+          ls -la temp/build/flexible-breadcrumb/ || echo "Temp/build/flexible-breadcrumb not found"
           echo "=== Temp/assets contents ==="
           ls -la temp/assets/ || echo "Temp/assets not found"
 
@@ -88,7 +94,7 @@ jobs:
 
           # Debug - Check ZIP contents
           echo "=== ZIP file contents ==="
-          unzip -l flexible-page-navigation.zip
+          unzip -l flexible-page-navigation.zip | grep -E "(block\.json|index\.js|style\.css)"
 
       - name: Create Release
         uses: softprops/action-gh-release@v1

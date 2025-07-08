@@ -333,6 +333,7 @@ class Flexible_Page_Navigation
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_scripts'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+        add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
         add_action('wp_ajax_fpn_test_github_api', array($this, 'test_github_api'));
         add_action('wp_ajax_fpn_clear_cache', array($this, 'clear_cache'));
         add_action('wp_ajax_nopriv_fpn_test_github_api', array($this, 'test_github_api'));
@@ -360,8 +361,11 @@ class Flexible_Page_Navigation
         if (!file_exists($nav_block_json_path)) {
             error_log('Flexible Page Navigation: flexible-nav block.json not found at ' . $nav_block_json_path);
         } else {
-            // Register Flexible Nav Block
-            $nav_result = register_block_type($nav_block_json_path, array(
+            // Register Flexible Nav Block with explicit asset paths
+            $nav_result = register_block_type('flexible-page-navigation/flexible-nav', array(
+                'editor_script' => 'flexible-nav-editor',
+                'editor_style' => 'flexible-nav-editor-style',
+                'style' => 'flexible-nav-style',
                 'render_callback' => array($this, 'render_navigation_block'),
             ));
 
@@ -381,8 +385,11 @@ class Flexible_Page_Navigation
         if (!file_exists($breadcrumb_block_json_path)) {
             error_log('Flexible Page Navigation: flexible-breadcrumb block.json not found at ' . $breadcrumb_block_json_path);
         } else {
-            // Register Flexible Breadcrumb Block
-            $breadcrumb_result = register_block_type($breadcrumb_block_json_path, array(
+            // Register Flexible Breadcrumb Block with explicit asset paths
+            $breadcrumb_result = register_block_type('flexible-page-navigation/flexible-breadcrumb', array(
+                'editor_script' => 'flexible-breadcrumb-editor',
+                'editor_style' => 'flexible-breadcrumb-editor-style',
+                'style' => 'flexible-breadcrumb-style',
                 'render_callback' => array($this, 'render_breadcrumb_block'),
             ));
 
@@ -710,6 +717,55 @@ class Flexible_Page_Navigation
             array(),
             FPN_VERSION,
             true
+        );
+    }
+
+    public function enqueue_block_editor_assets()
+    {
+        // Enqueue Flexible Nav Block scripts
+        wp_enqueue_script(
+            'flexible-nav-editor',
+            FPN_PLUGIN_URL . 'build/flexible-nav/index.js',
+            array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
+            FPN_VERSION,
+            true
+        );
+
+        wp_enqueue_style(
+            'flexible-nav-editor-style',
+            FPN_PLUGIN_URL . 'build/flexible-nav/index.css',
+            array(),
+            FPN_VERSION
+        );
+
+        wp_enqueue_style(
+            'flexible-nav-style',
+            FPN_PLUGIN_URL . 'build/flexible-nav/style.css',
+            array(),
+            FPN_VERSION
+        );
+
+        // Enqueue Flexible Breadcrumb Block scripts
+        wp_enqueue_script(
+            'flexible-breadcrumb-editor',
+            FPN_PLUGIN_URL . 'build/flexible-breadcrumb/index.js',
+            array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
+            FPN_VERSION,
+            true
+        );
+
+        wp_enqueue_style(
+            'flexible-breadcrumb-editor-style',
+            FPN_PLUGIN_URL . 'build/flexible-breadcrumb/index.css',
+            array(),
+            FPN_VERSION
+        );
+
+        wp_enqueue_style(
+            'flexible-breadcrumb-style',
+            FPN_PLUGIN_URL . 'build/flexible-breadcrumb/style.css',
+            array(),
+            FPN_VERSION
         );
     }
 

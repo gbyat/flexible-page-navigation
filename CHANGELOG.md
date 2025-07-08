@@ -1,3 +1,9 @@
+## 2025-07-08 08:15:27 - Release v1.5.0
+
+### Changed Files:
+- `.github/workflows/release.yml`
+- `flexible-page-navigation.php`
+
 ## 2025-07-07 23:35:41 - 1.5.0
 
 ### Changed Files:
