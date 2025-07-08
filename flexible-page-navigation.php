@@ -23,6 +23,7 @@ define('FPN_VERSION', '1.5.3');
 define('FPN_PLUGIN_FILE', __FILE__);
 define('FPN_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('FPN_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('FPN_PLUGIN_VERSION', '1.5.2');
 define('FPN_GITHUB_REPO', 'gbyat/flexible-page-navigation');
 
 // GitHub Update System
@@ -333,6 +334,7 @@ class Flexible_Page_Navigation
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_scripts'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+        add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
         add_action('wp_ajax_fpn_test_github_api', array($this, 'test_github_api'));
         add_action('wp_ajax_fpn_clear_cache', array($this, 'clear_cache'));
         add_action('wp_ajax_nopriv_fpn_test_github_api', array($this, 'test_github_api'));
@@ -360,8 +362,24 @@ class Flexible_Page_Navigation
         if (!file_exists($nav_block_json_path)) {
             error_log('Flexible Page Navigation: flexible-nav block.json not found at ' . $nav_block_json_path);
         } else {
-            // Register Flexible Nav Block using block.json
-            $nav_result = register_block_type($nav_block_json_path, array(
+            // Register Flexible Nav Block with explicit asset loading for Kinsta compatibility
+            $nav_result = register_block_type('flexible-page-navigation/flexible-nav', array(
+                'editor_script' => array(
+                    'handle' => 'flexible-nav-editor',
+                    'src' => FPN_PLUGIN_URL . 'build/flexible-nav/index.js',
+                    'deps' => array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
+                    'version' => FPN_PLUGIN_VERSION
+                ),
+                'editor_style' => array(
+                    'handle' => 'flexible-nav-editor-style',
+                    'src' => FPN_PLUGIN_URL . 'build/flexible-nav/index.css',
+                    'version' => FPN_PLUGIN_VERSION
+                ),
+                'style' => array(
+                    'handle' => 'flexible-nav-style',
+                    'src' => FPN_PLUGIN_URL . 'build/flexible-nav/style.css',
+                    'version' => FPN_PLUGIN_VERSION
+                ),
                 'render_callback' => array($this, 'render_navigation_block'),
             ));
 
@@ -381,8 +399,24 @@ class Flexible_Page_Navigation
         if (!file_exists($breadcrumb_block_json_path)) {
             error_log('Flexible Page Navigation: flexible-breadcrumb block.json not found at ' . $breadcrumb_block_json_path);
         } else {
-            // Register Flexible Breadcrumb Block using block.json
-            $breadcrumb_result = register_block_type($breadcrumb_block_json_path, array(
+            // Register Flexible Breadcrumb Block with explicit asset loading for Kinsta compatibility
+            $breadcrumb_result = register_block_type('flexible-page-navigation/flexible-breadcrumb', array(
+                'editor_script' => array(
+                    'handle' => 'flexible-breadcrumb-editor',
+                    'src' => FPN_PLUGIN_URL . 'build/flexible-breadcrumb/index.js',
+                    'deps' => array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
+                    'version' => FPN_PLUGIN_VERSION
+                ),
+                'editor_style' => array(
+                    'handle' => 'flexible-breadcrumb-editor-style',
+                    'src' => FPN_PLUGIN_URL . 'build/flexible-breadcrumb/index.css',
+                    'version' => FPN_PLUGIN_VERSION
+                ),
+                'style' => array(
+                    'handle' => 'flexible-breadcrumb-style',
+                    'src' => FPN_PLUGIN_URL . 'build/flexible-breadcrumb/style.css',
+                    'version' => FPN_PLUGIN_VERSION
+                ),
                 'render_callback' => array($this, 'render_breadcrumb_block'),
             ));
 
@@ -511,11 +545,13 @@ class Flexible_Page_Navigation
 
     private function debug_tab()
     {
-        // Check block registration status (WordPress 5.0+ compatible)
-        $block_registered = false;
+        // Check block registration status for both blocks (WordPress 5.0+ compatible)
+        $nav_block_registered = false;
+        $breadcrumb_block_registered = false;
         if (function_exists('get_block_types')) {
             $blocks = get_block_types();
-            $block_registered = isset($blocks['flexible-page-navigation/flexible-nav']);
+            $nav_block_registered = isset($blocks['flexible-page-navigation/flexible-nav']);
+            $breadcrumb_block_registered = isset($blocks['flexible-page-navigation/flexible-breadcrumb']);
         }
 
         // Check if build files exist for Flexible Nav Block
@@ -563,12 +599,12 @@ class Flexible_Page_Navigation
         <h3><?php _e('Block Registration Status', 'flexible-page-navigation'); ?></h3>
         <table class="widefat">
             <tr>
-                <td><strong><?php _e('Block Registered', 'flexible-page-navigation'); ?></strong></td>
-                <td><?php echo $block_registered ? '<span style="color: green;">✓ Yes</span>' : '<span style="color: red;">✗ No</span>'; ?></td>
+                <td><strong><?php _e('Flexible Nav Block', 'flexible-page-navigation'); ?></strong></td>
+                <td><?php echo $nav_block_registered ? '<span style="color: green;">✓ Registered</span>' : '<span style="color: red;">✗ Not Registered</span>'; ?></td>
             </tr>
             <tr>
-                <td><strong><?php _e('Block Name', 'flexible-page-navigation'); ?></strong></td>
-                <td>flexible-page-navigation/flexible-nav</td>
+                <td><strong><?php _e('Flexible Breadcrumb Block', 'flexible-page-navigation'); ?></strong></td>
+                <td><?php echo $breadcrumb_block_registered ? '<span style="color: green;">✓ Registered</span>' : '<span style="color: red;">✗ Not Registered</span>'; ?></td>
             </tr>
         </table>
 
@@ -725,7 +761,7 @@ class Flexible_Page_Navigation
             'flexible-page-navigation-admin',
             FPN_PLUGIN_URL . 'assets/js/admin.js',
             array('jquery'),
-            FPN_VERSION,
+            FPN_PLUGIN_VERSION,
             true
         );
 
@@ -733,6 +769,52 @@ class Flexible_Page_Navigation
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('fpn_nonce'),
         ));
+    }
+
+    /**
+     * Enqueue block editor assets for Kinsta compatibility
+     */
+    public function enqueue_block_editor_assets()
+    {
+        // Enqueue Flexible Nav Block assets
+        if (file_exists(FPN_PLUGIN_DIR . 'build/flexible-nav/index.js')) {
+            wp_enqueue_script(
+                'flexible-nav-editor',
+                FPN_PLUGIN_URL . 'build/flexible-nav/index.js',
+                array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
+                FPN_PLUGIN_VERSION,
+                true
+            );
+        }
+
+        if (file_exists(FPN_PLUGIN_DIR . 'build/flexible-nav/index.css')) {
+            wp_enqueue_style(
+                'flexible-nav-editor-style',
+                FPN_PLUGIN_URL . 'build/flexible-nav/index.css',
+                array(),
+                FPN_PLUGIN_VERSION
+            );
+        }
+
+        // Enqueue Flexible Breadcrumb Block assets
+        if (file_exists(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/index.js')) {
+            wp_enqueue_script(
+                'flexible-breadcrumb-editor',
+                FPN_PLUGIN_URL . 'build/flexible-breadcrumb/index.js',
+                array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
+                FPN_PLUGIN_VERSION,
+                true
+            );
+        }
+
+        if (file_exists(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/index.css')) {
+            wp_enqueue_style(
+                'flexible-breadcrumb-editor-style',
+                FPN_PLUGIN_URL . 'build/flexible-breadcrumb/index.css',
+                array(),
+                FPN_PLUGIN_VERSION
+            );
+        }
     }
 
     public function render_breadcrumb_block($attributes)
