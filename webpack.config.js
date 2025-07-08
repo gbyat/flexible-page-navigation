@@ -75,12 +75,42 @@ module.exports = (env, argv) => {
             }),
         ],
         externals: {
-            '@wordpress/blocks': ['wp', 'blocks'],
-            '@wordpress/i18n': ['wp', 'i18n'],
-            '@wordpress/block-editor': ['wp', 'blockEditor'],
-            '@wordpress/components': ['wp', 'components'],
-            '@wordpress/element': ['wp', 'element'],
-            '@wordpress/api-fetch': ['wp', 'apiFetch'],
+            '@wordpress/blocks': {
+                root: ['wp', 'blocks'],
+                commonjs: '@wordpress/blocks',
+                commonjs2: '@wordpress/blocks',
+                amd: '@wordpress/blocks'
+            },
+            '@wordpress/i18n': {
+                root: ['wp', 'i18n'],
+                commonjs: '@wordpress/i18n',
+                commonjs2: '@wordpress/i18n',
+                amd: '@wordpress/i18n'
+            },
+            '@wordpress/block-editor': {
+                root: ['wp', 'blockEditor'],
+                commonjs: '@wordpress/block-editor',
+                commonjs2: '@wordpress/block-editor',
+                amd: '@wordpress/block-editor'
+            },
+            '@wordpress/components': {
+                root: ['wp', 'components'],
+                commonjs: '@wordpress/components',
+                commonjs2: '@wordpress/components',
+                amd: '@wordpress/components'
+            },
+            '@wordpress/element': {
+                root: ['wp', 'element'],
+                commonjs: '@wordpress/element',
+                commonjs2: '@wordpress/element',
+                amd: '@wordpress/element'
+            },
+            '@wordpress/api-fetch': {
+                root: ['wp', 'apiFetch'],
+                commonjs: '@wordpress/api-fetch',
+                commonjs2: '@wordpress/api-fetch',
+                amd: '@wordpress/api-fetch'
+            },
         },
         devtool: isProduction ? false : 'source-map',
     };

@@ -1,3 +1,10 @@
+## 2025-07-08 12:56:50 - Release v1.5.5
+
+### Changed Files:
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/index.js`
+- `webpack.config.js`
+
 ## 2025-07-08 12:46:54 - 1.5.5
 
 ### Changed Files:
