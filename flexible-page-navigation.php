@@ -334,7 +334,7 @@ class Flexible_Page_Navigation
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_scripts'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
-        add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
+
         add_action('wp_ajax_fpn_test_github_api', array($this, 'test_github_api'));
         add_action('wp_ajax_fpn_clear_cache', array($this, 'clear_cache'));
         add_action('wp_ajax_nopriv_fpn_test_github_api', array($this, 'test_github_api'));
@@ -428,6 +428,14 @@ class Flexible_Page_Navigation
             }
             error_log('Flexible Page Navigation: Auto-detected blocks: ' . implode(', ', $auto_detected_blocks));
         }
+
+        // Debug: Check if blocks are available in the editor context
+        add_action('admin_footer', function () {
+            if (function_exists('get_block_types')) {
+                $blocks = get_block_types();
+                error_log('Flexible Page Navigation: Blocks in admin_footer: ' . implode(', ', array_keys($blocks)));
+            }
+        });
     }
 
     public function add_admin_menu()
@@ -533,8 +541,8 @@ class Flexible_Page_Navigation
         // Check block registration status for both blocks (WordPress 5.0+ compatible)
         $nav_block_registered = false;
         $breadcrumb_block_registered = false;
-        if (function_exists('get_block_types')) {
-            $blocks = get_block_types();
+        if (function_exists('get_allowed_block_types')) {
+            $blocks = get_allowed_block_types();
             $nav_block_registered = isset($blocks['flexible-page-navigation/flexible-nav']);
             $breadcrumb_block_registered = isset($blocks['flexible-page-navigation/flexible-breadcrumb']);
         }
@@ -756,51 +764,7 @@ class Flexible_Page_Navigation
         ));
     }
 
-    /**
-     * Enqueue block editor assets for Kinsta compatibility
-     */
-    public function enqueue_block_editor_assets()
-    {
-        // Enqueue Flexible Nav Block assets
-        if (file_exists(FPN_PLUGIN_DIR . 'build/flexible-nav/index.js')) {
-            wp_enqueue_script(
-                'flexible-nav-editor',
-                FPN_PLUGIN_URL . 'build/flexible-nav/index.js',
-                array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
-                FPN_PLUGIN_VERSION,
-                true
-            );
-        }
 
-        if (file_exists(FPN_PLUGIN_DIR . 'build/flexible-nav/index.css')) {
-            wp_enqueue_style(
-                'flexible-nav-editor-style',
-                FPN_PLUGIN_URL . 'build/flexible-nav/index.css',
-                array(),
-                FPN_PLUGIN_VERSION
-            );
-        }
-
-        // Enqueue Flexible Breadcrumb Block assets
-        if (file_exists(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/index.js')) {
-            wp_enqueue_script(
-                'flexible-breadcrumb-editor',
-                FPN_PLUGIN_URL . 'build/flexible-breadcrumb/index.js',
-                array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
-                FPN_PLUGIN_VERSION,
-                true
-            );
-        }
-
-        if (file_exists(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/index.css')) {
-            wp_enqueue_style(
-                'flexible-breadcrumb-editor-style',
-                FPN_PLUGIN_URL . 'build/flexible-breadcrumb/index.css',
-                array(),
-                FPN_PLUGIN_VERSION
-            );
-        }
-    }
 
     public function render_breadcrumb_block($attributes)
     {

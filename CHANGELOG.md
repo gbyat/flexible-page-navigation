@@ -1,3 +1,8 @@
+## 2025-07-08 09:00:40 - Fix block registration to use correct block.json file paths
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-07-08 08:54:02 - Release v1.5.4
 
 ### Changed Files:
