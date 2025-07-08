@@ -3,7 +3,7 @@
   "name": "flexible-page-navigation/flexible-breadcrumb",
   "title": "Flexible Breadcrumb",
   "category": "widgets",
-  "icon": "arrow-right-alt",
+  "icon": "arrow-right",
   "description": "A flexible breadcrumb block with configurable content types, start page, and styling options.",
   "textdomain": "flexible-page-navigation",
   "supports": {
@@ -84,7 +84,7 @@
       "default": 5
     }
   },
-  "editorScript": "file:./index.js",
-  "editorStyle": "file:./index.css",
-  "style": "file:./style.css"
+  "editorScript": ["file:./index.js"],
+  "editorStyle": ["file:./index.css"],
+  "style": ["file:./style.css"]
 }

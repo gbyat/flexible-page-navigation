@@ -3,7 +3,7 @@
   "name": "flexible-page-navigation/flexible-nav",
   "title": "Flexible Page Navigation",
   "category": "widgets",
-  "icon": "menu",
+  "icon": "admin-links",
   "description": "A flexible page navigation block with customizable content types, sorting, depth, and child selection options.",
   "textdomain": "flexible-page-navigation",
   "supports": {
@@ -120,7 +120,7 @@
       "default": "#333333"
     }
   },
-  "editorScript": "file:./index.js",
-  "editorStyle": "file:./index.css",
-  "style": "file:./style.css"
+  "editorScript": ["file:./index.js"],
+  "editorStyle": ["file:./index.css"],
+  "style": ["file:./style.css"]
 }

@@ -362,16 +362,13 @@ class Flexible_Page_Navigation
      */
     public function register_blocks()
     {
-        // Check and register Flexible Nav Block
+        // Register Flexible Nav Block using block.json
         $nav_block_json_path = FPN_PLUGIN_DIR . 'build/flexible-nav/block.json';
-        $nav_index_js_path = FPN_PLUGIN_DIR . 'build/flexible-nav/index.js';
-        $nav_index_css_path = FPN_PLUGIN_DIR . 'build/flexible-nav/index.css';
-        $nav_style_css_path = FPN_PLUGIN_DIR . 'build/flexible-nav/style.css';
 
         if (!file_exists($nav_block_json_path)) {
             error_log('Flexible Page Navigation: flexible-nav block.json not found at ' . $nav_block_json_path);
         } else {
-            // Register Flexible Nav Block using block.json with correct path
+            // Register Flexible Nav Block using block.json
             $nav_result = register_block_type($nav_block_json_path, array(
                 'render_callback' => array($this, 'render_navigation_block'),
             ));
@@ -383,16 +380,13 @@ class Flexible_Page_Navigation
             }
         }
 
-        // Check and register Flexible Breadcrumb Block
+        // Register Flexible Breadcrumb Block using block.json
         $breadcrumb_block_json_path = FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/block.json';
-        $breadcrumb_index_js_path = FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/index.js';
-        $breadcrumb_index_css_path = FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/index.css';
-        $breadcrumb_style_css_path = FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/style.css';
 
         if (!file_exists($breadcrumb_block_json_path)) {
             error_log('Flexible Page Navigation: flexible-breadcrumb block.json not found at ' . $breadcrumb_block_json_path);
         } else {
-            // Register Flexible Breadcrumb Block using block.json with correct path
+            // Register Flexible Breadcrumb Block using block.json
             $breadcrumb_result = register_block_type($breadcrumb_block_json_path, array(
                 'render_callback' => array($this, 'render_breadcrumb_block'),
             ));
@@ -440,6 +434,55 @@ class Flexible_Page_Navigation
 
         // Debug: Check if blocks are available in the editor context
         add_action('admin_footer', array($this, 'debug_blocks_in_footer'));
+
+        // Fallback: Manually register blocks if block.json method fails
+        add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_assets'));
+    }
+
+    /**
+     * Enqueue block assets as fallback
+     */
+    public function enqueue_block_assets()
+    {
+        // Enqueue Flexible Nav Block assets
+        $nav_script_path = FPN_PLUGIN_URL . 'build/flexible-nav/index.js';
+        $nav_style_path = FPN_PLUGIN_URL . 'build/flexible-nav/index.css';
+
+        if (file_exists(FPN_PLUGIN_DIR . 'build/flexible-nav/index.js')) {
+            wp_enqueue_script(
+                'flexible-nav-block',
+                $nav_script_path,
+                array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
+                FPN_VERSION,
+                true
+            );
+            wp_enqueue_style(
+                'flexible-nav-block-editor',
+                $nav_style_path,
+                array(),
+                FPN_VERSION
+            );
+        }
+
+        // Enqueue Flexible Breadcrumb Block assets
+        $breadcrumb_script_path = FPN_PLUGIN_URL . 'build/flexible-breadcrumb/index.js';
+        $breadcrumb_style_path = FPN_PLUGIN_URL . 'build/flexible-breadcrumb/index.css';
+
+        if (file_exists(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/index.js')) {
+            wp_enqueue_script(
+                'flexible-breadcrumb-block',
+                $breadcrumb_script_path,
+                array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
+                FPN_VERSION,
+                true
+            );
+            wp_enqueue_style(
+                'flexible-breadcrumb-block-editor',
+                $breadcrumb_style_path,
+                array(),
+                FPN_VERSION
+            );
+        }
     }
 
     public function add_admin_menu()

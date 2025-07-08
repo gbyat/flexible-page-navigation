@@ -1,3 +1,14 @@
+## 2025-07-08 13:49:58 - Release v1.5.9
+
+### Changed Files:
+- `build/flexible-breadcrumb/block.json`
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/block.json`
+- `build/flexible-nav/index.js`
+- `flexible-page-navigation.php`
+- `src/block/flexible-breadcrumb/block.json`
+- `src/block/flexible-nav/block.json`
+
 ## 2025-07-08 13:28:51 - 1.5.9
 
 ### Changed Files:
