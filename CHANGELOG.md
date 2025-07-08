@@ -1,3 +1,8 @@
+## 2025-07-08 12:46:39 - Use get_allowed_block_types() for better block detection in debug tab
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-07-08 09:00:40 - Fix block registration to use correct block.json file paths
 
 ### Changed Files:

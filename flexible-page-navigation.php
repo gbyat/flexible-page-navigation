@@ -353,6 +353,15 @@ class Flexible_Page_Navigation
 
         load_plugin_textdomain('flexible-page-navigation', false, dirname(plugin_basename(__FILE__)) . '/languages');
 
+        // Register blocks in the proper hook to avoid script/style warnings
+        add_action('init', array($this, 'register_blocks'));
+    }
+
+    /**
+     * Register blocks in the proper hook
+     */
+    public function register_blocks()
+    {
         // Check and register Flexible Nav Block
         $nav_block_json_path = FPN_PLUGIN_DIR . 'build/flexible-nav/block.json';
         $nav_index_js_path = FPN_PLUGIN_DIR . 'build/flexible-nav/index.js';
@@ -430,12 +439,7 @@ class Flexible_Page_Navigation
         }
 
         // Debug: Check if blocks are available in the editor context
-        add_action('admin_footer', function () {
-            if (function_exists('get_block_types')) {
-                $blocks = get_block_types();
-                error_log('Flexible Page Navigation: Blocks in admin_footer: ' . implode(', ', array_keys($blocks)));
-            }
-        });
+        add_action('admin_footer', array($this, 'debug_blocks_in_footer'));
     }
 
     public function add_admin_menu()
@@ -541,10 +545,13 @@ class Flexible_Page_Navigation
         // Check block registration status for both blocks (WordPress 5.0+ compatible)
         $nav_block_registered = false;
         $breadcrumb_block_registered = false;
-        if (function_exists('get_allowed_block_types')) {
-            $blocks = get_allowed_block_types();
-            $nav_block_registered = isset($blocks['flexible-page-navigation/flexible-nav']);
-            $breadcrumb_block_registered = isset($blocks['flexible-page-navigation/flexible-breadcrumb']);
+        if (function_exists('is_block_registered')) {
+            $nav_block_registered = is_block_registered('flexible-page-navigation/flexible-nav');
+            $breadcrumb_block_registered = is_block_registered('flexible-page-navigation/flexible-breadcrumb');
+        } else {
+            // For older WordPress versions, assume blocks are registered if files exist
+            $nav_block_registered = file_exists(FPN_PLUGIN_DIR . 'build/flexible-nav/block.json');
+            $breadcrumb_block_registered = file_exists(FPN_PLUGIN_DIR . 'build/flexible-breadcrumb/block.json');
         }
 
         // Check if build files exist for Flexible Nav Block
@@ -762,6 +769,17 @@ class Flexible_Page_Navigation
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('fpn_nonce'),
         ));
+    }
+
+    /**
+     * Debug function to check blocks in admin footer
+     */
+    public function debug_blocks_in_footer()
+    {
+        if (function_exists('get_block_types')) {
+            $blocks = get_block_types();
+            error_log('Flexible Page Navigation: Blocks in admin_footer: ' . implode(', ', array_keys($blocks)));
+        }
     }
 
 
