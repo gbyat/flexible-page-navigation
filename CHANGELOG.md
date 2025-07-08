@@ -1,3 +1,11 @@
+## 2025-07-08 08:27:00 - 1.5.2
+
+### Changed Files:
+- `build/flexible-breadcrumb/block.json`
+- `build/flexible-nav/block.json`
+- `flexible-page-navigation.php`
+- `webpack.config.js`
+
 ## 2025-07-08 08:24:31 - Fix block registration to use block.json files directly for proper WordPress detection
 
 ### Changed Files:

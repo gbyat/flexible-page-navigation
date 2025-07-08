@@ -1,6 +1,7 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const fs = require('fs');
 
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
@@ -46,6 +47,13 @@ module.exports = (env, argv) => {
                     {
                         from: 'src/block/flexible-nav/block.json',
                         to: 'flexible-nav/block.json',
+                        transform(content) {
+                            const blockJson = JSON.parse(content.toString());
+                            blockJson.editorScript = 'flexible-page-navigation/build/flexible-nav/index.js';
+                            blockJson.editorStyle = 'flexible-page-navigation/build/flexible-nav/index.css';
+                            blockJson.style = 'flexible-page-navigation/build/flexible-nav/style.css';
+                            return JSON.stringify(blockJson, null, 2);
+                        },
                     },
                     {
                         from: 'src/block/flexible-nav/index.css',
@@ -59,6 +67,13 @@ module.exports = (env, argv) => {
                     {
                         from: 'src/block/flexible-breadcrumb/block.json',
                         to: 'flexible-breadcrumb/block.json',
+                        transform(content) {
+                            const blockJson = JSON.parse(content.toString());
+                            blockJson.editorScript = 'flexible-page-navigation/build/flexible-breadcrumb/index.js';
+                            blockJson.editorStyle = 'flexible-page-navigation/build/flexible-breadcrumb/index.css';
+                            blockJson.style = 'flexible-page-navigation/build/flexible-breadcrumb/style.css';
+                            return JSON.stringify(blockJson, null, 2);
+                        },
                     },
                     {
                         from: 'src/block/flexible-breadcrumb/index.css',
