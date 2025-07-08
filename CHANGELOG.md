@@ -1,3 +1,11 @@
+## 2025-07-08 13:04:02 - Release v1.5.6
+
+### Changed Files:
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/index.js`
+- `src/block/flexible-breadcrumb/index.js`
+- `src/block/flexible-nav/index.js`
+
 ## 2025-07-08 12:57:08 - 1.5.6
 
 ### Changed Files:

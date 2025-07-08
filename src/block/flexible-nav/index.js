@@ -1,20 +1,21 @@
-import { registerBlockType } from '@wordpress/blocks';
-import { __ } from '@wordpress/i18n';
-import {
+// Safe WordPress imports with fallbacks
+const { registerBlockType } = window.wp?.blocks || {};
+const { __ } = window.wp?.i18n || {};
+const {
     useBlockProps,
     InspectorControls,
     ColorPalette,
-    __experimentalNumberControl as NumberControl,
-} from '@wordpress/block-editor';
-import {
+    __experimentalNumberControl: NumberControl,
+} = window.wp?.blockEditor || {};
+const {
     PanelBody,
     SelectControl,
     ToggleControl,
     TextControl,
     RangeControl,
-} from '@wordpress/components';
-import { useState, useEffect } from '@wordpress/element';
-import apiFetch from '@wordpress/api-fetch';
+} = window.wp?.components || {};
+const { useState, useEffect } = window.wp?.element || {};
+const apiFetch = window.wp?.apiFetch || {};
 
 registerBlockType('flexible-page-navigation/flexible-nav', {
     edit: function Edit({ attributes, setAttributes }) {
