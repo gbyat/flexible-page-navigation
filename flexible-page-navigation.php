@@ -362,24 +362,8 @@ class Flexible_Page_Navigation
         if (!file_exists($nav_block_json_path)) {
             error_log('Flexible Page Navigation: flexible-nav block.json not found at ' . $nav_block_json_path);
         } else {
-            // Register Flexible Nav Block with explicit asset loading for Kinsta compatibility
-            $nav_result = register_block_type('flexible-page-navigation/flexible-nav', array(
-                'editor_script' => array(
-                    'handle' => 'flexible-nav-editor',
-                    'src' => FPN_PLUGIN_URL . 'build/flexible-nav/index.js',
-                    'deps' => array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
-                    'version' => FPN_PLUGIN_VERSION
-                ),
-                'editor_style' => array(
-                    'handle' => 'flexible-nav-editor-style',
-                    'src' => FPN_PLUGIN_URL . 'build/flexible-nav/index.css',
-                    'version' => FPN_PLUGIN_VERSION
-                ),
-                'style' => array(
-                    'handle' => 'flexible-nav-style',
-                    'src' => FPN_PLUGIN_URL . 'build/flexible-nav/style.css',
-                    'version' => FPN_PLUGIN_VERSION
-                ),
+            // Register Flexible Nav Block using block.json with correct path
+            $nav_result = register_block_type($nav_block_json_path, array(
                 'render_callback' => array($this, 'render_navigation_block'),
             ));
 
@@ -399,24 +383,8 @@ class Flexible_Page_Navigation
         if (!file_exists($breadcrumb_block_json_path)) {
             error_log('Flexible Page Navigation: flexible-breadcrumb block.json not found at ' . $breadcrumb_block_json_path);
         } else {
-            // Register Flexible Breadcrumb Block with explicit asset loading for Kinsta compatibility
-            $breadcrumb_result = register_block_type('flexible-page-navigation/flexible-breadcrumb', array(
-                'editor_script' => array(
-                    'handle' => 'flexible-breadcrumb-editor',
-                    'src' => FPN_PLUGIN_URL . 'build/flexible-breadcrumb/index.js',
-                    'deps' => array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
-                    'version' => FPN_PLUGIN_VERSION
-                ),
-                'editor_style' => array(
-                    'handle' => 'flexible-breadcrumb-editor-style',
-                    'src' => FPN_PLUGIN_URL . 'build/flexible-breadcrumb/index.css',
-                    'version' => FPN_PLUGIN_VERSION
-                ),
-                'style' => array(
-                    'handle' => 'flexible-breadcrumb-style',
-                    'src' => FPN_PLUGIN_URL . 'build/flexible-breadcrumb/style.css',
-                    'version' => FPN_PLUGIN_VERSION
-                ),
+            // Register Flexible Breadcrumb Block using block.json with correct path
+            $breadcrumb_result = register_block_type($breadcrumb_block_json_path, array(
                 'render_callback' => array($this, 'render_breadcrumb_block'),
             ));
 
@@ -442,6 +410,23 @@ class Flexible_Page_Navigation
             }
         } else {
             error_log('Flexible Page Navigation: get_block_types() not available (WordPress < 5.0)');
+        }
+
+        // Debug: Check if WordPress can find our block.json files
+        error_log('Flexible Page Navigation: Checking block.json files...');
+        error_log('Flexible Page Navigation: Nav block.json exists: ' . (file_exists($nav_block_json_path) ? 'YES' : 'NO'));
+        error_log('Flexible Page Navigation: Breadcrumb block.json exists: ' . (file_exists($breadcrumb_block_json_path) ? 'YES' : 'NO'));
+
+        // Debug: Check if WordPress auto-detects blocks
+        $auto_detected_blocks = array();
+        if (function_exists('get_block_types')) {
+            $all_blocks = get_block_types();
+            foreach ($all_blocks as $block_name => $block_data) {
+                if (strpos($block_name, 'flexible-page-navigation') === 0) {
+                    $auto_detected_blocks[] = $block_name;
+                }
+            }
+            error_log('Flexible Page Navigation: Auto-detected blocks: ' . implode(', ', $auto_detected_blocks));
         }
     }
 
