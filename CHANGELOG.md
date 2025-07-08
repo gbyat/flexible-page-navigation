@@ -1,3 +1,9 @@
+## 2025-07-08 08:31:53 - Revert to relative paths in block.json files for better WordPress compatibility
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-07-08 08:31:16 - Fix block registration to use block.json files with correct asset paths
 
 ### Changed Files:
