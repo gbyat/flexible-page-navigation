@@ -1,3 +1,8 @@
+## 2025-07-08 18:40:53 - 1.5.11
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-07-08 18:40:51 - Update .gitignore to exclude 'release/' directory and add 'archiver' dependency in package.json. Introduce zip creation script for manual distribution in README. Enhance webpack configuration for UMD library support and update GitHub Actions workflow for improved release process.
 
 ### Changed Files:
