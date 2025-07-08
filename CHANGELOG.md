@@ -1,3 +1,10 @@
+## 2025-07-08 12:46:54 - 1.5.5
+
+### Changed Files:
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-07-08 12:46:52 - Add block registration in init hook and improve debug functionality
 
 ### Changed Files:
