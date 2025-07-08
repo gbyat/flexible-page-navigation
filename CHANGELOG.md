@@ -1,3 +1,10 @@
+## 2025-07-08 13:12:45 - 1.5.8
+
+### Changed Files:
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-07-08 13:12:43 - Refactor flexible navigation and breadcrumb blocks to ensure safe WordPress imports with fallbacks, improving compatibility and stability. Update block registration process and enhance editor controls for better user experience.
 
 ### Changed Files:
