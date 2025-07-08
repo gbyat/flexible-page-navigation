@@ -1,3 +1,10 @@
+## 2025-07-08 13:04:10 - 1.5.7
+
+### Changed Files:
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-07-08 13:04:09 - Refactor block registration for flexible navigation and breadcrumb components to use safe WordPress imports with fallbacks, enhancing compatibility and stability.
 
 ### Changed Files:
