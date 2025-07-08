@@ -1,3 +1,9 @@
+## 2025-07-08 12:57:07 - Update webpack configuration to enhance external module definitions and implement block registration for flexible navigation and breadcrumb components.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-07-08 12:56:50 - Release v1.5.5
 
 ### Changed Files:
