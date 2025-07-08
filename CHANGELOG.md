@@ -1,3 +1,10 @@
+## 2025-07-08 08:31:16 - Fix block registration to use block.json files with correct asset paths
+
+### Changed Files:
+- `build/flexible-breadcrumb/block.json`
+- `build/flexible-nav/block.json`
+- `webpack.config.js`
+
 ## 2025-07-08 08:27:00 - 1.5.2
 
 ### Changed Files:

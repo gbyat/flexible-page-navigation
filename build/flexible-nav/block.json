@@ -8,10 +8,7 @@
   "textdomain": "flexible-page-navigation",
   "supports": {
     "html": false,
-    "align": [
-      "wide",
-      "full"
-    ]
+    "align": ["wide", "full"]
   },
   "attributes": {
     "contentType": {
@@ -123,7 +120,7 @@
       "default": "#333333"
     }
   },
-  "editorScript": "flexible-page-navigation/build/flexible-nav/index.js",
-  "editorStyle": "flexible-page-navigation/build/flexible-nav/index.css",
-  "style": "flexible-page-navigation/build/flexible-nav/style.css"
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style.css"
 }
