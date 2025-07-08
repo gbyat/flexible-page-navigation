@@ -1,3 +1,9 @@
+## 2025-07-08 13:50:06 - Enhance flexible navigation and breadcrumb blocks by updating block.json to use arrays for script and style paths, improving compatibility. Adjust icons for better visual representation. Implement fallback for block asset registration to ensure reliability in the editor.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-07-08 13:49:58 - Release v1.5.9
 
 ### Changed Files:
