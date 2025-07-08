@@ -1,3 +1,9 @@
+## 2025-07-08 13:12:43 - Refactor flexible navigation and breadcrumb blocks to ensure safe WordPress imports with fallbacks, improving compatibility and stability. Update block registration process and enhance editor controls for better user experience.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-07-08 13:12:34 - 
 
 ### Changed Files:
