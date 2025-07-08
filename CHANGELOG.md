@@ -1,3 +1,9 @@
+## 2025-07-08 18:40:51 - Update .gitignore to exclude 'release/' directory and add 'archiver' dependency in package.json. Introduce zip creation script for manual distribution in README. Enhance webpack configuration for UMD library support and update GitHub Actions workflow for improved release process.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-07-08 18:40:44 - Release v1.5.10
 
 ### Changed Files:
