@@ -80,4 +80,5 @@ wp-content/plugins/hello.php
 
 # Plugin specific
 *.zip
-temp/ 
+temp/
+release/ 

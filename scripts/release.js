@@ -43,6 +43,10 @@ try {
     console.log(`✅ Release v${version} successfully created and pushed to GitHub!`);
     console.log('🎉 GitHub Actions will now create the release automatically.');
 
+    // Create release zip
+    console.log('📦 Creating release zip...');
+    execSync('npm run zip', { stdio: 'inherit' });
+
 } catch (error) {
     console.error('❌ Error during release:', error.message);
     process.exit(1);

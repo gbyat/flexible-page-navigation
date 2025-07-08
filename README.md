@@ -148,6 +148,31 @@ npm run release:major
 3. GitHub Actions erstellt automatisch ein Release
 4. WordPress erkennt das Update automatisch
 
+### ZIP-Datei erstellen
+
+Für manuelle Distributionen kann eine ZIP-Datei erstellt werden:
+
+```bash
+# ZIP-Datei erstellen (ohne Entwicklungsdateien)
+npm run zip
+```
+
+Die ZIP-Datei wird im `release/` Verzeichnis erstellt und enthält nur die für den Plugin-Betrieb erforderlichen Dateien:
+
+- `flexible-page-navigation.php` (Haupt-Plugin-Datei)
+- `build/` (kompilierte Block-Dateien)
+- `assets/` (CSS/JS Assets)
+- `README.md`, `CHANGELOG.md`, `LICENSE` (Dokumentation)
+
+**Ausgeschlossen werden:**
+
+- `src/` (Quelldateien)
+- `webpack.config.js` (Build-Konfiguration)
+- `.gitignore` (Git-Konfiguration)
+- `package.json`, `package-lock.json` (Dependencies)
+- `scripts/` (Entwicklungsskripte)
+- `node_modules/` (Dependencies)
+
 ## 📁 Projektstruktur
 
 ```

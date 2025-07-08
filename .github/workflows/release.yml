@@ -42,30 +42,28 @@ jobs:
           # Create a temporary directory for the plugin
           mkdir -p temp
 
-          # Copy main PHP file (same as deploy)
+          # Copy main PHP file
           cp flexible-page-navigation.php temp/
+          echo "✅ Copied flexible-page-navigation.php"
 
-          # Copy build directory with proper structure
+          # Copy build directory (kompilierte Block-Dateien)
           if [ -d "build" ]; then
-            # Ensure build directory structure is preserved
             cp -r build temp/
-            echo "✅ Copied build/ with structure:"
-            find temp/build -type f -name "*.json" -o -name "*.js" -o -name "*.css" | sort
+            echo "✅ Copied build/ (compiled block files)"
           else
             echo "ERROR: Build directory not found!"
             exit 1
           fi
 
-          # Copy assets/js directory (same as deploy)
-          if [ -d "assets/js" ]; then
-            mkdir -p temp/assets
-            cp -r assets/js temp/assets/
-            echo "✅ Copied assets/js/"
+          # Copy assets directory (CSS/JS Assets)
+          if [ -d "assets" ]; then
+            cp -r assets temp/
+            echo "✅ Copied assets/ (CSS/JS assets)"
           else
-            echo "⚠️  Assets/js directory not found (optional)"
+            echo "⚠️  Assets directory not found (optional)"
           fi
 
-          # Copy documentation files (same as deploy)
+          # Copy documentation files
           for doc in README.md CHANGELOG.md LICENSE; do
             if [ -f "$doc" ]; then
               cp "$doc" temp/
@@ -80,10 +78,6 @@ jobs:
           ls -la temp/
           echo "=== Temp/build contents ==="
           ls -la temp/build/ || echo "Temp/build not found"
-          echo "=== Temp/build/flexible-nav contents ==="
-          ls -la temp/build/flexible-nav/ || echo "Temp/build/flexible-nav not found"
-          echo "=== Temp/build/flexible-breadcrumb contents ==="
-          ls -la temp/build/flexible-breadcrumb/ || echo "Temp/build/flexible-breadcrumb not found"
           echo "=== Temp/assets contents ==="
           ls -la temp/assets/ || echo "Temp/assets not found"
 
@@ -94,7 +88,11 @@ jobs:
 
           # Debug - Check ZIP contents
           echo "=== ZIP file contents ==="
-          unzip -l flexible-page-navigation.zip | grep -E "(block\.json|index\.js|style\.css)"
+          unzip -l flexible-page-navigation.zip | head -20
+          echo "..."
+          unzip -l flexible-page-navigation.zip | tail -10
+
+          echo "✅ ZIP file created with only production files (no src/, webpack.config.js, etc.)"
 
       - name: Create Release
         uses: softprops/action-gh-release@v1

@@ -15,6 +15,11 @@ module.exports = (env, argv) => {
             path: path.resolve(__dirname, 'build'),
             filename: '[name].js',
             clean: true,
+            library: {
+                type: 'umd',
+                name: 'FlexiblePageNavigation'
+            },
+            globalObject: 'this'
         },
         module: {
             rules: [
@@ -111,6 +116,36 @@ module.exports = (env, argv) => {
                 commonjs2: '@wordpress/api-fetch',
                 amd: '@wordpress/api-fetch'
             },
+            '@wordpress/data': {
+                root: ['wp', 'data'],
+                commonjs: '@wordpress/data',
+                commonjs2: '@wordpress/data',
+                amd: '@wordpress/data'
+            },
+            '@wordpress/compose': {
+                root: ['wp', 'compose'],
+                commonjs: '@wordpress/compose',
+                commonjs2: '@wordpress/compose',
+                amd: '@wordpress/compose'
+            },
+            '@wordpress/rich-text': {
+                root: ['wp', 'richText'],
+                commonjs: '@wordpress/rich-text',
+                commonjs2: '@wordpress/rich-text',
+                amd: '@wordpress/rich-text'
+            },
+            'react': {
+                root: 'React',
+                commonjs: 'react',
+                commonjs2: 'react',
+                amd: 'react'
+            },
+            'react-dom': {
+                root: 'ReactDOM',
+                commonjs: 'react-dom',
+                commonjs2: 'react-dom',
+                amd: 'react-dom'
+            }
         },
         devtool: isProduction ? false : 'source-map',
     };

@@ -1,3 +1,17 @@
+## 2025-07-08 18:40:44 - Release v1.5.10
+
+### Changed Files:
+- `.github/workflows/release.yml`
+- `.gitignore`
+- `README.md`
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/index.js`
+- `package-lock.json`
+- `package.json`
+- `scripts/create-release-zip.js`
+- `scripts/release.js`
+- `webpack.config.js`
+
 ## 2025-07-08 13:50:07 - 1.5.10
 
 ### Changed Files:

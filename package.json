@@ -11,6 +11,7 @@
     "release:patch": "npm version patch && npm run build:prod && node scripts/release.js",
     "release:minor": "npm version minor && npm run build:prod && node scripts/release.js",
     "release:major": "npm version major && npm run build:prod && node scripts/release.js",
+    "zip": "node scripts/create-release-zip.js",
     "version": "node scripts/sync-version.js"
   },
   "keywords": [
@@ -35,6 +36,7 @@
     "@wordpress/element": "^5.0.0",
     "@wordpress/i18n": "^4.0.0",
     "@wordpress/rich-text": "^6.0.0",
+    "archiver": "^6.0.2",
     "babel-loader": "^10.0.0",
     "copy-webpack-plugin": "^13.0.0",
     "css-loader": "^6.8.0",
