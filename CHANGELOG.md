@@ -1,3 +1,9 @@
+## 2025-07-08 08:24:31 - Fix block registration to use block.json files directly for proper WordPress detection
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-07-08 08:23:56 - Release v1.5.1
 
 ### Changed Files:
