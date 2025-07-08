@@ -1,3 +1,9 @@
+## 2025-07-08 08:16:30 - Fix block registration and GitHub Actions ZIP structure for proper block detection
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-07-08 08:15:27 - Release v1.5.0
 
 ### Changed Files:
