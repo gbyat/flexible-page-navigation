@@ -1,3 +1,9 @@
+## 2025-07-08 12:46:52 - Add block registration in init hook and improve debug functionality
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-07-08 12:46:39 - Use get_allowed_block_types() for better block detection in debug tab
 
 ### Changed Files:
