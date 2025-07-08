@@ -1,3 +1,10 @@
+## 2025-07-08 12:57:08 - 1.5.6
+
+### Changed Files:
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-07-08 12:57:07 - Update webpack configuration to enhance external module definitions and implement block registration for flexible navigation and breadcrumb components.
 
 ### Changed Files:
