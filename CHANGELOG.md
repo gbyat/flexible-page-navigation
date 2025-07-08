@@ -1,3 +1,10 @@
+## 2025-07-08 13:50:07 - 1.5.10
+
+### Changed Files:
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-07-08 13:50:06 - Enhance flexible navigation and breadcrumb blocks by updating block.json to use arrays for script and style paths, improving compatibility. Adjust icons for better visual representation. Implement fallback for block asset registration to ensure reliability in the editor.
 
 ### Changed Files:
