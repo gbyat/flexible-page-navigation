@@ -1,3 +1,10 @@
+## 2025-07-08 08:31:55 - 1.5.3
+
+### Changed Files:
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-07-08 08:31:53 - Revert to relative paths in block.json files for better WordPress compatibility
 
 ### Changed Files:
