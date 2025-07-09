@@ -1,3 +1,10 @@
+## 2025-07-09 16:04:22 - 1.6.0
+
+### Changed Files:
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-07-09 16:04:20 - Enhance flexible navigation and breadcrumb blocks with new attributes for mobile menu animation, dropdown max width, and menu orientation. Update styles for horizontal navigation and improve color selection controls in the editor. Add development documentation to .gitignore.
 
 ### Changed Files:
