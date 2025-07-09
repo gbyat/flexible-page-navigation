@@ -118,6 +118,10 @@
     "mainItemTextColor": {
       "type": "string",
       "default": "#333333"
+    },
+    "mobileMenuAnimation": {
+      "type": "string",
+      "default": "slide"
     }
   },
   "editorScript": ["file:./index.js"],

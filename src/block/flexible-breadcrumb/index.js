@@ -12,10 +12,13 @@ import {
     ColorPicker,
     RangeControl,
     ToggleControl,
-    Button
+    Button,
+    Dropdown,
+    ColorPalette
 } from '@wordpress/components';
 import { useState, useEffect, Fragment } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
+import { useSelect } from '@wordpress/data';
 
 registerBlockType('flexible-page-navigation/flexible-breadcrumb', {
     attributes: {
@@ -138,6 +141,12 @@ registerBlockType('flexible-page-navigation/flexible-breadcrumb', {
             color: textColor
         };
 
+        // Hole die Theme/Standardfarben aus dem Editor-Kontext
+        const themeColors = useSelect(
+            (select) => select('core/block-editor').getSettings().colors,
+            []
+        );
+
         return (
             <div {...blockProps}>
                 <InspectorControls>
@@ -242,50 +251,175 @@ registerBlockType('flexible-page-navigation/flexible-breadcrumb', {
                         />
                     </PanelBody>
 
-                    <PanelBody title={__('Colors', 'flexible-page-navigation')} initialOpen={false}>
-                        <div>
-                            <label>{__('Text Color', 'flexible-page-navigation')}</label>
-                            <input
-                                type="color"
-                                value={textColor}
-                                onChange={(e) => setAttributes({ textColor: e.target.value })}
-                                style={{ width: '100%', height: '40px' }}
+                    <PanelBody title={__('Farben', 'flexible-page-navigation')} initialOpen={false}>
+                        {/* Textfarbe (bereits modern) */}
+                        <div style={{ marginBottom: '1em' }}>
+                            <label style={{ display: 'block', marginBottom: 4 }}>{__('Textfarbe', 'flexible-page-navigation')}</label>
+                            <Dropdown
+                                renderToggle={({ isOpen, onToggle }) => (
+                                    <button
+                                        onClick={onToggle}
+                                        aria-expanded={isOpen}
+                                        aria-label={__('Textfarbe wählen', 'flexible-page-navigation')}
+                                        style={{
+                                            width: 32,
+                                            height: 32,
+                                            borderRadius: '50%',
+                                            border: '1px solid #ccc',
+                                            background: textColor || '#fff',
+                                            display: 'inline-block',
+                                            cursor: 'pointer',
+                                            boxShadow: isOpen ? '0 0 0 2px #007cba' : 'none',
+                                        }}
+                                    />
+                                )}
+                                renderContent={() => (
+                                    <div style={{ padding: 8 }}>
+                                        <ColorPalette
+                                            value={textColor}
+                                            onChange={(color) => setAttributes({ textColor: color })}
+                                            colors={themeColors}
+                                            enableAlpha={false}
+                                            clearable
+                                        />
+                                    </div>
+                                )}
                             />
                         </div>
-                        <div style={{ marginTop: '10px' }}>
-                            <label>{__('Link Color', 'flexible-page-navigation')}</label>
-                            <input
-                                type="color"
-                                value={linkColor}
-                                onChange={(e) => setAttributes({ linkColor: e.target.value })}
-                                style={{ width: '100%', height: '40px' }}
+                        {/* Linkfarbe */}
+                        <div style={{ marginBottom: '1em' }}>
+                            <label style={{ display: 'block', marginBottom: 4 }}>{__('Linkfarbe', 'flexible-page-navigation')}</label>
+                            <Dropdown
+                                renderToggle={({ isOpen, onToggle }) => (
+                                    <button
+                                        onClick={onToggle}
+                                        aria-expanded={isOpen}
+                                        aria-label={__('Linkfarbe wählen', 'flexible-page-navigation')}
+                                        style={{
+                                            width: 32,
+                                            height: 32,
+                                            borderRadius: '50%',
+                                            border: '1px solid #ccc',
+                                            background: linkColor || '#fff',
+                                            display: 'inline-block',
+                                            cursor: 'pointer',
+                                            boxShadow: isOpen ? '0 0 0 2px #007cba' : 'none',
+                                        }}
+                                    />
+                                )}
+                                renderContent={() => (
+                                    <div style={{ padding: 8 }}>
+                                        <ColorPalette
+                                            value={linkColor}
+                                            onChange={(color) => setAttributes({ linkColor: color })}
+                                            colors={themeColors}
+                                            enableAlpha={false}
+                                            clearable
+                                        />
+                                    </div>
+                                )}
                             />
                         </div>
-                        <div style={{ marginTop: '10px' }}>
-                            <label>{__('Active Color', 'flexible-page-navigation')}</label>
-                            <input
-                                type="color"
-                                value={activeColor}
-                                onChange={(e) => setAttributes({ activeColor: e.target.value })}
-                                style={{ width: '100%', height: '40px' }}
+                        {/* Aktive Farbe */}
+                        <div style={{ marginBottom: '1em' }}>
+                            <label style={{ display: 'block', marginBottom: 4 }}>{__('Aktive Farbe', 'flexible-page-navigation')}</label>
+                            <Dropdown
+                                renderToggle={({ isOpen, onToggle }) => (
+                                    <button
+                                        onClick={onToggle}
+                                        aria-expanded={isOpen}
+                                        aria-label={__('Aktive Farbe wählen', 'flexible-page-navigation')}
+                                        style={{
+                                            width: 32,
+                                            height: 32,
+                                            borderRadius: '50%',
+                                            border: '1px solid #ccc',
+                                            background: activeColor || '#fff',
+                                            display: 'inline-block',
+                                            cursor: 'pointer',
+                                            boxShadow: isOpen ? '0 0 0 2px #007cba' : 'none',
+                                        }}
+                                    />
+                                )}
+                                renderContent={() => (
+                                    <div style={{ padding: 8 }}>
+                                        <ColorPalette
+                                            value={activeColor}
+                                            onChange={(color) => setAttributes({ activeColor: color })}
+                                            colors={themeColors}
+                                            enableAlpha={false}
+                                            clearable
+                                        />
+                                    </div>
+                                )}
                             />
                         </div>
-                        <div style={{ marginTop: '10px' }}>
-                            <label>{__('Separator Color', 'flexible-page-navigation')}</label>
-                            <input
-                                type="color"
-                                value={separatorColor}
-                                onChange={(e) => setAttributes({ separatorColor: e.target.value })}
-                                style={{ width: '100%', height: '40px' }}
+                        {/* Separator-Farbe */}
+                        <div style={{ marginBottom: '1em' }}>
+                            <label style={{ display: 'block', marginBottom: 4 }}>{__('Trennzeichen-Farbe', 'flexible-page-navigation')}</label>
+                            <Dropdown
+                                renderToggle={({ isOpen, onToggle }) => (
+                                    <button
+                                        onClick={onToggle}
+                                        aria-expanded={isOpen}
+                                        aria-label={__('Trennzeichen-Farbe wählen', 'flexible-page-navigation')}
+                                        style={{
+                                            width: 32,
+                                            height: 32,
+                                            borderRadius: '50%',
+                                            border: '1px solid #ccc',
+                                            background: separatorColor || '#fff',
+                                            display: 'inline-block',
+                                            cursor: 'pointer',
+                                            boxShadow: isOpen ? '0 0 0 2px #007cba' : 'none',
+                                        }}
+                                    />
+                                )}
+                                renderContent={() => (
+                                    <div style={{ padding: 8 }}>
+                                        <ColorPalette
+                                            value={separatorColor}
+                                            onChange={(color) => setAttributes({ separatorColor: color })}
+                                            colors={themeColors}
+                                            enableAlpha={false}
+                                            clearable
+                                        />
+                                    </div>
+                                )}
                             />
                         </div>
-                        <div style={{ marginTop: '10px' }}>
-                            <label>{__('Background Color', 'flexible-page-navigation')}</label>
-                            <input
-                                type="color"
-                                value={backgroundColor === 'transparent' ? '#ffffff' : backgroundColor}
-                                onChange={(e) => setAttributes({ backgroundColor: e.target.value })}
-                                style={{ width: '100%', height: '40px' }}
+                        {/* Hintergrundfarbe */}
+                        <div style={{ marginBottom: '1em' }}>
+                            <label style={{ display: 'block', marginBottom: 4 }}>{__('Hintergrundfarbe', 'flexible-page-navigation')}</label>
+                            <Dropdown
+                                renderToggle={({ isOpen, onToggle }) => (
+                                    <button
+                                        onClick={onToggle}
+                                        aria-expanded={isOpen}
+                                        aria-label={__('Hintergrundfarbe wählen', 'flexible-page-navigation')}
+                                        style={{
+                                            width: 32,
+                                            height: 32,
+                                            borderRadius: '50%',
+                                            border: '1px solid #ccc',
+                                            background: backgroundColor && backgroundColor !== 'transparent' ? backgroundColor : '#fff',
+                                            display: 'inline-block',
+                                            cursor: 'pointer',
+                                            boxShadow: isOpen ? '0 0 0 2px #007cba' : 'none',
+                                        }}
+                                    />
+                                )}
+                                renderContent={() => (
+                                    <div style={{ padding: 8 }}>
+                                        <ColorPalette
+                                            value={backgroundColor === 'transparent' ? '' : backgroundColor}
+                                            onChange={(color) => setAttributes({ backgroundColor: color || 'transparent' })}
+                                            colors={themeColors}
+                                            enableAlpha={false}
+                                            clearable
+                                        />
+                                    </div>
+                                )}
                             />
                         </div>
                     </PanelBody>

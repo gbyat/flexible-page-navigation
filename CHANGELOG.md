@@ -1,3 +1,17 @@
+## 2025-07-09 16:02:36 - Update CHANGELOG.md to include release notes for v1.5.11
+
+### Changed Files:
+- `.gitignore`
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/block.json`
+- `build/flexible-nav/index.js`
+- `build/flexible-nav/style.css`
+- `flexible-page-navigation.php`
+- `src/block/flexible-breadcrumb/index.js`
+- `src/block/flexible-nav/block.json`
+- `src/block/flexible-nav/index.js`
+- `src/block/flexible-nav/style.css`
+
 ## 2025-07-09 16:02:22 - Fix: Webpack externals and output format - blocks now working correctly
 
 ### Changed Files:

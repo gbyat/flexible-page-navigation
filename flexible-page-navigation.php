@@ -982,6 +982,11 @@ class Flexible_Page_Navigation
         $main_item_font_weight = isset($attributes['mainItemFontWeight']) ? $attributes['mainItemFontWeight'] : '600';
         $main_item_font_size = isset($attributes['mainItemFontSize']) ? intval($attributes['mainItemFontSize']) : 16;
         $main_item_text_color = isset($attributes['mainItemTextColor']) ? $attributes['mainItemTextColor'] : '#333333';
+        $dropdown_max_width = isset($attributes['dropdownMaxWidth']) ? intval($attributes['dropdownMaxWidth']) : 280;
+        $menu_orientation = isset($attributes['menuOrientation']) ? $attributes['menuOrientation'] : 'vertical';
+        $mobile_menu_animation = isset($attributes['mobileMenuAnimation']) ? $attributes['mobileMenuAnimation'] : 'slide';
+        $mobile_breakpoint = isset($attributes['mobileBreakpoint']) ? intval($attributes['mobileBreakpoint']) : 768;
+        $mobile_accordion = isset($attributes['submenuBehavior']) ? (bool)$attributes['submenuBehavior'] : false;
 
         // Get current page ID
         $current_page_id = get_queried_object_id();
@@ -1027,7 +1032,24 @@ class Flexible_Page_Navigation
 
         // Build navigation HTML with unique block ID
         $block_id = 'fpn-block-' . uniqid() . '-v3';
-        $output = '<nav id="' . $block_id . '" class="fpn-navigation fpn-layout-' . esc_attr($column_layout) . '" role="navigation" aria-label="' . __('Page Navigation', 'flexible-page-navigation') . '" data-accordion="' . ($accordion_enabled ? 'true' : 'false') . '" data-columns="' . esc_attr($column_layout) . '" data-hover="' . esc_attr($hover_effect) . '">';
+        $orientation_class = $menu_orientation === 'horizontal' ? 'fpn-orientation-horizontal' : 'fpn-orientation-vertical';
+        $output = '<nav id="' . $block_id . '" class="fpn-navigation ' . esc_attr($orientation_class) . ' fpn-layout-' . esc_attr($column_layout) . '" role="navigation" aria-label="' . __('Page Navigation', 'flexible-page-navigation') . '"'
+            . ' data-orientation="' . esc_attr($menu_orientation) . '"'
+            . ' data-mobile-animation="' . esc_attr($mobile_menu_animation) . '"'
+            . ' data-mobile-breakpoint="' . esc_attr($mobile_breakpoint) . '"'
+            . ' data-mobile-accordion="' . ($mobile_accordion ? 'true' : 'false') . '"'
+            . ' data-accordion="' . ($accordion_enabled ? 'true' : 'false') . '"'
+            . ' data-columns="' . esc_attr($column_layout) . '"'
+            . ' data-hover="' . esc_attr($hover_effect) . '">';
+
+        // Burger-Icon für horizontales Menü im Mobile-Modus
+        if ($menu_orientation === 'horizontal') {
+            $output .= '<button class="fpn-burger" aria-label="' . esc_attr__('Menü öffnen/schließen', 'flexible-page-navigation') . '" aria-expanded="false" aria-controls="' . $block_id . '-menu">'
+                . '<span class="fpn-burger-bar"></span>'
+                . '<span class="fpn-burger-bar"></span>'
+                . '<span class="fpn-burger-bar"></span>'
+                . '</button>';
+        }
 
         // Add inline styles including recursive accordion functionality
         $output .= '<style>';
@@ -1050,9 +1072,6 @@ class Flexible_Page_Navigation
             $output .= '#' . $block_id . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-2, #' . $block_id . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
             $output .= '#' . $block_id . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-2, #' . $block_id . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
         }
-
-        // Toggle button visibility - only for depth 1 and above
-        $output .= '#' . $block_id . ' .fpn-depth-1 .fpn-item.fpn-has-children .fpn-toggle, #' . $block_id . ' .fpn-depth-2 .fpn-item.fpn-has-children .fpn-toggle, #' . $block_id . ' .fpn-depth-3 .fpn-item.fpn-has-children .fpn-toggle, #' . $block_id . ' .fpn-depth-4 .fpn-item.fpn-has-children .fpn-toggle { display: flex !important; }';
 
         // Only add color styles if they are set (not default)
         if ($background_color !== '#f8f9fa' || $text_color !== '#333333' || $active_background_color !== '#007cba' || $active_text_color !== '#ffffff' || $child_active_background_color !== '#e8f4fd' || $child_active_text_color !== '#333333' || $hover_background_color !== 'rgba(0, 0, 0, 0.1)') {
@@ -1096,6 +1115,11 @@ class Flexible_Page_Navigation
         $output .= '#' . $block_id . ' .fpn-depth-3 > .fpn-item > a { padding-left: ' . ($separator_padding * 3) . 'px; }';
         $output .= '#' . $block_id . ' .fpn-depth-4 > .fpn-item > a { padding-left: ' . ($separator_padding * 4) . 'px; }';
 
+        // Apply dropdown max width for horizontal orientation
+        if ($menu_orientation === 'horizontal' && $dropdown_max_width !== 280) {
+            $output .= '#' . $block_id . ' .fpn-list ul, #' . $block_id . ' .fpn-depth-1, #' . $block_id . ' .fpn-depth-2, #' . $block_id . ' .fpn-depth-3, #' . $block_id . ' .fpn-depth-4 { max-width: ' . $dropdown_max_width . 'px; }';
+        }
+
         // Apply border-left only if separator is enabled
         if ($separator_enabled) {
             $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
@@ -1104,6 +1128,20 @@ class Flexible_Page_Navigation
             $output .= '#' . $block_id . ' .fpn-depth-4 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
         } else {
             $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a, #' . $block_id . ' .fpn-depth-2 > .fpn-item > a, #' . $block_id . ' .fpn-depth-3 > .fpn-item > a, #' . $block_id . ' .fpn-depth-4 > .fpn-item > a { border-left: none; }';
+        }
+
+        // Accordion-Toggle-Buttons: Sichtbarkeit abhängig vom Modus
+        $toggle_selector = '#' . $block_id . ' .fpn-depth-1 .fpn-item.fpn-has-children .fpn-toggle, '
+            . '#' . $block_id . ' .fpn-depth-2 .fpn-item.fpn-has-children .fpn-toggle, '
+            . '#' . $block_id . ' .fpn-depth-3 .fpn-item.fpn-has-children .fpn-toggle, '
+            . '#' . $block_id . ' .fpn-depth-4 .fpn-item.fpn-has-children .fpn-toggle';
+        if ($menu_orientation === 'horizontal' && $mobile_accordion) {
+            // Nur im Mobile-Breakpoint anzeigen
+            $output .= '@media (max-width: ' . $mobile_breakpoint . 'px) {' . $toggle_selector . ' { display: flex !important; } }';
+            $output .= '@media (min-width: ' . ($mobile_breakpoint + 1) . 'px) {' . $toggle_selector . ' { display: none !important; } }';
+        } else {
+            // Immer ausblenden
+            $output .= $toggle_selector . ' { display: none !important; }';
         }
 
         $output .= '</style>';

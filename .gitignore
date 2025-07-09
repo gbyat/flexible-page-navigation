@@ -81,4 +81,8 @@ wp-content/plugins/hello.php
 # Plugin specific
 *.zip
 temp/
-release/ 
+release/
+
+# Development documentation
+CHECKPOINT_*.md
+WORKING_CONFIG.md 
