@@ -1,3 +1,12 @@
+## 2025-07-09 16:02:22 - Fix: Webpack externals and output format - blocks now working correctly
+
+### Changed Files:
+- `CHANGELOG.md`
+
+## 2025-07-08 18:48:17 - Release v1.5.11
+
+### Changed Files:
+
 ## 2025-07-08 18:40:53 - 1.5.11
 
 ### Changed Files:
