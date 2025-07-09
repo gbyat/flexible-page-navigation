@@ -1,3 +1,9 @@
+## 2025-07-09 16:04:20 - Enhance flexible navigation and breadcrumb blocks with new attributes for mobile menu animation, dropdown max width, and menu orientation. Update styles for horizontal navigation and improve color selection controls in the editor. Add development documentation to .gitignore.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-07-09 16:02:36 - Update CHANGELOG.md to include release notes for v1.5.11
 
 ### Changed Files:
