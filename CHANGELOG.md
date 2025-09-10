@@ -1,3 +1,9 @@
+## 2025-09-10 13:54:07 - Release v1.6.1
+
+### Changed Files:
+- `package.json`
+- `scripts/release.js`
+
 ## 2025-09-10 13:50:00 - 1.6.1
 
 ### Changed Files:

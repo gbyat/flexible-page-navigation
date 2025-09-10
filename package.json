@@ -11,7 +11,6 @@
     "release:patch": "npm version patch && npm run build:prod && node scripts/release.js",
     "release:minor": "npm version minor && npm run build:prod && node scripts/release.js",
     "release:major": "npm version major && npm run build:prod && node scripts/release.js",
-    "zip": "node scripts/create-release-zip.js",
     "version": "node scripts/sync-version.js"
   },
   "keywords": [
