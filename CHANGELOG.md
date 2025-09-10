@@ -1,3 +1,8 @@
+## 2025-09-10 13:50:00 - 1.6.1
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-09-10 13:49:58 - Refactor navigation HTML attributes for better accessibility and consistency. Remove unnecessary text domain loading and update README with plugin details. Delete obsolete release zip creation script.
 
 ### Changed Files:
