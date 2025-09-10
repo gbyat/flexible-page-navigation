@@ -351,8 +351,6 @@ class Flexible_Page_Navigation
             return;
         }
 
-        load_plugin_textdomain('flexible-page-navigation', false, dirname(plugin_basename(__FILE__)) . '/languages');
-
         // Register blocks in the proper hook to avoid script/style warnings
         add_action('init', array($this, 'register_blocks'));
     }
@@ -935,7 +933,7 @@ class Flexible_Page_Navigation
 
         $separator_style = sprintf('color: %s; margin: 0 %dpx;', $separator_color, $separator_margin);
 
-        $html = '<nav class="wp-block-flexible-page-navigation-flexible-breadcrumb" aria-label="Breadcrumb">';
+        $html = '<nav class="wp-block-flexible-page-navigation-flexible-breadcrumb" aria-label="' . esc_attr__('Breadcrumb', 'flexible-page-navigation') . '">';
         $html .= '<div class="breadcrumb-container" style="' . esc_attr($container_style) . '">';
 
         foreach ($breadcrumb_items as $index => $item) {
@@ -1033,10 +1031,10 @@ class Flexible_Page_Navigation
         // Build navigation HTML with unique block ID
         $block_id = 'fpn-block-' . uniqid() . '-v3';
         $orientation_class = $menu_orientation === 'horizontal' ? 'fpn-orientation-horizontal' : 'fpn-orientation-vertical';
-        $output = '<nav id="' . $block_id . '" class="fpn-navigation ' . esc_attr($orientation_class) . ' fpn-layout-' . esc_attr($column_layout) . '" role="navigation" aria-label="' . __('Page Navigation', 'flexible-page-navigation') . '"'
+        $output = '<nav id="' . esc_attr($block_id) . '" class="fpn-navigation ' . esc_attr($orientation_class) . ' fpn-layout-' . esc_attr($column_layout) . '" role="navigation" aria-label="' . esc_attr__('Page Navigation', 'flexible-page-navigation') . '"'
             . ' data-orientation="' . esc_attr($menu_orientation) . '"'
             . ' data-mobile-animation="' . esc_attr($mobile_menu_animation) . '"'
-            . ' data-mobile-breakpoint="' . esc_attr($mobile_breakpoint) . '"'
+            . ' data-mobile-breakpoint="' . intval($mobile_breakpoint) . '"'
             . ' data-mobile-accordion="' . ($mobile_accordion ? 'true' : 'false') . '"'
             . ' data-accordion="' . ($accordion_enabled ? 'true' : 'false') . '"'
             . ' data-columns="' . esc_attr($column_layout) . '"'
@@ -1044,7 +1042,7 @@ class Flexible_Page_Navigation
 
         // Burger-Icon für horizontales Menü im Mobile-Modus
         if ($menu_orientation === 'horizontal') {
-            $output .= '<button class="fpn-burger" aria-label="' . esc_attr__('Menü öffnen/schließen', 'flexible-page-navigation') . '" aria-expanded="false" aria-controls="' . $block_id . '-menu">'
+            $output .= '<button class="fpn-burger" aria-label="' . esc_attr__('Menu open / close', 'flexible-page-navigation') . '" aria-expanded="false" aria-controls="' . esc_attr($block_id) . '-menu">'
                 . '<span class="fpn-burger-bar"></span>'
                 . '<span class="fpn-burger-bar"></span>'
                 . '<span class="fpn-burger-bar"></span>'
@@ -1057,51 +1055,51 @@ class Flexible_Page_Navigation
         // Recursive accordion CSS - force this to load
         if ($accordion_enabled) {
             // Depth 0 and 1 are always visible, only hide depth 2+ by default
-            $output .= '#' . $block_id . ' .fpn-item .fpn-depth-2, #' . $block_id . ' .fpn-item .fpn-depth-3, #' . $block_id . ' .fpn-item .fpn-depth-4 { display: none !important; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-item .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-4 { display: none !important; }';
             // Show sublevels when parent is expanded - more specific selectors
-            $output .= '#' . $block_id . ' .fpn-item.fpn-expanded > .fpn-depth-2, #' . $block_id . ' .fpn-item.fpn-expanded > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-expanded > .fpn-depth-4 { display: block !important; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-expanded > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-expanded > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-expanded > .fpn-depth-4 { display: block !important; }';
             // Also handle nested expanded items
-            $output .= '#' . $block_id . ' .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-4 { display: block !important; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-4 { display: block !important; }';
         } else {
             // Non-accordion mode: show all items, but hide children of non-active parents
-            $output .= '#' . $block_id . ' .fpn-item .fpn-depth-1, #' . $block_id . ' .fpn-item .fpn-depth-2, #' . $block_id . ' .fpn-item .fpn-depth-3, #' . $block_id . ' .fpn-item .fpn-depth-4 { display: none; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-item .fpn-depth-1, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-4 { display: none; }';
             // Show children of active parents
-            $output .= '#' . $block_id . ' .fpn-item.fpn-active > .fpn-depth-1, #' . $block_id . ' .fpn-item.fpn-active > .fpn-depth-2, #' . $block_id . ' .fpn-item.fpn-active > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
-            $output .= '#' . $block_id . ' .fpn-item.fpn-active-parent > .fpn-depth-1, #' . $block_id . ' .fpn-item.fpn-active-parent > .fpn-depth-2, #' . $block_id . ' .fpn-item.fpn-active-parent > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-active-parent > .fpn-depth-4 { display: block; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-active > .fpn-depth-1, #' . esc_attr($block_id) . ' .fpn-item.fpn-active > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-active > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent > .fpn-depth-1, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent > .fpn-depth-4 { display: block; }';
             // Show children of active children (nested active items)
-            $output .= '#' . $block_id . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-2, #' . $block_id . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
-            $output .= '#' . $block_id . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-2, #' . $block_id . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-3, #' . $block_id . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
         }
 
         // Only add color styles if they are set (not default)
         if ($background_color !== '#f8f9fa' || $text_color !== '#333333' || $active_background_color !== '#007cba' || $active_text_color !== '#ffffff' || $child_active_background_color !== '#e8f4fd' || $child_active_text_color !== '#333333' || $hover_background_color !== 'rgba(0, 0, 0, 0.1)') {
             if ($background_color !== '#f8f9fa') {
-                $output .= '#' . $block_id . ' { background-color: ' . esc_attr($background_color) . '; }';
+                $output .= '#' . esc_attr($block_id) . ' { background-color: ' . esc_attr($background_color) . '; }';
             }
             if ($text_color !== '#333333') {
-                $output .= '#' . $block_id . ' .fpn-item a { color: ' . esc_attr($text_color) . '; }';
+                $output .= '#' . esc_attr($block_id) . ' .fpn-item a { color: ' . esc_attr($text_color) . '; }';
             }
             if ($active_background_color !== '#007cba' || $active_text_color !== '#ffffff') {
-                $output .= '#' . $block_id . ' .fpn-depth-0 > .fpn-item.fpn-active > a { background-color: ' . esc_attr($active_background_color) . '; color: ' . esc_attr($active_text_color) . '; }';
-                $output .= '#' . $block_id . ' .fpn-depth-0 > .fpn-item.fpn-active-parent > a { background-color: ' . esc_attr($active_background_color) . '; color: ' . esc_attr($active_text_color) . '; }';
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item.fpn-active > a { background-color: ' . esc_attr($active_background_color) . '; color: ' . esc_attr($active_text_color) . '; }';
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item.fpn-active-parent > a { background-color: ' . esc_attr($active_background_color) . '; color: ' . esc_attr($active_text_color) . '; }';
             }
             if ($child_active_background_color !== '#e8f4fd' || $child_active_text_color !== '#333333') {
-                $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item.fpn-active > a, #' . $block_id . ' .fpn-depth-2 > .fpn-item.fpn-active > a, #' . $block_id . ' .fpn-depth-3 > .fpn-item.fpn-active > a, #' . $block_id . ' .fpn-depth-4 > .fpn-item.fpn-active > a { background-color: ' . esc_attr($child_active_background_color) . '; color: ' . esc_attr($child_active_text_color) . '; }';
-                $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item.fpn-active-parent > a, #' . $block_id . ' .fpn-depth-2 > .fpn-item.fpn-active-parent > a, #' . $block_id . ' .fpn-depth-3 > .fpn-item.fpn-active-parent > a, #' . $block_id . ' .fpn-depth-4 > .fpn-item.fpn-active-parent > a { background-color: ' . esc_attr($child_active_background_color) . '; color: ' . esc_attr($child_active_text_color) . '; }';
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item.fpn-active > a, #' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item.fpn-active > a, #' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item.fpn-active > a, #' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item.fpn-active > a { background-color: ' . esc_attr($child_active_background_color) . '; color: ' . esc_attr($child_active_text_color) . '; }';
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item.fpn-active-parent > a, #' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item.fpn-active-parent > a, #' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item.fpn-active-parent > a, #' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item.fpn-active-parent > a { background-color: ' . esc_attr($child_active_background_color) . '; color: ' . esc_attr($child_active_text_color) . '; }';
             }
             if ($hover_background_color !== 'rgba(0, 0, 0, 0.1)') {
-                $output .= '#' . $block_id . ' { --fpn-hover-bg: ' . esc_attr($hover_background_color) . '; }';
+                $output .= '#' . esc_attr($block_id) . ' { --fpn-hover-bg: ' . esc_attr($hover_background_color) . '; }';
             }
         }
 
         // Main menu items (depth-0) styling
         if ($main_item_font_weight !== '600' || $main_item_font_size !== 16 || $main_item_text_color !== '#333333') {
-            $output .= '#' . $block_id . ' .fpn-depth-0 > .fpn-item > a {';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a {';
             if ($main_item_font_weight !== '600') {
                 $output .= ' font-weight: ' . esc_attr($main_item_font_weight) . ';';
             }
             if ($main_item_font_size !== 16) {
-                $output .= ' font-size: ' . $main_item_font_size . 'px;';
+                $output .= ' font-size: ' . intval($main_item_font_size) . 'px;';
             }
             if ($main_item_text_color !== '#333333') {
                 $output .= ' color: ' . esc_attr($main_item_text_color) . ';';
@@ -1110,35 +1108,35 @@ class Flexible_Page_Navigation
         }
 
         // Always apply separator and padding styles
-        $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a { padding-left: ' . $separator_padding . 'px; }';
-        $output .= '#' . $block_id . ' .fpn-depth-2 > .fpn-item > a { padding-left: ' . ($separator_padding * 2) . 'px; }';
-        $output .= '#' . $block_id . ' .fpn-depth-3 > .fpn-item > a { padding-left: ' . ($separator_padding * 3) . 'px; }';
-        $output .= '#' . $block_id . ' .fpn-depth-4 > .fpn-item > a { padding-left: ' . ($separator_padding * 4) . 'px; }';
+        $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a { padding-left: ' . intval($separator_padding) . 'px; }';
+        $output .= '#' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a { padding-left: ' . intval($separator_padding * 2) . 'px; }';
+        $output .= '#' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a { padding-left: ' . intval($separator_padding * 3) . 'px; }';
+        $output .= '#' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a { padding-left: ' . intval($separator_padding * 4) . 'px; }';
 
         // Apply dropdown max width for horizontal orientation
         if ($menu_orientation === 'horizontal' && $dropdown_max_width !== 280) {
-            $output .= '#' . $block_id . ' .fpn-list ul, #' . $block_id . ' .fpn-depth-1, #' . $block_id . ' .fpn-depth-2, #' . $block_id . ' .fpn-depth-3, #' . $block_id . ' .fpn-depth-4 { max-width: ' . $dropdown_max_width . 'px; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-list ul, #' . esc_attr($block_id) . ' .fpn-depth-1, #' . esc_attr($block_id) . ' .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-depth-4 { max-width: ' . intval($dropdown_max_width) . 'px; }';
         }
 
         // Apply border-left only if separator is enabled
         if ($separator_enabled) {
-            $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
-            $output .= '#' . $block_id . ' .fpn-depth-2 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
-            $output .= '#' . $block_id . ' .fpn-depth-3 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
-            $output .= '#' . $block_id . ' .fpn-depth-4 > .fpn-item > a { border-left: ' . $separator_width . 'px solid ' . esc_attr($separator_color) . '; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a { border-left: ' . intval($separator_width) . 'px solid ' . esc_attr($separator_color) . '; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a { border-left: ' . intval($separator_width) . 'px solid ' . esc_attr($separator_color) . '; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a { border-left: ' . intval($separator_width) . 'px solid ' . esc_attr($separator_color) . '; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a { border-left: ' . intval($separator_width) . 'px solid ' . esc_attr($separator_color) . '; }';
         } else {
-            $output .= '#' . $block_id . ' .fpn-depth-1 > .fpn-item > a, #' . $block_id . ' .fpn-depth-2 > .fpn-item > a, #' . $block_id . ' .fpn-depth-3 > .fpn-item > a, #' . $block_id . ' .fpn-depth-4 > .fpn-item > a { border-left: none; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a, #' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a, #' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a, #' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a { border-left: none; }';
         }
 
         // Accordion-Toggle-Buttons: Sichtbarkeit abhängig vom Modus
-        $toggle_selector = '#' . $block_id . ' .fpn-depth-1 .fpn-item.fpn-has-children .fpn-toggle, '
-            . '#' . $block_id . ' .fpn-depth-2 .fpn-item.fpn-has-children .fpn-toggle, '
-            . '#' . $block_id . ' .fpn-depth-3 .fpn-item.fpn-has-children .fpn-toggle, '
-            . '#' . $block_id . ' .fpn-depth-4 .fpn-item.fpn-has-children .fpn-toggle';
+        $toggle_selector = '#' . esc_attr($block_id) . ' .fpn-depth-1 .fpn-item.fpn-has-children .fpn-toggle, '
+            . '#' . esc_attr($block_id) . ' .fpn-depth-2 .fpn-item.fpn-has-children .fpn-toggle, '
+            . '#' . esc_attr($block_id) . ' .fpn-depth-3 .fpn-item.fpn-has-children .fpn-toggle, '
+            . '#' . esc_attr($block_id) . ' .fpn-depth-4 .fpn-item.fpn-has-children .fpn-toggle';
         if ($menu_orientation === 'horizontal' && $mobile_accordion) {
             // Nur im Mobile-Breakpoint anzeigen
-            $output .= '@media (max-width: ' . $mobile_breakpoint . 'px) {' . $toggle_selector . ' { display: flex !important; } }';
-            $output .= '@media (min-width: ' . ($mobile_breakpoint + 1) . 'px) {' . $toggle_selector . ' { display: none !important; } }';
+            $output .= '@media (max-width: ' . intval($mobile_breakpoint) . 'px) {' . $toggle_selector . ' { display: flex !important; } }';
+            $output .= '@media (min-width: ' . intval($mobile_breakpoint + 1) . 'px) {' . $toggle_selector . ' { display: none !important; } }';
         } else {
             // Immer ausblenden
             $output .= $toggle_selector . ' { display: none !important; }';
@@ -1163,12 +1161,12 @@ class Flexible_Page_Navigation
         $list_attributes = array('class="fpn-list fpn-depth-' . $current_depth . '"');
 
         if ($list_id) {
-            $list_attributes[] = 'id="' . $list_id . '"';
+            $list_attributes[] = 'id="' . esc_attr($list_id) . '"';
         }
 
         if ($current_depth > 0) {
             $list_attributes[] = 'role="group"';
-            $list_attributes[] = 'aria-label="' . __('Submenu', 'flexible-page-navigation') . '"';
+            $list_attributes[] = 'aria-label="' . esc_attr__('Submenu', 'flexible-page-navigation') . '"';
         }
 
         $output = '<ul ' . implode(' ', $list_attributes) . '>';
@@ -1187,7 +1185,7 @@ class Flexible_Page_Navigation
             // Apply active padding as inline style
             $active_style = '';
             if ($current_depth === 0 && ($is_active || $is_parent_active)) {
-                $active_style = ' style="padding: ' . $active_padding . 'px;"';
+                $active_style = ' style="padding: ' . intval($active_padding) . 'px;"';
             }
 
             $classes = array('fpn-item');

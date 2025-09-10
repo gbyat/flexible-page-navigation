@@ -1,3 +1,9 @@
+## 2025-09-10 13:49:45 - Release v1.6.0
+
+### Changed Files:
+- `README.md`
+- `flexible-page-navigation.php`
+
 ## 2025-07-09 16:04:22 - 1.6.0
 
 ### Changed Files:

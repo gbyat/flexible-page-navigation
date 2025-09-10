@@ -1,5 +1,18 @@
 # Flexible Page Navigation
 
+**Contributors:** webentwicklerin  
+**Tags:** navigation, blocks, fse  
+**Requires at least:** 5.0  
+**Tested up to:** 6.8  
+**Requires PHP:** 7.4  
+**Stable tag:** 1.0.0  
+**License:** GPLv2 or later  
+**License URI:** https://www.gnu.org/licenses/gpl-2.0.html
+
+Ein WordPress-Plugin für flexible Seiten-Navigation
+
+## Description
+
 Ein WordPress-Plugin für flexible Seiten-Navigation - entwickelt als Test- und Trainingsprojekt für moderne WordPress-Plugin-Entwicklung mit automatischem GitHub-Update-System, CI/CD-Pipeline und moderner Entwicklungsumgebung.
 
 > **Hinweis**: Dieses Plugin wurde als Lernprojekt entwickelt, um moderne WordPress-Plugin-Entwicklung, GitHub Actions, CI/CD-Pipelines und Gutenberg-Block-Entwicklung zu erlernen und zu testen. Es ist funktional und einsatzbereit, aber primär für Bildungszwecke konzipiert.
