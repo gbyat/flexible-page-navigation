@@ -1,3 +1,9 @@
+## 2025-09-10 14:27:47 - 1.6.3
+
+### Changed Files:
+- `build/flexible-nav/style.css`
+- `flexible-page-navigation.php`
+
 ## 2025-09-10 14:27:46 - Refactor flexible navigation styles and logic to improve column layout handling and toggle button visibility. Update CSS classes for better clarity and ensure toggle buttons are shown only for the deepest visible level with children.
 
 ### Changed Files:

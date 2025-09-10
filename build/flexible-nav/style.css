@@ -234,7 +234,7 @@
     display: none; /* Hide by default */
 }
 
-/* Show toggle buttons for depth 1+ items with children */
+/* Show toggle buttons only for the deepest visible level with children */
 .fpn-depth-1 .fpn-item.fpn-has-children .fpn-toggle,
 .fpn-depth-2 .fpn-item.fpn-has-children .fpn-toggle,
 .fpn-depth-3 .fpn-item.fpn-has-children .fpn-toggle,
