@@ -1,3 +1,9 @@
+## 2025-09-10 13:56:32 - Remove release zip creation script from package.json and release.js to streamline the release process.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-09-10 13:54:07 - Release v1.6.1
 
 ### Changed Files:
