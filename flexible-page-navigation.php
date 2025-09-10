@@ -4,7 +4,7 @@
  * Plugin Name: Flexible Page Navigation
  * Plugin URI: https://github.com/gbyat/flexible-page-navigation
  * Description: A flexible page navigation block for WordPress with customizable content types, sorting, depth, and child selection options.
- * Version: 1.6.3
+ * Version: 1.6.4
  * Requires at least: 5.0
  * Tested up to: 6.4
  * Author: Gabriele Laesser
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Plugin constants
-define('FPN_VERSION', '1.6.3');
+define('FPN_VERSION', '1.6.4');
 define('FPN_PLUGIN_FILE', __FILE__);
 define('FPN_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('FPN_PLUGIN_URL', plugin_dir_url(__FILE__));

@@ -1,3 +1,10 @@
+## 2025-09-10 16:28:54 - 1.6.4
+
+### Changed Files:
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/index.js`
+- `flexible-page-navigation.php`
+
 ## 2025-09-10 16:28:52 - Enhance flexible navigation with burger menu functionality and improved CSS for mobile responsiveness. Update script to initialize burger menu and adjust styles for better alignment and visibility of navigation elements.
 
 ### Changed Files:
