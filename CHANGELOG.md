@@ -1,3 +1,9 @@
+## 2025-09-10 13:49:58 - Refactor navigation HTML attributes for better accessibility and consistency. Remove unnecessary text domain loading and update README with plugin details. Delete obsolete release zip creation script.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-09-10 13:49:45 - Release v1.6.0
 
 ### Changed Files:
