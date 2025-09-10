@@ -1,3 +1,9 @@
+## 2025-09-10 14:27:46 - Refactor flexible navigation styles and logic to improve column layout handling and toggle button visibility. Update CSS classes for better clarity and ensure toggle buttons are shown only for the deepest visible level with children.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-09-10 14:27:31 - Release v1.6.2
 
 ### Changed Files:
