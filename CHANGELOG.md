@@ -1,3 +1,8 @@
+## 2025-09-10 13:56:34 - 1.6.2
+
+### Changed Files:
+- `flexible-page-navigation.php`
+
 ## 2025-09-10 13:56:32 - Remove release zip creation script from package.json and release.js to streamline the release process.
 
 ### Changed Files:
