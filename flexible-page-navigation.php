@@ -1037,7 +1037,8 @@ class Flexible_Page_Navigation
             . ' data-mobile-breakpoint="' . intval($mobile_breakpoint) . '"'
             . ' data-mobile-accordion="' . ($mobile_accordion ? 'true' : 'false') . '"'
             . ' data-accordion="' . ($accordion_enabled ? 'true' : 'false') . '"'
-            . ' data-columns="' . esc_attr($column_layout) . '"'
+            . ' data-?
+            ="' . esc_attr($column_layout) . '"'
             . ' data-hover="' . esc_attr($hover_effect) . '">';
 
         // Burger-Icon für horizontales Menü im Mobile-Modus
@@ -1133,6 +1134,7 @@ class Flexible_Page_Navigation
             . '#' . esc_attr($block_id) . ' .fpn-depth-2 .fpn-item.fpn-has-children .fpn-toggle, '
             . '#' . esc_attr($block_id) . ' .fpn-depth-3 .fpn-item.fpn-has-children .fpn-toggle, '
             . '#' . esc_attr($block_id) . ' .fpn-depth-4 .fpn-item.fpn-has-children .fpn-toggle';
+
         if ($menu_orientation === 'horizontal' && $mobile_accordion) {
             // Nur im Mobile-Breakpoint anzeigen
             $output .= '@media (max-width: ' . intval($mobile_breakpoint) . 'px) {' . $toggle_selector . ' { display: flex !important; } }';
@@ -1140,6 +1142,13 @@ class Flexible_Page_Navigation
         } else {
             // Immer ausblenden
             $output .= $toggle_selector . ' { display: none !important; }';
+        }
+
+        // Show toggle buttons only for the deepest visible level when accordion is enabled
+        if ($accordion_enabled) {
+            $deepest_level = $depth - 1; // depth is max_depth, so deepest visible is depth-1
+            $deepest_toggle_selector = '#' . esc_attr($block_id) . ' .fpn-depth-' . $deepest_level . ' .fpn-item.fpn-has-children .fpn-toggle';
+            $output .= $deepest_toggle_selector . ' { display: flex !important; }';
         }
 
         $output .= '</style>';
@@ -1226,9 +1235,9 @@ class Flexible_Page_Navigation
 
             $output .= '<a ' . implode(' ', $link_attributes) . '>' . esc_html($page->post_title) . '</a>';
 
-            // Add toggle button for items with children when accordion is enabled, but only for depth 1 and above
-            // AND only if the children will actually be displayed (within depth limit)
-            if ($this->has_children($page->ID, $page->post_type) && $accordion_enabled && $current_depth >= 1 && $current_depth < $max_depth - 1) {
+            // Add toggle button for items with children when accordion is enabled
+            // BUT ONLY for the deepest visible level that has children
+            if ($this->has_children($page->ID, $page->post_type) && $accordion_enabled && $current_depth >= 1 && $current_depth === $max_depth - 1) {
                 $toggle_label = sprintf(
                     __('Toggle submenu for %s', 'flexible-page-navigation'),
                     esc_attr($page->post_title)

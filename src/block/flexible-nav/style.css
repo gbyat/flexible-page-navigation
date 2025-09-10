@@ -234,7 +234,7 @@
     display: none; /* Hide by default */
 }
 
-/* Show toggle buttons for depth 1+ items with children */
+/* Show toggle buttons only for the deepest visible level with children */
 .fpn-depth-1 .fpn-item.fpn-has-children .fpn-toggle,
 .fpn-depth-2 .fpn-item.fpn-has-children .fpn-toggle,
 .fpn-depth-3 .fpn-item.fpn-has-children .fpn-toggle,
@@ -381,19 +381,23 @@
 }
 
 /* Column Layout Styles */
-.fpn-navigation.fpn-layout-2-columns .fpn-depth-0 {
+.fpn-navigation.fpn-layout-single .fpn-depth-0 {
+    display: block;
+}
+
+.fpn-navigation.fpn-layout-two-columns .fpn-depth-0 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
 }
 
-.fpn-navigation.fpn-layout-3-columns .fpn-depth-0 {
+.fpn-navigation.fpn-layout-three-columns .fpn-depth-0 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 2rem;
 }
 
-.fpn-navigation.fpn-layout-4-columns .fpn-depth-0 {
+.fpn-navigation.fpn-layout-four-columns .fpn-depth-0 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 1.5rem;
@@ -401,16 +405,16 @@
 
 /* Responsive column layouts */
 @media (max-width: 768px) {
-    .fpn-navigation.fpn-layout-2-columns .fpn-depth-0,
-    .fpn-navigation.fpn-layout-3-columns .fpn-depth-0,
-    .fpn-navigation.fpn-layout-4-columns .fpn-depth-0 {
+    .fpn-navigation.fpn-layout-two-columns .fpn-depth-0,
+    .fpn-navigation.fpn-layout-three-columns .fpn-depth-0,
+    .fpn-navigation.fpn-layout-four-columns .fpn-depth-0 {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
 }
 
 @media (max-width: 1024px) and (min-width: 769px) {
-    .fpn-navigation.fpn-layout-4-columns .fpn-depth-0 {
+    .fpn-navigation.fpn-layout-four-columns .fpn-depth-0 {
         grid-template-columns: 1fr 1fr;
         gap: 1.5rem;
     }

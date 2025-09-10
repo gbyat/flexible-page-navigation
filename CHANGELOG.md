@@ -1,3 +1,10 @@
+## 2025-09-10 14:27:31 - Release v1.6.2
+
+### Changed Files:
+- `build/flexible-nav/style.css`
+- `flexible-page-navigation.php`
+- `src/block/flexible-nav/style.css`
+
 ## 2025-09-10 13:56:34 - 1.6.2
 
 ### Changed Files:
