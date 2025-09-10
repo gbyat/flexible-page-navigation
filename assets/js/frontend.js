@@ -8,6 +8,7 @@
     // Initialize accordion functionality when DOM is ready
     document.addEventListener('DOMContentLoaded', function () {
         initializeAccordion();
+        initializeBurgerMenu();
     });
 
     /**
@@ -58,8 +59,8 @@
                 }
             });
 
-            // Auto-expand active items and their parents (only for items with toggle buttons)
-            autoExpandActiveItems(navigation);
+            // Do not auto-expand on init for accordion navigations; just sync toggle states (show plus by default)
+            updateToggleButtonStates(navigation);
         });
 
         // Handle non-accordion navigation (accordion=false)
@@ -283,6 +284,67 @@
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };
+    }
+
+    /**
+     * Initialize burger toggle for horizontal menus
+     */
+    function initializeBurgerMenu() {
+        const burgers = document.querySelectorAll('.fpn-navigation.fpn-orientation-horizontal .fpn-burger');
+
+        burgers.forEach(function (burger) {
+            const navigation = burger.closest('.fpn-navigation.fpn-orientation-horizontal');
+            if (!navigation) return;
+
+            const getBreakpoint = () => {
+                const attr = navigation.getAttribute('data-mobile-breakpoint');
+                const parsed = parseInt(attr, 10);
+                return Number.isFinite(parsed) ? parsed : 900;
+            };
+
+            const closeMenu = () => {
+                navigation.classList.remove('fpn-mobile-open');
+                burger.setAttribute('aria-expanded', 'false');
+            };
+
+            const openMenu = () => {
+                navigation.classList.add('fpn-mobile-open');
+                burger.setAttribute('aria-expanded', 'true');
+            };
+
+            const toggleMenu = () => {
+                // Only toggle under or equal to breakpoint width
+                if (window.innerWidth <= getBreakpoint()) {
+                    if (navigation.classList.contains('fpn-mobile-open')) {
+                        closeMenu();
+                    } else {
+                        openMenu();
+                    }
+                }
+            };
+
+            // Click/keyboard handlers
+            burger.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleMenu();
+            });
+
+            burger.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleMenu();
+                }
+            });
+
+            // On resize above breakpoint, ensure menu is closed
+            window.addEventListener('resize', debounce(function () {
+                if (window.innerWidth > getBreakpoint()) {
+                    closeMenu();
+                }
+            }, 150));
+        });
     }
 
     /**

@@ -774,9 +774,17 @@ class Flexible_Page_Navigation
 
     public function enqueue_frontend_scripts()
     {
+        // Enqueue individual block CSS files
         wp_enqueue_style(
-            'flexible-page-navigation-style',
-            FPN_PLUGIN_URL . 'build/style.css',
+            'flexible-nav-style',
+            FPN_PLUGIN_URL . 'build/flexible-nav/style.css',
+            array(),
+            FPN_VERSION
+        );
+
+        wp_enqueue_style(
+            'flexible-breadcrumb-style',
+            FPN_PLUGIN_URL . 'build/flexible-breadcrumb/style.css',
             array(),
             FPN_VERSION
         );
@@ -955,7 +963,7 @@ class Flexible_Page_Navigation
 
     public function render_navigation_block($attributes)
     {
-        $content_type = isset($attributes['contentType']) ? $attributes['contentType'] : 'pages';
+        $content_type = isset($attributes['contentType']) ? $attributes['contentType'] : 'page';
         $sort_by = isset($attributes['sortBy']) ? $attributes['sortBy'] : 'menu_order';
         $sort_order = isset($attributes['sortOrder']) ? $attributes['sortOrder'] : 'ASC';
         $depth = isset($attributes['depth']) ? intval($attributes['depth']) : 3;
@@ -989,17 +997,11 @@ class Flexible_Page_Navigation
         // Get current page ID
         $current_page_id = get_queried_object_id();
 
-        // Get pages based on menu display mode
+        // Get pages based on child selection only (ignore deprecated menuDisplayMode)
         $pages = array();
-        if ($menu_display_mode === 'children') {
-            // Show children only
-            $nav_parent_id = 0;
-            if ($child_selection === 'custom' && $parent_page_id > 0) {
-                $nav_parent_id = $parent_page_id;
-            } elseif ($child_selection === 'current') {
-                $nav_parent_id = $current_page_id;
-            }
 
+        if ($child_selection === 'current') {
+            $nav_parent_id = $current_page_id;
             if ($nav_parent_id > 0) {
                 $pages = get_posts(array(
                     'post_type' => $content_type,
@@ -1007,21 +1009,38 @@ class Flexible_Page_Navigation
                     'posts_per_page' => -1,
                     'orderby' => $sort_by,
                     'order' => $sort_order,
-                    'hierarchical' => true,
                     'post_parent' => $nav_parent_id,
                 ));
             }
-        } else {
-            // Show all items - get only top-level items to avoid duplicates
+        } elseif ($child_selection === 'custom' && $parent_page_id > 0) {
             $pages = get_posts(array(
                 'post_type' => $content_type,
                 'post_status' => 'publish',
                 'posts_per_page' => -1,
                 'orderby' => $sort_by,
                 'order' => $sort_order,
-                'hierarchical' => true,
-                'post_parent' => 0, // Only top-level items
+                'post_parent' => $parent_page_id,
             ));
+        } else { // 'all' or any other value
+            $pages = get_posts(array(
+                'post_type' => $content_type,
+                'post_status' => 'publish',
+                'posts_per_page' => -1,
+                'orderby' => $sort_by,
+                'order' => $sort_order,
+                'post_parent' => 0,
+            ));
+
+            // Fallback: if nothing found at top level, drop parent constraint
+            if (empty($pages)) {
+                $pages = get_posts(array(
+                    'post_type' => $content_type,
+                    'post_status' => 'publish',
+                    'posts_per_page' => -1,
+                    'orderby' => $sort_by,
+                    'order' => $sort_order,
+                ));
+            }
         }
 
         if (empty($pages)) {
@@ -1031,14 +1050,14 @@ class Flexible_Page_Navigation
         // Build navigation HTML with unique block ID
         $block_id = 'fpn-block-' . uniqid() . '-v3';
         $orientation_class = $menu_orientation === 'horizontal' ? 'fpn-orientation-horizontal' : 'fpn-orientation-vertical';
-        $output = '<nav id="' . esc_attr($block_id) . '" class="fpn-navigation ' . esc_attr($orientation_class) . ' fpn-layout-' . esc_attr($column_layout) . '" role="navigation" aria-label="' . esc_attr__('Page Navigation', 'flexible-page-navigation') . '"'
+        $layout_class = $menu_orientation === 'vertical' ? ' fpn-layout-' . esc_attr($column_layout) : '';
+        $output = '<nav id="' . esc_attr($block_id) . '" class="fpn-navigation ' . esc_attr($orientation_class) . $layout_class . '" role="navigation" aria-label="' . esc_attr__('Page Navigation', 'flexible-page-navigation') . '"'
             . ' data-orientation="' . esc_attr($menu_orientation) . '"'
             . ' data-mobile-animation="' . esc_attr($mobile_menu_animation) . '"'
             . ' data-mobile-breakpoint="' . intval($mobile_breakpoint) . '"'
             . ' data-mobile-accordion="' . ($mobile_accordion ? 'true' : 'false') . '"'
             . ' data-accordion="' . ($accordion_enabled ? 'true' : 'false') . '"'
-            . ' data-?
-            ="' . esc_attr($column_layout) . '"'
+            . ' data-columns="' . esc_attr($column_layout) . '"'
             . ' data-hover="' . esc_attr($hover_effect) . '">';
 
         // Burger-Icon für horizontales Menü im Mobile-Modus
@@ -1129,26 +1148,45 @@ class Flexible_Page_Navigation
             $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a, #' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a, #' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a, #' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a { border-left: none; }';
         }
 
+        // Column layout for vertical orientation (top-level only)
+        if ($menu_orientation === 'vertical') {
+            $top_level_selector = '#' . esc_attr($block_id) . ' > .fpn-list.fpn-depth-0';
+            if ($column_layout === 'two-columns') {
+                $output .= $top_level_selector . ' { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; }';
+                $output .= '@media (max-width: ' . intval($mobile_breakpoint) . 'px) { ' . $top_level_selector . ' { grid-template-columns: 1fr; gap: 1rem; } }';
+            } elseif ($column_layout === 'three-columns') {
+                $output .= $top_level_selector . ' { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; }';
+                $output .= '@media (max-width: ' . intval($mobile_breakpoint) . 'px) { ' . $top_level_selector . ' { grid-template-columns: 1fr; gap: 1rem; } }';
+            } elseif ($column_layout === 'four-columns') {
+                $output .= $top_level_selector . ' { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; }';
+                $output .= '@media (max-width: ' . intval($mobile_breakpoint) . 'px) { ' . $top_level_selector . ' { grid-template-columns: 1fr; gap: 1rem; } }';
+                $output .= '@media (min-width: ' . intval($mobile_breakpoint + 1) . 'px) and (max-width: 1024px) { ' . $top_level_selector . ' { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; } }';
+            }
+        }
+
         // Accordion-Toggle-Buttons: Sichtbarkeit abhängig vom Modus
         $toggle_selector = '#' . esc_attr($block_id) . ' .fpn-depth-1 .fpn-item.fpn-has-children .fpn-toggle, '
             . '#' . esc_attr($block_id) . ' .fpn-depth-2 .fpn-item.fpn-has-children .fpn-toggle, '
             . '#' . esc_attr($block_id) . ' .fpn-depth-3 .fpn-item.fpn-has-children .fpn-toggle, '
             . '#' . esc_attr($block_id) . ' .fpn-depth-4 .fpn-item.fpn-has-children .fpn-toggle';
 
-        if ($menu_orientation === 'horizontal' && $mobile_accordion) {
-            // Nur im Mobile-Breakpoint anzeigen
-            $output .= '@media (max-width: ' . intval($mobile_breakpoint) . 'px) {' . $toggle_selector . ' { display: flex !important; } }';
-            $output .= '@media (min-width: ' . intval($mobile_breakpoint + 1) . 'px) {' . $toggle_selector . ' { display: none !important; } }';
+        if ($menu_orientation === 'horizontal') {
+            if ($mobile_accordion) {
+                // Im Mobile-Breakpoint anzeigen, darüber ausblenden
+                $output .= '@media (max-width: ' . intval($mobile_breakpoint) . 'px) {' . $toggle_selector . ' { display: flex !important; } }';
+                $output .= '@media (min-width: ' . intval($mobile_breakpoint + 1) . 'px) {' . $toggle_selector . ' { display: none !important; } }';
+            } else {
+                // Horizontal ohne Mobile-Accordion: nie zeigen
+                $output .= $toggle_selector . ' { display: none !important; }';
+            }
         } else {
-            // Immer ausblenden
-            $output .= $toggle_selector . ' { display: none !important; }';
+            // Vertikal: immer zeigen (Accordion-Modus)
+            $output .= $toggle_selector . ' { display: flex !important; }';
         }
 
         // Show toggle buttons only for the deepest visible level when accordion is enabled
         if ($accordion_enabled) {
-            $deepest_level = $depth - 1; // depth is max_depth, so deepest visible is depth-1
-            $deepest_toggle_selector = '#' . esc_attr($block_id) . ' .fpn-depth-' . $deepest_level . ' .fpn-item.fpn-has-children .fpn-toggle';
-            $output .= $deepest_toggle_selector . ' { display: flex !important; }';
+            // Removed deepest-level-only override to always show toggles on depths 1-4 per CSS
         }
 
         $output .= '</style>';
@@ -1236,8 +1274,8 @@ class Flexible_Page_Navigation
             $output .= '<a ' . implode(' ', $link_attributes) . '>' . esc_html($page->post_title) . '</a>';
 
             // Add toggle button for items with children when accordion is enabled
-            // BUT ONLY for the deepest visible level that has children
-            if ($this->has_children($page->ID, $page->post_type) && $accordion_enabled && $current_depth >= 1 && $current_depth === $max_depth - 1) {
+            // AND only if the children will actually be displayed (within depth limit)
+            if ($this->has_children($page->ID, $page->post_type) && $accordion_enabled && $current_depth >= 1 && $current_depth < $max_depth - 1) {
                 $toggle_label = sprintf(
                     __('Toggle submenu for %s', 'flexible-page-navigation'),
                     esc_attr($page->post_title)

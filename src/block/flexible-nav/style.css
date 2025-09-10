@@ -445,7 +445,7 @@
 .fpn-navigation.fpn-orientation-horizontal {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
     position: relative;
     width: 100%;
@@ -454,7 +454,7 @@
 .fpn-navigation.fpn-orientation-horizontal > ul {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -509,9 +509,36 @@
     width: 28px;
     height: 4px;
     background: #333;
-    margin: 4px 0;
     border-radius: 2px;
     transition: all 0.3s;
+    transform-origin: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: 0;
+}
+
+/* Initial positioning for burger bars */
+.fpn-navigation.fpn-orientation-horizontal .fpn-burger-bar:nth-child(1) {
+    transform: translate(-50%, -8px);
+}
+.fpn-navigation.fpn-orientation-horizontal .fpn-burger-bar:nth-child(2) {
+    transform: translate(-50%, -50%);
+}
+.fpn-navigation.fpn-orientation-horizontal .fpn-burger-bar:nth-child(3) {
+    transform: translate(-50%, 4px);
+}
+
+/* Burger to X transformation */
+.fpn-navigation.fpn-orientation-horizontal.fpn-mobile-open .fpn-burger-bar:nth-child(1) {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+.fpn-navigation.fpn-orientation-horizontal.fpn-mobile-open .fpn-burger-bar:nth-child(2) {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleX(0);
+}
+.fpn-navigation.fpn-orientation-horizontal.fpn-mobile-open .fpn-burger-bar:nth-child(3) {
+    transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 /* --- Accordion-Toggle nur im Mobile-Accordion-Modus sichtbar --- */
@@ -617,6 +644,7 @@
     .fpn-navigation.fpn-orientation-horizontal > ul {
         display: none;
         flex-direction: column;
+        align-items: flex-start;
         position: absolute;
         top: 100%;
         left: 0;

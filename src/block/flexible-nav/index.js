@@ -13,6 +13,7 @@ import {
     TextControl,
     RangeControl,
     Dropdown,
+    NumberControl,
 } from '@wordpress/components';
 import { useState, useEffect } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
@@ -283,11 +284,12 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                         />
 
                         {childSelection === 'custom' && (
-                            <TextControl
+                            <NumberControl
                                 label={__('Parent Page ID', 'flexible-page-navigation')}
-                                type="number"
                                 value={parentPageId}
-                                onChange={(value) => setAttributes({ parentPageId: parseInt(value) || 0 })}
+                                onChange={(value) => setAttributes({ parentPageId: Number(value) || 0 })}
+                                min={1}
+                                step={1}
                                 help={__('Enter the ID of the parent page to show its children', 'flexible-page-navigation')}
                             />
                         )}

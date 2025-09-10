@@ -1,3 +1,14 @@
+## 2025-09-10 16:28:32 - Release v1.6.3
+
+### Changed Files:
+- `assets/js/frontend.js`
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/index.js`
+- `build/flexible-nav/style.css`
+- `flexible-page-navigation.php`
+- `src/block/flexible-nav/index.js`
+- `src/block/flexible-nav/style.css`
+
 ## 2025-09-10 14:27:47 - 1.6.3
 
 ### Changed Files:
