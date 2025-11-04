@@ -1,3 +1,9 @@
+## 2025-11-04 13:08:41 - Update flexible navigation blocks to support new vertical and horizontal layouts, enhance accessibility with improved ARIA attributes, and ensure proper escaping for translatable strings. Add new block registration and asset enqueuing for vertical and horizontal navigation blocks. Update README to reflect new features and deprecate the old block.
+
+### Changed Files:
+- `package-lock.json`
+- `package.json`
+
 ## 2025-11-04 13:08:27 - Release v1.6.4
 
 ### Changed Files:
