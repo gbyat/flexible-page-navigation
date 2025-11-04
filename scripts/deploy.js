@@ -4,6 +4,7 @@ const path = require('path');
 // Configuration
 const buildDir = path.join(__dirname, '..', 'build');
 const assetsDir = path.join(__dirname, '..', 'assets', 'js');
+const languagesDir = path.join(__dirname, '..', 'languages');
 const targetDir = 'C:\\inetpub\\wwwroot\\wp_familieplus\\wp-content\\plugins\\flexible-page-navigation';
 
 // Documentation files to copy
@@ -36,6 +37,11 @@ async function deploy() {
         console.log('📁 Copying assets/js...');
         await fs.copy(assetsDir, path.join(targetDir, 'assets', 'js'));
         console.log('✅ Copied assets/js/');
+
+        // Copy languages directory
+        console.log('📁 Copying languages directory...');
+        await fs.copy(languagesDir, path.join(targetDir, 'languages'));
+        console.log('✅ Copied languages/');
 
         // Copy documentation files
         console.log('📁 Copying documentation...');

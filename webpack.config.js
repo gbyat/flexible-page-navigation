@@ -10,6 +10,8 @@ module.exports = (env, argv) => {
         entry: {
             'flexible-nav/index': './src/block/flexible-nav/index.js',
             'flexible-breadcrumb/index': './src/block/flexible-breadcrumb/index.js',
+            'flexible-nav-vertical/index': './src/block/flexible-nav-vertical/index.js',
+            'flexible-nav-horizontal/index': './src/block/flexible-nav-horizontal/index.js',
         },
         output: {
             path: path.resolve(__dirname, 'build'),
@@ -75,6 +77,32 @@ module.exports = (env, argv) => {
                     {
                         from: 'src/block/flexible-breadcrumb/style.css',
                         to: 'flexible-breadcrumb/style.css',
+                    },
+                    // Flexible Nav Vertical Block
+                    {
+                        from: 'src/block/flexible-nav-vertical/block.json',
+                        to: 'flexible-nav-vertical/block.json',
+                    },
+                    {
+                        from: 'src/block/flexible-nav-vertical/index.css',
+                        to: 'flexible-nav-vertical/index.css',
+                    },
+                    {
+                        from: 'src/block/flexible-nav-vertical/style.css',
+                        to: 'flexible-nav-vertical/style.css',
+                    },
+                    // Flexible Nav Horizontal Block
+                    {
+                        from: 'src/block/flexible-nav-horizontal/block.json',
+                        to: 'flexible-nav-horizontal/block.json',
+                    },
+                    {
+                        from: 'src/block/flexible-nav-horizontal/index.css',
+                        to: 'flexible-nav-horizontal/index.css',
+                    },
+                    {
+                        from: 'src/block/flexible-nav-horizontal/style.css',
+                        to: 'flexible-nav-horizontal/style.css',
                     },
                 ],
             }),

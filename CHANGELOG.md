@@ -1,3 +1,34 @@
+## 2025-11-04 13:08:27 - Release v1.6.4
+
+### Changed Files:
+- `.github/workflows/release.yml`
+- `README.md`
+- `assets/js/frontend.js`
+- `build/flexible-breadcrumb/block.json`
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav/block.json`
+- `build/flexible-nav/index.js`
+- `build/flexible-nav/style.css`
+- `flexible-page-navigation.php`
+- `languages/flexible-page-navigation.pot`
+- `package-lock.json`
+- `package.json`
+- `scripts/deploy.js`
+- `scripts/generate-pot.js`
+- `src/block/flexible-breadcrumb/block.json`
+- `src/block/flexible-nav-horizontal/block.json`
+- `src/block/flexible-nav-horizontal/index.css`
+- `src/block/flexible-nav-horizontal/index.js`
+- `src/block/flexible-nav-horizontal/style.css`
+- `src/block/flexible-nav-vertical/block.json`
+- `src/block/flexible-nav-vertical/index.css`
+- `src/block/flexible-nav-vertical/index.js`
+- `src/block/flexible-nav-vertical/style.css`
+- `src/block/flexible-nav/block.json`
+- `src/block/flexible-nav/index.js`
+- `src/block/flexible-nav/style.css`
+- `webpack.config.js`
+
 ## 2025-09-10 16:28:54 - 1.6.4
 
 ### Changed Files:

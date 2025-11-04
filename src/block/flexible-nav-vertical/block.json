@@ -1,0 +1,17 @@
+{
+  "apiVersion": 3,
+  "name": "flexible-page-navigation/flexible-nav-vertical",
+  "title": "Flexible Nav (Vertical)",
+  "category": "widgets",
+  "icon": "admin-links",
+  "description": "Vertical page navigation with accordion and column layouts.",
+  "textdomain": "flexible-page-navigation",
+  "attributes": {
+    "menuOrientation": { "type": "string", "default": "vertical" }
+  },
+  "editorScript": ["file:./index.js"],
+  "editorStyle": ["file:./index.css"],
+  "style": ["file:./style.css"]
+}
+
+

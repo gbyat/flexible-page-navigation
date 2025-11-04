@@ -77,8 +77,8 @@
      */
     function toggleAccordion(item) {
         const isExpanded = item.classList.contains('fpn-expanded');
-        console.log('Toggling item:', item);
-        console.log('Is expanded:', isExpanded);
+        // console.log('Toggling item:', item);
+        // console.log('Is expanded:', isExpanded);
 
         if (isExpanded) {
             collapseItem(item);
@@ -109,8 +109,8 @@
         // Check if children are visible
         const children = item.querySelector('ul');
         if (children) {
-            console.log('Children element:', children);
-            console.log('Children display style:', children.style.display);
+            // console.log('Children element:', children);
+            // console.log('Children display style:', children.style.display);
         }
 
         // Trigger custom event
@@ -170,7 +170,7 @@
             } else {
                 // When accordion is false, active parents automatically show their children
                 // No need to manually expand - CSS handles the visibility
-                console.log('Accordion disabled - active items will show children automatically');
+                // console.log('Accordion disabled - active items will show children automatically');
             }
         });
 

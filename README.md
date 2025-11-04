@@ -17,23 +17,46 @@ Ein WordPress-Plugin für flexible Seiten-Navigation - entwickelt als Test- und 
 
 > **Hinweis**: Dieses Plugin wurde als Lernprojekt entwickelt, um moderne WordPress-Plugin-Entwicklung, GitHub Actions, CI/CD-Pipelines und Gutenberg-Block-Entwicklung zu erlernen und zu testen. Es ist funktional und einsatzbereit, aber primär für Bildungszwecke konzipiert.
 
+### ⚠️ Deprecation Hinweis
+
+Der ursprüngliche Block `flexible-nav` ist als veraltet (deprecated) gekennzeichnet und wird nicht mehr im Inserter angezeigt. Bitte verwende stattdessen die neuen, klar getrennten Blöcke:
+
+- `flexible-nav-vertical`
+- `flexible-nav-horizontal`
+
+Vorhandene Inhalte mit `flexible-nav` bleiben funktionsfähig. Neue Features werden ausschließlich in den beiden neuen Blöcken entwickelt.
+
 ## 🚀 Features
 
-### ✅ **Flexible Navigation Block**
+### ✅ **Blöcke**
 
-- **Inhaltstyp-Auswahl**: Seiten, Beiträge oder Custom Post Types
-- **Sortierung**: Nach Menüreihenfolge, Titel, Datum oder ID
-- **Sortierreihenfolge**: Aufsteigend oder absteigend
-- **Tiefe**: Konfigurierbare Hierarchie-Tiefe (1-5 Ebenen)
-- **Child Selection**: "Current" (Kinder der aktuellen Seite) oder "Custom" (Kinder einer bestimmten Seite)
+- `flexible-nav-vertical` (Vertikal)
+  - Accordion optional; ohne Accordion werden aktive Pfade gezeigt
+  - Ohne Accordion und ohne Active Indicator: zeige alle Items bis zur eingestellten Tiefe
+  - First-Level-Farben (Background/Text), wenn Active Indicator aus ist
+  - Main Items Padding: bei Active Indicator an → nur aktives Haupt-Item; bei aus → alle Haupt-Items
+- `flexible-nav-horizontal` (Horizontal)
+  - Desktop: Hover-Flyouts bis Tiefe, Child‑Indicator (None, ▾, ▼, +)
+  - Mobile: Burger + Animation (slide/fade/none), optional rekursives Accordion, eigene Mobile‑Farben & Typografie
+- `flexible-breadcrumb` (Breadcrumb)
+  - Startlink frei wählbar (Home/Seite/benutzerdefinierte URL)
+  - Separator (Text/Symbol) mit Abstand und Farbe
+  - Farben/Typografie für Link, aktives Element und Hintergrund
+
+Gemeinsame Features:
+
+- **Inhaltstyp-Auswahl**: Seiten, Beiträge, CPTs
+- **Sortierung**: Menüreihenfolge, Titel, Datum, ID
+- **Sortierreihenfolge**: ASC/DESC
+- **Tiefe**: konfigurierbar (1–5)
+- **Child Selection**: Current, All, Custom Parent
 
 ### ✅ **Design & Formatierung**
 
-- **Aktiver Hauptlink**: Hervorhebung der aktuellen Seite
-- **Aktiver Parent-Link**: Hervorhebung der übergeordneten Seite
-- **Accordion-Funktionalität**: Aufklappbare Navigation für Top-Level-Items
-- **Farbanpassung**: Hintergrundfarbe, Textfarbe, aktive Zustände
-- **Responsive Design**: Optimiert für alle Bildschirmgrößen
+- Farben: Hintergrund, Text, Active States (vertikal), First‑Level‑Farben (wenn Active Indicator aus)
+- Hover‑Effekte (underline/background/scale/none)
+- Desktop/Mobile‑Typografie (horizontal): getrennte Einstellungen für Main/Sub
+- Responsive: Burger‑Menü und Animationen im Horizontal‑Block
 
 ### ✅ **Automatisches Update-System**
 
@@ -104,27 +127,19 @@ Das Plugin kann direkt in WordPress installiert werden oder über den Plugin-Upl
 4. Gehe zu WordPress Admin → Einstellungen → Flexible Page Navigation
 5. Füge den Token ein und speichere
 
-### Block-Konfiguration
+### Block‑Konfiguration (Kurzüberblick)
 
-Der Block bietet folgende Einstellungen:
+- **Content Settings** (immer zuerst): Content Type, Sort By/Order, Depth, Child Selection (Custom: Parent ID)
+- **Vertical › Layout**: Column Layout, Accordion, Show Active Indicator, Main Items Padding, Separator‑Linien & Einrückung
+- **Vertical › Colors**: Background/Text; bei deaktiviertem Active Indicator zusätzlich First‑Level Background/Text; Active/Child‑Active Farben bei aktiviertem Indicator
+- **Horizontal › Desktop**: Dropdown Max Width, Hover Effect, Container Background, Farben (Main/Sub), Child‑Indicator (▾/▼/+), Typografie Main/Sub
+- **Horizontal › Mobile**: Breakpoint, Animation, Mobile Accordion, Indentation, Mobile‑Farben (Main/Sub), Typografie Main/Sub
 
-#### Navigation Settings
+### Breadcrumb‑Konfiguration (Kurzüberblick)
 
-- **Content Type**: Seiten, Beiträge oder Custom Post Types
-- **Sort By**: Menüreihenfolge, Titel, Datum, ID
-- **Sort Order**: Aufsteigend oder absteigend
-- **Depth**: Hierarchie-Tiefe (1-5 Ebenen)
-- **Child Selection**:
-  - "Current": Kinder der aktuellen Seite
-  - "Custom": Kinder einer bestimmten Seite (mit Page-ID-Auswahl)
-- **Enable Accordion**: Accordion-Funktionalität für Top-Level-Items
-
-#### Colors
-
-- **Background Color**: Hintergrundfarbe der Navigation
-- **Text Color**: Textfarbe der Links
-- **Active Background Color**: Hintergrundfarbe für aktive Links
-- **Active Text Color**: Textfarbe für aktive Links
+- Start Link: Home | Seite (ID) | Custom URL, optional anzeigen
+- Separator & Abstand, Farben (Text/Link/Aktiv), Hintergrund, Border‑Radius
+- Typografie: Font Size, Weight
 
 ## 🚀 Entwicklung
 
@@ -163,28 +178,7 @@ npm run release:major
 
 ### ZIP-Datei erstellen
 
-Für manuelle Distributionen kann eine ZIP-Datei erstellt werden:
-
-```bash
-# ZIP-Datei erstellen (ohne Entwicklungsdateien)
-npm run zip
-```
-
-Die ZIP-Datei wird im `release/` Verzeichnis erstellt und enthält nur die für den Plugin-Betrieb erforderlichen Dateien:
-
-- `flexible-page-navigation.php` (Haupt-Plugin-Datei)
-- `build/` (kompilierte Block-Dateien)
-- `assets/` (CSS/JS Assets)
-- `README.md`, `CHANGELOG.md`, `LICENSE` (Dokumentation)
-
-**Ausgeschlossen werden:**
-
-- `src/` (Quelldateien)
-- `webpack.config.js` (Build-Konfiguration)
-- `.gitignore` (Git-Konfiguration)
-- `package.json`, `package-lock.json` (Dependencies)
-- `scripts/` (Entwicklungsskripte)
-- `node_modules/` (Dependencies)
+Die ZIP-Erstellung übernimmt die Release-Pipeline (GitHub Actions). Ein lokales `npm run zip` ist nicht mehr erforderlich.
 
 ## 📁 Projektstruktur
 

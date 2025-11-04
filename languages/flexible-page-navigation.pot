@@ -1,0 +1,238 @@
+# Copyright (C) 2025 Flexible Page Navigation
+# This file is distributed under the same license as the Flexible Page Navigation package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Flexible Page Navigation\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: webentwicklerin <gabriele@webentwicklerin.at>\n"
+"Last-Translator: Gabriele Laesser <gabriele@webentwicklerin.at>\n"
+"POT-Creation-Date: 2025-11-04 11:36+0000\n"
+"Report-Msgid-Bugs-To: https://github.com/gbyat/flexible-page-navigation/issues\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../flexible-page-navigation.php:140
+msgid "No changelog available."
+msgstr ""
+
+#: ../flexible-page-navigation.php:258
+msgid "Installation"
+msgstr ""
+
+#: ../flexible-page-navigation.php:260
+msgid "Upload the plugin files to the /wp-content/plugins/flexible-page-navigation directory, or install the plugin through the WordPress plugins screen directly."
+msgstr ""
+
+#: ../flexible-page-navigation.php:261
+msgid "Activate the plugin through the 'Plugins' screen in WordPress."
+msgstr ""
+
+#: ../flexible-page-navigation.php:262
+msgid "Use the Settings->Flexible Page Navigation screen to configure the plugin."
+msgstr ""
+
+#: ../flexible-page-navigation.php:263
+msgid "Add the Flexible Page Navigation block to your pages or posts."
+msgstr ""
+
+#: ../flexible-page-navigation.php:272
+msgid "Features"
+msgstr ""
+
+#: ../flexible-page-navigation.php:274
+msgid "Flexible Navigation Block"
+msgstr ""
+
+#: ../flexible-page-navigation.php:274
+msgid "Gutenberg block for creating custom navigation menus."
+msgstr ""
+
+#: ../flexible-page-navigation.php:275
+msgid "Content Type Selection"
+msgstr ""
+
+#: ../flexible-page-navigation.php:275
+msgid "Choose between Pages, Posts, or Custom Post Types."
+msgstr ""
+
+#: ../flexible-page-navigation.php:276
+msgid "Accordion Functionality"
+msgstr ""
+
+#: ../flexible-page-navigation.php:276
+msgid "Expandable/collapsible submenu items."
+msgstr ""
+
+#: ../flexible-page-navigation.php:277
+msgid "Custom Styling"
+msgstr ""
+
+#: ../flexible-page-navigation.php:277
+msgid "Full control over colors, fonts, and layout."
+msgstr ""
+
+#: ../flexible-page-navigation.php:278
+msgid "Accessibility"
+msgstr ""
+
+#: ../flexible-page-navigation.php:278
+msgid "WCAG compliant with ARIA attributes and keyboard navigation."
+msgstr ""
+
+#: ../flexible-page-navigation.php:279
+msgid "Responsive Design"
+msgstr ""
+
+#: ../flexible-page-navigation.php:279
+msgid "Works perfectly on all devices."
+msgstr ""
+
+#: ../flexible-page-navigation.php:547, ../flexible-page-navigation.php:548, ../flexible-page-navigation.php:565
+msgid "Flexible Page Navigation"
+msgstr ""
+
+#: ../flexible-page-navigation.php:559, ../flexible-page-navigation.php:600, ../flexible-page-navigation.php:770, ../flexible-page-navigation.php:814
+msgid "Insufficient permissions"
+msgstr ""
+
+#: ../flexible-page-navigation.php:569
+msgid "Settings"
+msgstr ""
+
+#: ../flexible-page-navigation.php:572
+msgid "Debug"
+msgstr ""
+
+#: ../flexible-page-navigation.php:595, ../flexible-page-navigation.php:775, ../flexible-page-navigation.php:819
+msgid "Security check failed"
+msgstr ""
+
+#: ../flexible-page-navigation.php:605
+msgid "GitHub token saved successfully!"
+msgstr ""
+
+#: ../flexible-page-navigation.php:611
+msgid "GitHub Settings"
+msgstr ""
+
+#: ../flexible-page-navigation.php:617
+msgid "GitHub Personal Access Token"
+msgstr ""
+
+#: ../flexible-page-navigation.php:621
+msgid "Show Token"
+msgstr ""
+
+#: ../flexible-page-navigation.php:623
+msgid "Enter your GitHub personal access token for automatic updates. The token should have \"repo\" permissions."
+msgstr ""
+
+#: ../flexible-page-navigation.php:631
+msgid "Token is not set"
+msgstr ""
+
+#: ../flexible-page-navigation.php:627
+msgid "Token is set"
+msgstr ""
+
+#: ../flexible-page-navigation.php:637
+msgid "Save Settings"
+msgstr ""
+
+#: ../flexible-page-navigation.php:680
+msgid "Debug Information"
+msgstr ""
+
+#: ../flexible-page-navigation.php:682
+msgid "Plugin Information"
+msgstr ""
+
+#: ../flexible-page-navigation.php:685
+msgid "Version"
+msgstr ""
+
+#: ../flexible-page-navigation.php:689
+msgid "GitHub Repository"
+msgstr ""
+
+#: ../flexible-page-navigation.php:693
+msgid "GitHub Token"
+msgstr ""
+
+#: ../flexible-page-navigation.php:694
+msgid "Set"
+msgstr ""
+
+#: ../flexible-page-navigation.php:694
+msgid "Not set"
+msgstr ""
+
+#: ../flexible-page-navigation.php:698
+msgid "Block Registration Status"
+msgstr ""
+
+#: ../flexible-page-navigation.php:701, ../flexible-page-navigation.php:712
+msgid "Flexible Nav Block"
+msgstr ""
+
+#: ../flexible-page-navigation.php:705, ../flexible-page-navigation.php:732
+msgid "Flexible Breadcrumb Block"
+msgstr ""
+
+#: ../flexible-page-navigation.php:710
+msgid "Build Files Status"
+msgstr ""
+
+#: ../flexible-page-navigation.php:752
+msgid "Actions"
+msgstr ""
+
+#: ../flexible-page-navigation.php:755
+msgid "Test GitHub API"
+msgstr ""
+
+#: ../flexible-page-navigation.php:758
+msgid "Clear Cache"
+msgstr ""
+
+#: ../flexible-page-navigation.php:780
+msgid "GitHub token not set"
+msgstr ""
+
+#: ../flexible-page-navigation.php:829
+msgid "Cache was already empty"
+msgstr ""
+
+#: ../flexible-page-navigation.php:827
+msgid "Cache cleared successfully"
+msgstr ""
+
+#: ../flexible-page-navigation.php:1002
+msgid "Breadcrumb"
+msgstr ""
+
+#: ../flexible-page-navigation.php:1115
+msgid "No pages found."
+msgstr ""
+
+#: ../flexible-page-navigation.php:1128
+msgid "Page Navigation"
+msgstr ""
+
+#: ../flexible-page-navigation.php:1139
+msgid "Menu open / close"
+msgstr ""
+
+#: ../flexible-page-navigation.php:1497
+msgid "Submenu"
+msgstr ""
+
+#: ../flexible-page-navigation.php:1562
+msgid "Toggle submenu for %s"
+msgstr ""

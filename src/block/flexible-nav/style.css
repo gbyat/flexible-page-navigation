@@ -204,10 +204,10 @@
     display: block !important;
 }
 
-.fpn-navigation[data-accordion="false"] .fpn-item .fpn-depth-1,
-.fpn-navigation[data-accordion="false"] .fpn-item .fpn-depth-2,
-.fpn-navigation[data-accordion="false"] .fpn-item .fpn-depth-3,
-.fpn-navigation[data-accordion="false"] .fpn-item .fpn-depth-4 {
+.fpn-navigation.fpn-orientation-vertical[data-accordion="false"] .fpn-item .fpn-depth-1,
+.fpn-navigation.fpn-orientation-vertical[data-accordion="false"] .fpn-item .fpn-depth-2,
+.fpn-navigation.fpn-orientation-vertical[data-accordion="false"] .fpn-item .fpn-depth-3,
+.fpn-navigation.fpn-orientation-vertical[data-accordion="false"] .fpn-item .fpn-depth-4 {
     display: none; /* Hide by default when accordion is false */
 }
 
@@ -219,13 +219,13 @@
 }
 
 /* When accordion is false, show children of active items and their parents */
-.fpn-navigation[data-accordion="false"] .fpn-item.fpn-active > ul,
-.fpn-navigation[data-accordion="false"] .fpn-item.fpn-active-parent > ul {
+.fpn-navigation.fpn-orientation-vertical[data-accordion="false"] .fpn-item.fpn-active > ul,
+.fpn-navigation.fpn-orientation-vertical[data-accordion="false"] .fpn-item.fpn-active-parent > ul {
     display: block;
 }
 
 /* When accordion is false, hide children of non-active, non-parent items */
-.fpn-navigation[data-accordion="false"] .fpn-item:not(.fpn-active):not(.fpn-active-parent) > ul {
+.fpn-navigation.fpn-orientation-vertical[data-accordion="false"] .fpn-item:not(.fpn-active):not(.fpn-active-parent) > ul {
     display: none;
 }
 

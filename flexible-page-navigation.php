@@ -137,7 +137,7 @@ class FPN_GitHub_Updater
 
         // If no changelog from file, use GitHub release body
         if (empty($changelog)) {
-            $changelog = $this->github_response->body ?: __('No changelog available.', 'flexible-page-navigation');
+            $changelog = $this->github_response->body ?: esc_html__('No changelog available.', 'flexible-page-navigation');
         }
 
         // Get README content for description
@@ -255,12 +255,12 @@ class FPN_GitHub_Updater
      */
     private function get_installation_instructions()
     {
-        return '<strong>' . __('Installation', 'flexible-page-navigation') . '</strong><br><br>
+        return '<strong>' . esc_html__('Installation', 'flexible-page-navigation') . '</strong><br><br>
         <ol>
-            <li>' . __('Upload the plugin files to the /wp-content/plugins/flexible-page-navigation directory, or install the plugin through the WordPress plugins screen directly.', 'flexible-page-navigation') . '</li>
-            <li>' . __('Activate the plugin through the \'Plugins\' screen in WordPress.', 'flexible-page-navigation') . '</li>
-            <li>' . __('Use the Settings->Flexible Page Navigation screen to configure the plugin.', 'flexible-page-navigation') . '</li>
-            <li>' . __('Add the Flexible Page Navigation block to your pages or posts.', 'flexible-page-navigation') . '</li>
+            <li>' . esc_html__('Upload the plugin files to the /wp-content/plugins/flexible-page-navigation directory, or install the plugin through the WordPress plugins screen directly.', 'flexible-page-navigation') . '</li>
+            <li>' . esc_html__('Activate the plugin through the \'Plugins\' screen in WordPress.', 'flexible-page-navigation') . '</li>
+            <li>' . esc_html__('Use the Settings->Flexible Page Navigation screen to configure the plugin.', 'flexible-page-navigation') . '</li>
+            <li>' . esc_html__('Add the Flexible Page Navigation block to your pages or posts.', 'flexible-page-navigation') . '</li>
         </ol>';
     }
 
@@ -269,14 +269,14 @@ class FPN_GitHub_Updater
      */
     private function get_screenshots_section()
     {
-        return '<strong>' . __('Features', 'flexible-page-navigation') . '</strong><br><br>
+        return '<strong>' . esc_html__('Features', 'flexible-page-navigation') . '</strong><br><br>
         <ul>
-            <li><strong>' . __('Flexible Navigation Block', 'flexible-page-navigation') . '</strong> - ' . __('Gutenberg block for creating custom navigation menus.', 'flexible-page-navigation') . '</li>
-            <li><strong>' . __('Content Type Selection', 'flexible-page-navigation') . '</strong> - ' . __('Choose between Pages, Posts, or Custom Post Types.', 'flexible-page-navigation') . '</li>
-            <li><strong>' . __('Accordion Functionality', 'flexible-page-navigation') . '</strong> - ' . __('Expandable/collapsible submenu items.', 'flexible-page-navigation') . '</li>
-            <li><strong>' . __('Custom Styling', 'flexible-page-navigation') . '</strong> - ' . __('Full control over colors, fonts, and layout.', 'flexible-page-navigation') . '</li>
-            <li><strong>' . __('Accessibility', 'flexible-page-navigation') . '</strong> - ' . __('WCAG compliant with ARIA attributes and keyboard navigation.', 'flexible-page-navigation') . '</li>
-            <li><strong>' . __('Responsive Design', 'flexible-page-navigation') . '</strong> - ' . __('Works perfectly on all devices.', 'flexible-page-navigation') . '</li>
+            <li><strong>' . esc_html__('Flexible Navigation Block', 'flexible-page-navigation') . '</strong> - ' . esc_html__('Gutenberg block for creating custom navigation menus.', 'flexible-page-navigation') . '</li>
+            <li><strong>' . esc_html__('Content Type Selection', 'flexible-page-navigation') . '</strong> - ' . esc_html__('Choose between Pages, Posts, or Custom Post Types.', 'flexible-page-navigation') . '</li>
+            <li><strong>' . esc_html__('Accordion Functionality', 'flexible-page-navigation') . '</strong> - ' . esc_html__('Expandable/collapsible submenu items.', 'flexible-page-navigation') . '</li>
+            <li><strong>' . esc_html__('Custom Styling', 'flexible-page-navigation') . '</strong> - ' . esc_html__('Full control over colors, fonts, and layout.', 'flexible-page-navigation') . '</li>
+            <li><strong>' . esc_html__('Accessibility', 'flexible-page-navigation') . '</strong> - ' . esc_html__('WCAG compliant with ARIA attributes and keyboard navigation.', 'flexible-page-navigation') . '</li>
+            <li><strong>' . esc_html__('Responsive Design', 'flexible-page-navigation') . '</strong> - ' . esc_html__('Works perfectly on all devices.', 'flexible-page-navigation') . '</li>
         </ul>';
     }
 
@@ -396,6 +396,24 @@ class Flexible_Page_Navigation
             }
         }
 
+        // Register Flexible Nav Vertical Block using block.json
+        $nav_vertical_block_json_path = FPN_PLUGIN_DIR . 'build/flexible-nav-vertical/block.json';
+
+        if (file_exists($nav_vertical_block_json_path)) {
+            register_block_type($nav_vertical_block_json_path, array(
+                'render_callback' => array($this, 'render_navigation_block'),
+            ));
+        }
+
+        // Register Flexible Nav Horizontal Block using block.json
+        $nav_horizontal_block_json_path = FPN_PLUGIN_DIR . 'build/flexible-nav-horizontal/block.json';
+
+        if (file_exists($nav_horizontal_block_json_path)) {
+            register_block_type($nav_horizontal_block_json_path, array(
+                'render_callback' => array($this, 'render_navigation_block'),
+            ));
+        }
+
         // Debug: Check if blocks are available (WordPress 5.0+ compatible)
         if (function_exists('get_block_types')) {
             $blocks = get_block_types();
@@ -481,13 +499,53 @@ class Flexible_Page_Navigation
                 FPN_VERSION
             );
         }
+
+        // Enqueue Flexible Nav Vertical Block assets
+        $nav_vertical_script_path = FPN_PLUGIN_URL . 'build/flexible-nav-vertical/index.js';
+        $nav_vertical_style_path = FPN_PLUGIN_URL . 'build/flexible-nav-vertical/index.css';
+
+        if (file_exists(FPN_PLUGIN_DIR . 'build/flexible-nav-vertical/index.js')) {
+            wp_enqueue_script(
+                'flexible-nav-vertical-block',
+                $nav_vertical_script_path,
+                array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
+                FPN_VERSION,
+                true
+            );
+            wp_enqueue_style(
+                'flexible-nav-vertical-block-editor',
+                $nav_vertical_style_path,
+                array(),
+                FPN_VERSION
+            );
+        }
+
+        // Enqueue Flexible Nav Horizontal Block assets
+        $nav_horizontal_script_path = FPN_PLUGIN_URL . 'build/flexible-nav-horizontal/index.js';
+        $nav_horizontal_style_path = FPN_PLUGIN_URL . 'build/flexible-nav-horizontal/index.css';
+
+        if (file_exists(FPN_PLUGIN_DIR . 'build/flexible-nav-horizontal/index.js')) {
+            wp_enqueue_script(
+                'flexible-nav-horizontal-block',
+                $nav_horizontal_script_path,
+                array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
+                FPN_VERSION,
+                true
+            );
+            wp_enqueue_style(
+                'flexible-nav-horizontal-block-editor',
+                $nav_horizontal_style_path,
+                array(),
+                FPN_VERSION
+            );
+        }
     }
 
     public function add_admin_menu()
     {
         add_options_page(
-            __('Flexible Page Navigation', 'flexible-page-navigation'),
-            __('Flexible Page Navigation', 'flexible-page-navigation'),
+            esc_html__('Flexible Page Navigation', 'flexible-page-navigation'),
+            esc_html__('Flexible Page Navigation', 'flexible-page-navigation'),
             'manage_options',
             'flexible-page-navigation',
             array($this, 'admin_page')
@@ -498,7 +556,7 @@ class Flexible_Page_Navigation
     {
         // Check user permissions
         if (!current_user_can('manage_options')) {
-            wp_die(__('Insufficient permissions', 'flexible-page-navigation'));
+            wp_die(esc_html__('Insufficient permissions', 'flexible-page-navigation'));
         }
 
         $active_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'settings';
@@ -544,7 +602,7 @@ class Flexible_Page_Navigation
 
             $token = sanitize_text_field($_POST['github_token']);
             update_option('fpn_github_token', $token);
-            echo '<div class="notice notice-success is-dismissible"><p>' . __('GitHub token saved successfully!', 'flexible-page-navigation') . '</p></div>';
+            echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('GitHub token saved successfully!', 'flexible-page-navigation') . '</p></div>';
         }
 
         // Get current token
@@ -633,7 +691,7 @@ class Flexible_Page_Navigation
             </tr>
             <tr>
                 <td><strong><?php _e('GitHub Token', 'flexible-page-navigation'); ?></strong></td>
-                <td><?php echo get_option('fpn_github_token') ? __('Set', 'flexible-page-navigation') : __('Not set', 'flexible-page-navigation'); ?></td>
+                <td><?php echo get_option('fpn_github_token') ? esc_html__('Set', 'flexible-page-navigation') : esc_html__('Not set', 'flexible-page-navigation'); ?></td>
             </tr>
         </table>
 
@@ -967,7 +1025,7 @@ class Flexible_Page_Navigation
         $sort_by = isset($attributes['sortBy']) ? $attributes['sortBy'] : 'menu_order';
         $sort_order = isset($attributes['sortOrder']) ? $attributes['sortOrder'] : 'ASC';
         $depth = isset($attributes['depth']) ? intval($attributes['depth']) : 3;
-        $child_selection = isset($attributes['childSelection']) ? $attributes['childSelection'] : 'current';
+        $child_selection = isset($attributes['childSelection']) ? $attributes['childSelection'] : 'all';
         $menu_display_mode = isset($attributes['menuDisplayMode']) ? $attributes['menuDisplayMode'] : 'children';
         $parent_page_id = isset($attributes['parentPageId']) ? intval($attributes['parentPageId']) : 0;
         $accordion_enabled = $attributes['accordionEnabled'] ?? true;
@@ -993,6 +1051,16 @@ class Flexible_Page_Navigation
         $mobile_menu_animation = isset($attributes['mobileMenuAnimation']) ? $attributes['mobileMenuAnimation'] : 'slide';
         $mobile_breakpoint = isset($attributes['mobileBreakpoint']) ? intval($attributes['mobileBreakpoint']) : 768;
         $mobile_accordion = isset($attributes['submenuBehavior']) ? (bool)$attributes['submenuBehavior'] : false;
+        // Mobile color/indentation attributes (optional)
+        $mobile_separator_padding = isset($attributes['mobileSeparatorPadding']) ? intval($attributes['mobileSeparatorPadding']) : 20;
+        $mobile_main_text = isset($attributes['mobileMainItemTextColor']) ? $attributes['mobileMainItemTextColor'] : '';
+        $mobile_main_bg = isset($attributes['mobileMainItemBackgroundColor']) ? $attributes['mobileMainItemBackgroundColor'] : '';
+        $mobile_main_hover_text = isset($attributes['mobileMainItemHoverTextColor']) ? $attributes['mobileMainItemHoverTextColor'] : '';
+        $mobile_main_hover_bg = isset($attributes['mobileMainItemHoverBackgroundColor']) ? $attributes['mobileMainItemHoverBackgroundColor'] : '';
+        $mobile_sub_text = isset($attributes['mobileSubItemTextColor']) ? $attributes['mobileSubItemTextColor'] : '';
+        $mobile_sub_bg = isset($attributes['mobileSubItemBackgroundColor']) ? $attributes['mobileSubItemBackgroundColor'] : '';
+        $mobile_sub_hover_text = isset($attributes['mobileSubItemHoverTextColor']) ? $attributes['mobileSubItemHoverTextColor'] : '';
+        $mobile_sub_hover_bg = isset($attributes['mobileSubItemHoverBackgroundColor']) ? $attributes['mobileSubItemHoverBackgroundColor'] : '';
 
         // Get current page ID
         $current_page_id = get_queried_object_id();
@@ -1044,19 +1112,25 @@ class Flexible_Page_Navigation
         }
 
         if (empty($pages)) {
-            return '<div class="fpn-navigation fpn-no-pages">' . __('No pages found.', 'flexible-page-navigation') . '</div>';
+            return '<div class="fpn-navigation fpn-no-pages">' . esc_html__('No pages found.', 'flexible-page-navigation') . '</div>';
         }
 
         // Build navigation HTML with unique block ID
         $block_id = 'fpn-block-' . uniqid() . '-v3';
         $orientation_class = $menu_orientation === 'horizontal' ? 'fpn-orientation-horizontal' : 'fpn-orientation-vertical';
         $layout_class = $menu_orientation === 'vertical' ? ' fpn-layout-' . esc_attr($column_layout) : '';
+        // For horizontal menus, never use global accordion flag on desktop,
+        // we handle mobile accordion separately via data-mobile-accordion + media queries.
+        $data_accordion = ($menu_orientation === 'horizontal')
+            ? 'false'
+            : ($accordion_enabled ? 'true' : 'false');
+
         $output = '<nav id="' . esc_attr($block_id) . '" class="fpn-navigation ' . esc_attr($orientation_class) . $layout_class . '" role="navigation" aria-label="' . esc_attr__('Page Navigation', 'flexible-page-navigation') . '"'
             . ' data-orientation="' . esc_attr($menu_orientation) . '"'
             . ' data-mobile-animation="' . esc_attr($mobile_menu_animation) . '"'
             . ' data-mobile-breakpoint="' . intval($mobile_breakpoint) . '"'
             . ' data-mobile-accordion="' . ($mobile_accordion ? 'true' : 'false') . '"'
-            . ' data-accordion="' . ($accordion_enabled ? 'true' : 'false') . '"'
+            . ' data-accordion="' . $data_accordion . '"'
             . ' data-columns="' . esc_attr($column_layout) . '"'
             . ' data-hover="' . esc_attr($hover_effect) . '">';
 
@@ -1071,60 +1145,195 @@ class Flexible_Page_Navigation
 
         // Add inline styles including recursive accordion functionality
         $output .= '<style>';
+        // Determine active indicator early; used by multiple branches
+        $show_active_indicator = isset($attributes['showActiveIndicator']) ? (bool)$attributes['showActiveIndicator'] : true;
 
-        // Recursive accordion CSS - force this to load
-        if ($accordion_enabled) {
-            // Depth 0 and 1 are always visible, only hide depth 2+ by default
-            $output .= '#' . esc_attr($block_id) . ' .fpn-item .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-4 { display: none !important; }';
-            // Show sublevels when parent is expanded - more specific selectors
-            $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-expanded > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-expanded > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-expanded > .fpn-depth-4 { display: block !important; }';
-            // Also handle nested expanded items
-            $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-4 { display: block !important; }';
-        } else {
-            // Non-accordion mode: show all items, but hide children of non-active parents
-            $output .= '#' . esc_attr($block_id) . ' .fpn-item .fpn-depth-1, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-4 { display: none; }';
-            // Show children of active parents
-            $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-active > .fpn-depth-1, #' . esc_attr($block_id) . ' .fpn-item.fpn-active > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-active > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
-            $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent > .fpn-depth-1, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent > .fpn-depth-4 { display: block; }';
-            // Show children of active children (nested active items)
-            $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
-            $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
+        // Accordion/non-accordion CSS:
+        // - Vertical: apply same logic as bisher
+        // - Horizontal: no accordion CSS on desktop; apply accordion CSS only under mobile breakpoint if enabled
+        if ($menu_orientation === 'vertical') {
+            if ($accordion_enabled) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-item .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-4 { display: none !important; }';
+                $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-expanded > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-expanded > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-expanded > .fpn-depth-4 { display: block !important; }';
+                $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-expanded .fpn-item.fpn-expanded > .fpn-depth-4 { display: block !important; }';
+            } else {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-item .fpn-depth-1, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item .fpn-depth-4 { display: none; }';
+                $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-active > .fpn-depth-1, #' . esc_attr($block_id) . ' .fpn-item.fpn-active > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-active > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
+                $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent > .fpn-depth-1, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent > .fpn-depth-4 { display: block; }';
+                $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-active .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
+                $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-2, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-3, #' . esc_attr($block_id) . ' .fpn-item.fpn-active-parent .fpn-item.fpn-active > .fpn-depth-4 { display: block; }';
+                // Special case: no accordion AND no active indicator => show all items up to depth
+                if (!$show_active_indicator) {
+                    $output .= '#' . esc_attr($block_id) . ' .fpn-item > .fpn-depth-1, '
+                        . '#' . esc_attr($block_id) . ' .fpn-item > .fpn-depth-2, '
+                        . '#' . esc_attr($block_id) . ' .fpn-item > .fpn-depth-3, '
+                        . '#' . esc_attr($block_id) . ' .fpn-item > .fpn-depth-4 { display: block !important; }';
+                }
+            }
+        } else { // horizontal
+            if ($mobile_accordion) {
+                $output .= '@media (max-width: ' . intval($mobile_breakpoint) . 'px) {'
+                    // hide all sub-levels by default on mobile
+                    . '#' . esc_attr($block_id) . ' .fpn-item > .fpn-depth-1, '
+                    . '#' . esc_attr($block_id) . ' .fpn-item > .fpn-depth-2, '
+                    . '#' . esc_attr($block_id) . ' .fpn-item > .fpn-depth-3, '
+                    . '#' . esc_attr($block_id) . ' .fpn-item > .fpn-depth-4 { display: none !important; }'
+                    // show children when parent expanded (recursive)
+                    . '#' . esc_attr($block_id) . ' .fpn-item.fpn-expanded > .fpn-depth-1, '
+                    . '#' . esc_attr($block_id) . ' .fpn-item.fpn-expanded > .fpn-depth-2, '
+                    . '#' . esc_attr($block_id) . ' .fpn-item.fpn-expanded > .fpn-depth-3, '
+                    . '#' . esc_attr($block_id) . ' .fpn-item.fpn-expanded > .fpn-depth-4 { display: block !important; }'
+                    . '}';
+            }
         }
 
         // Only add color styles if they are set (not default)
-        if ($background_color !== '#f8f9fa' || $text_color !== '#333333' || $active_background_color !== '#007cba' || $active_text_color !== '#ffffff' || $child_active_background_color !== '#e8f4fd' || $child_active_text_color !== '#333333' || $hover_background_color !== 'rgba(0, 0, 0, 0.1)') {
+        $first_level_bg = isset($attributes['firstLevelItemBackgroundColor']) ? $attributes['firstLevelItemBackgroundColor'] : '';
+        if ($background_color !== '#f8f9fa' || $text_color !== '#333333' || ($show_active_indicator && ($active_background_color !== '#007cba' || $active_text_color !== '#ffffff')) || ($show_active_indicator && ($child_active_background_color !== '#e8f4fd' || $child_active_text_color !== '#333333')) || $hover_background_color !== 'rgba(0, 0, 0, 0.1)' || (!$show_active_indicator && !empty($first_level_bg))) {
             if ($background_color !== '#f8f9fa') {
                 $output .= '#' . esc_attr($block_id) . ' { background-color: ' . esc_attr($background_color) . '; }';
             }
             if ($text_color !== '#333333') {
                 $output .= '#' . esc_attr($block_id) . ' .fpn-item a { color: ' . esc_attr($text_color) . '; }';
             }
-            if ($active_background_color !== '#007cba' || $active_text_color !== '#ffffff') {
+            if ($show_active_indicator && ($active_background_color !== '#007cba' || $active_text_color !== '#ffffff')) {
                 $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item.fpn-active > a { background-color: ' . esc_attr($active_background_color) . '; color: ' . esc_attr($active_text_color) . '; }';
                 $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item.fpn-active-parent > a { background-color: ' . esc_attr($active_background_color) . '; color: ' . esc_attr($active_text_color) . '; }';
             }
-            if ($child_active_background_color !== '#e8f4fd' || $child_active_text_color !== '#333333') {
+            if ($show_active_indicator && ($child_active_background_color !== '#e8f4fd' || $child_active_text_color !== '#333333')) {
                 $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item.fpn-active > a, #' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item.fpn-active > a, #' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item.fpn-active > a, #' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item.fpn-active > a { background-color: ' . esc_attr($child_active_background_color) . '; color: ' . esc_attr($child_active_text_color) . '; }';
                 $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item.fpn-active-parent > a, #' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item.fpn-active-parent > a, #' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item.fpn-active-parent > a, #' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item.fpn-active-parent > a { background-color: ' . esc_attr($child_active_background_color) . '; color: ' . esc_attr($child_active_text_color) . '; }';
             }
             if ($hover_background_color !== 'rgba(0, 0, 0, 0.1)') {
                 $output .= '#' . esc_attr($block_id) . ' { --fpn-hover-bg: ' . esc_attr($hover_background_color) . '; }';
             }
+            if (!$show_active_indicator && !empty($first_level_bg)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a { background-color: ' . esc_attr($first_level_bg) . '; }';
+            }
         }
 
-        // Main menu items (depth-0) styling
-        if ($main_item_font_weight !== '600' || $main_item_font_size !== 16 || $main_item_text_color !== '#333333') {
-            $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a {';
-            if ($main_item_font_weight !== '600') {
-                $output .= ' font-weight: ' . esc_attr($main_item_font_weight) . ';';
+        // If vertical and no active indicator, apply main item padding to all top-level links
+        if ($menu_orientation === 'vertical' && !$show_active_indicator) {
+            $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a { padding: ' . intval($active_padding) . 'px; }';
+        }
+
+        // Desktop-specific colors for horizontal menus (main and sub items)
+        if ($menu_orientation === 'horizontal') {
+            $desk_indicator = isset($attributes['desktopChildIndicator']) ? $attributes['desktopChildIndicator'] : 'none';
+            $desk_main_text = isset($attributes['desktopMainItemTextColor']) ? $attributes['desktopMainItemTextColor'] : '';
+            $desk_main_bg = isset($attributes['desktopMainItemBackgroundColor']) ? $attributes['desktopMainItemBackgroundColor'] : '';
+            $desk_main_hover_text = isset($attributes['desktopMainItemHoverTextColor']) ? $attributes['desktopMainItemHoverTextColor'] : '';
+            $desk_main_hover_bg = isset($attributes['desktopMainItemHoverBackgroundColor']) ? $attributes['desktopMainItemHoverBackgroundColor'] : '';
+            $desk_sub_text = isset($attributes['desktopSubItemTextColor']) ? $attributes['desktopSubItemTextColor'] : '';
+            $desk_sub_bg = isset($attributes['desktopSubItemBackgroundColor']) ? $attributes['desktopSubItemBackgroundColor'] : '';
+            $desk_sub_hover_text = isset($attributes['desktopSubItemHoverTextColor']) ? $attributes['desktopSubItemHoverTextColor'] : '';
+            $desk_sub_hover_bg = isset($attributes['desktopSubItemHoverBackgroundColor']) ? $attributes['desktopSubItemHoverBackgroundColor'] : '';
+
+            // Apply only above mobile breakpoint so mobile overrides can differ
+            $output .= '@media (min-width: ' . intval($mobile_breakpoint + 1) . 'px) {';
+            // Ensure desktop hover flyouts are visible (override any theme rules)
+            $output .= '#' . esc_attr($block_id) . ' .fpn-orientation-horizontal .fpn-item > .fpn-depth-1, '
+                . '#' . esc_attr($block_id) . ' .fpn-orientation-horizontal .fpn-item > .fpn-depth-2, '
+                . '#' . esc_attr($block_id) . ' .fpn-orientation-horizontal .fpn-item > .fpn-depth-3, '
+                . '#' . esc_attr($block_id) . ' .fpn-orientation-horizontal .fpn-item > .fpn-depth-4 { display: none !important; opacity: 0; pointer-events: none; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-orientation-horizontal .fpn-item:hover > .fpn-depth-1,
+' . '#' . esc_attr($block_id) . ' .fpn-orientation-horizontal .fpn-item:focus-within > .fpn-depth-1 { display: block !important; opacity: 1; pointer-events: auto; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-orientation-horizontal .fpn-item:hover > .fpn-depth-2,
+' . '#' . esc_attr($block_id) . ' .fpn-orientation-horizontal .fpn-item:hover > .fpn-depth-3,
+' . '#' . esc_attr($block_id) . ' .fpn-orientation-horizontal .fpn-item:hover > .fpn-depth-4 { display: block !important; opacity: 1; pointer-events: auto; }';
+            // Also match generic "> ul" selector used by non-accordion CSS
+            $output .= '#' . esc_attr($block_id) . ' .fpn-orientation-horizontal .fpn-item > ul { display: none !important; opacity: 0; pointer-events: none; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-orientation-horizontal .fpn-item:hover > ul,
+' . '#' . esc_attr($block_id) . ' .fpn-orientation-horizontal .fpn-item:focus-within > ul { display: block !important; opacity: 1; pointer-events: auto; }';
+            // Desktop child indicator for items with children
+            if ($desk_indicator !== 'none') {
+                $indicator_char = '"▾"';
+                if ($desk_indicator === 'solid') {
+                    $indicator_char = '"▼"';
+                }
+                if ($desk_indicator === 'plus') {
+                    $indicator_char = '"+"';
+                }
+                $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-has-children > a::after { content: ' . $indicator_char . '; display: inline-block; margin-left: 6px; font-size: 0.8em; opacity: 0.8; vertical-align: middle; }';
             }
-            if ($main_item_font_size !== 16) {
-                $output .= ' font-size: ' . intval($main_item_font_size) . 'px;';
+            if (!empty($desk_main_bg)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a { background-color: ' . esc_attr($desk_main_bg) . '; }';
             }
-            if ($main_item_text_color !== '#333333') {
-                $output .= ' color: ' . esc_attr($main_item_text_color) . ';';
+            if (!empty($desk_main_text)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a { color: ' . esc_attr($desk_main_text) . '; }';
             }
-            $output .= ' }';
+            if (!empty($desk_main_hover_bg)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a:hover { background-color: ' . esc_attr($desk_main_hover_bg) . ' !important; }';
+            }
+            if (!empty($desk_main_hover_text)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a:hover { color: ' . esc_attr($desk_main_hover_text) . ' !important; }';
+            }
+            if (!empty($desk_sub_bg)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a { background-color: ' . esc_attr($desk_sub_bg) . '; }';
+            }
+            if (!empty($desk_sub_text)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a { color: ' . esc_attr($desk_sub_text) . '; }';
+            }
+            if (!empty($desk_sub_hover_bg)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a:hover, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a:hover, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a:hover, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a:hover { background-color: ' . esc_attr($desk_sub_hover_bg) . ' !important; }';
+            }
+            if (!empty($desk_sub_hover_text)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a:hover, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a:hover, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a:hover, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a:hover { color: ' . esc_attr($desk_sub_hover_text) . ' !important; }';
+            }
+            $output .= '}';
+        }
+
+        // Main menu items (depth-0) typography
+        if ($menu_orientation === 'horizontal') {
+            $desk_fw = isset($attributes['desktopMainItemFontWeight']) ? $attributes['desktopMainItemFontWeight'] : '600';
+            $desk_fs = isset($attributes['desktopMainItemFontSize']) ? intval($attributes['desktopMainItemFontSize']) : 16;
+            $mob_fw = isset($attributes['mobileMainItemFontWeight']) ? $attributes['mobileMainItemFontWeight'] : '600';
+            $mob_fs = isset($attributes['mobileMainItemFontSize']) ? intval($attributes['mobileMainItemFontSize']) : 16;
+            $output .= '@media (min-width: ' . intval($mobile_breakpoint + 1) . 'px) { #' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a { font-weight: ' . esc_attr($desk_fw) . '; font-size: ' . $desk_fs . 'px; } }';
+            $output .= '@media (max-width: ' . intval($mobile_breakpoint) . 'px) { #' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a { font-weight: ' . esc_attr($mob_fw) . '; font-size: ' . $mob_fs . 'px; } }';
+            // Sub items (depth 1-4) typography
+            $desk_sub_fw = isset($attributes['desktopSubItemFontWeight']) ? $attributes['desktopSubItemFontWeight'] : '600';
+            $desk_sub_fs = isset($attributes['desktopSubItemFontSize']) ? intval($attributes['desktopSubItemFontSize']) : 14;
+            $mob_sub_fw = isset($attributes['mobileSubItemFontWeight']) ? $attributes['mobileSubItemFontWeight'] : '600';
+            $mob_sub_fs = isset($attributes['mobileSubItemFontSize']) ? intval($attributes['mobileSubItemFontSize']) : 14;
+            $sub_selector = '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a, '
+                . '#' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a, '
+                . '#' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a, '
+                . '#' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a';
+            $output .= '@media (min-width: ' . intval($mobile_breakpoint + 1) . 'px) { ' . $sub_selector . ' { font-weight: ' . esc_attr($desk_sub_fw) . '; font-size: ' . $desk_sub_fs . 'px; } }';
+            $output .= '@media (max-width: ' . intval($mobile_breakpoint) . 'px) { ' . $sub_selector . ' { font-weight: ' . esc_attr($mob_sub_fw) . '; font-size: ' . $mob_sub_fs . 'px; } }';
+        } else {
+            if ($main_item_font_weight !== '600' || $main_item_font_size !== 16 || $main_item_text_color !== '#333333' || (!$show_active_indicator && !empty($first_level_bg)) || (!$show_active_indicator && !empty($attributes['firstLevelItemColor']))) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a {';
+                if ($main_item_font_weight !== '600') {
+                    $output .= ' font-weight: ' . esc_attr($main_item_font_weight) . ';';
+                }
+                if ($main_item_font_size !== 16) {
+                    $output .= ' font-size: ' . intval($main_item_font_size) . 'px;';
+                }
+                if ($main_item_text_color !== '#333333') {
+                    $output .= ' color: ' . esc_attr($main_item_text_color) . ';';
+                }
+                if (!$show_active_indicator && !empty($first_level_bg)) {
+                    $output .= ' background-color: ' . esc_attr($first_level_bg) . ';';
+                }
+                if (!$show_active_indicator && !empty($attributes['firstLevelItemColor'])) {
+                    $output .= ' color: ' . esc_attr($attributes['firstLevelItemColor']) . ';';
+                }
+                $output .= ' }';
+            }
         }
 
         // Always apply separator and padding styles
@@ -1164,24 +1373,26 @@ class Flexible_Page_Navigation
             }
         }
 
-        // Accordion-Toggle-Buttons: Sichtbarkeit abhängig vom Modus
-        $toggle_selector = '#' . esc_attr($block_id) . ' .fpn-depth-1 .fpn-item.fpn-has-children .fpn-toggle, '
+        // Accordion toggle buttons: only visible when accordion is enabled
+        $toggle_selector = '#' . esc_attr($block_id) . ' .fpn-depth-0 .fpn-item.fpn-has-children .fpn-toggle, '
+            . '#' . esc_attr($block_id) . ' .fpn-depth-1 .fpn-item.fpn-has-children .fpn-toggle, '
             . '#' . esc_attr($block_id) . ' .fpn-depth-2 .fpn-item.fpn-has-children .fpn-toggle, '
             . '#' . esc_attr($block_id) . ' .fpn-depth-3 .fpn-item.fpn-has-children .fpn-toggle, '
             . '#' . esc_attr($block_id) . ' .fpn-depth-4 .fpn-item.fpn-has-children .fpn-toggle';
 
         if ($menu_orientation === 'horizontal') {
             if ($mobile_accordion) {
-                // Im Mobile-Breakpoint anzeigen, darüber ausblenden
                 $output .= '@media (max-width: ' . intval($mobile_breakpoint) . 'px) {' . $toggle_selector . ' { display: flex !important; } }';
                 $output .= '@media (min-width: ' . intval($mobile_breakpoint + 1) . 'px) {' . $toggle_selector . ' { display: none !important; } }';
             } else {
-                // Horizontal ohne Mobile-Accordion: nie zeigen
                 $output .= $toggle_selector . ' { display: none !important; }';
             }
         } else {
-            // Vertikal: immer zeigen (Accordion-Modus)
-            $output .= $toggle_selector . ' { display: flex !important; }';
+            if ($accordion_enabled) {
+                $output .= $toggle_selector . ' { display: flex !important; }';
+            } else {
+                $output .= $toggle_selector . ' { display: none !important; }';
+            }
         }
 
         // Show toggle buttons only for the deepest visible level when accordion is enabled
@@ -1189,16 +1400,86 @@ class Flexible_Page_Navigation
             // Removed deepest-level-only override to always show toggles on depths 1-4 per CSS
         }
 
+        // Per-block mobile breakpoint CSS: burger/menu visibility and animations/colors
+        if ($menu_orientation === 'horizontal') {
+            $output .= '@media (max-width: ' . intval($mobile_breakpoint) . 'px) {';
+            // Ensure UL visibility toggles and animation according to data-mobile-animation (specificity via ID)
+            $output .= '#' . esc_attr($block_id) . ' > ul { display: none; flex-direction: column; align-items: flex-start; position: absolute; top: 100%; left: 0; width: 100%; }';
+            $output .= '#' . esc_attr($block_id) . '.fpn-mobile-open > ul { display: flex; }';
+            if ($mobile_menu_animation === 'slide') {
+                $output .= '#' . esc_attr($block_id) . ' > ul { transform: translateY(-30px); opacity: 0; transition: transform 0.3s, opacity 0.3s; }';
+                $output .= '#' . esc_attr($block_id) . '.fpn-mobile-open > ul { transform: translateY(0); opacity: 1; }';
+            } elseif ($mobile_menu_animation === 'fade') {
+                $output .= '#' . esc_attr($block_id) . ' > ul { opacity: 0; transition: opacity 0.3s; }';
+                $output .= '#' . esc_attr($block_id) . '.fpn-mobile-open > ul { opacity: 1; }';
+            } else {
+                $output .= '#' . esc_attr($block_id) . ' > ul { opacity: 1; transform: none; transition: none; }';
+                $output .= '#' . esc_attr($block_id) . '.fpn-mobile-open > ul { opacity: 1; transform: none; transition: none; }';
+            }
+            // Mobile indentation and toggle positioning for submenu links
+            $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a { padding-left: ' . intval($mobile_separator_padding) . 'px; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a { padding-left: ' . intval($mobile_separator_padding * 2) . 'px; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a { padding-left: ' . intval($mobile_separator_padding * 3) . 'px; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a { padding-left: ' . intval($mobile_separator_padding * 4) . 'px; }';
+            // Layout: keep toggle aligned regardless of submenu height
+            $output .= '#' . esc_attr($block_id) . ' .fpn-item { display: grid; grid-template-columns: 1fr auto; align-items: center; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-item > ul { grid-column: 1 / -1; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-item.fpn-has-children > a { padding-right: 12px; }';
+            $output .= '#' . esc_attr($block_id) . ' .fpn-toggle { position: static; transform: none; margin-left: 8px; }';
+            // When mobile accordion is OFF, show all submenus by default
+            if (!$mobile_accordion) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-item > ul { display: block !important; }';
+            }
+            // Mobile colors
+            if (!empty($mobile_main_bg)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a { background-color: ' . esc_attr($mobile_main_bg) . '; }';
+            }
+            if (!empty($mobile_main_text)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a { color: ' . esc_attr($mobile_main_text) . '; }';
+            }
+            if (!empty($mobile_main_hover_bg)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a:hover { background-color: ' . esc_attr($mobile_main_hover_bg) . ' !important; }';
+            }
+            if (!empty($mobile_main_hover_text)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-0 > .fpn-item > a:hover { color: ' . esc_attr($mobile_main_hover_text) . ' !important; }';
+            }
+            if (!empty($mobile_sub_bg)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a { background-color: ' . esc_attr($mobile_sub_bg) . '; }';
+            }
+            if (!empty($mobile_sub_text)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a { color: ' . esc_attr($mobile_sub_text) . '; }';
+            }
+            if (!empty($mobile_sub_hover_bg)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a:hover, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a:hover, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a:hover, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a:hover { background-color: ' . esc_attr($mobile_sub_hover_bg) . ' !important; }';
+            }
+            if (!empty($mobile_sub_hover_text)) {
+                $output .= '#' . esc_attr($block_id) . ' .fpn-depth-1 > .fpn-item > a:hover, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-2 > .fpn-item > a:hover, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-3 > .fpn-item > a:hover, '
+                    . '#' . esc_attr($block_id) . ' .fpn-depth-4 > .fpn-item > a:hover { color: ' . esc_attr($mobile_sub_hover_text) . ' !important; }';
+            }
+            $output .= '}';
+        }
+
         $output .= '</style>';
 
-        $output .= $this->build_navigation_tree($pages, $current_page_id, $depth, 0, $accordion_enabled, $active_padding);
+        $output .= $this->build_navigation_tree($pages, $current_page_id, $depth, 0, $accordion_enabled, $active_padding, 0, $menu_orientation);
 
         $output .= '</nav>';
 
         return $output;
     }
 
-    private function build_navigation_tree($pages, $current_page_id, $max_depth, $current_depth, $accordion_enabled = true, $active_padding = 8, $parent_id = 0)
+    private function build_navigation_tree($pages, $current_page_id, $max_depth, $current_depth, $accordion_enabled = true, $active_padding = 8, $parent_id = 0, $menu_orientation = 'vertical')
     {
         if ($current_depth >= $max_depth) {
             return '';
@@ -1273,14 +1554,15 @@ class Flexible_Page_Navigation
 
             $output .= '<a ' . implode(' ', $link_attributes) . '>' . esc_html($page->post_title) . '</a>';
 
-            // Add toggle button for items with children when accordion is enabled
-            // AND only if the children will actually be displayed (within depth limit)
-            if ($this->has_children($page->ID, $page->post_type) && $accordion_enabled && $current_depth >= 1 && $current_depth < $max_depth - 1) {
+            // Add toggle button for items with children when accordion is enabled.
+            // Vertical: from depth >=1; Horizontal: include depth 0 (start at main level on mobile).
+            $allow_toggle_from_depth = ($menu_orientation === 'horizontal') ? 0 : 1;
+            if ($this->has_children($page->ID, $page->post_type) && $accordion_enabled && $current_depth >= $allow_toggle_from_depth && $current_depth < $max_depth - 1) {
                 $toggle_label = sprintf(
-                    __('Toggle submenu for %s', 'flexible-page-navigation'),
+                    esc_html__('Toggle submenu for %s', 'flexible-page-navigation'),
                     esc_attr($page->post_title)
                 );
-                $output .= '<button class="fpn-toggle" aria-label="' . $toggle_label . '" aria-expanded="false" aria-controls="fpn-submenu-' . $page->ID . '">';
+                $output .= '<button class="fpn-toggle" aria-label="' . esc_attr($toggle_label) . '" aria-expanded="false" aria-controls="fpn-submenu-' . esc_attr($page->ID) . '">';
                 $output .= '<span class="fpn-toggle-icon fpn-toggle-plus" aria-hidden="true">+</span>';
                 $output .= '<span class="fpn-toggle-icon fpn-toggle-minus" aria-hidden="true">×</span>';
                 $output .= '</button>';
@@ -1297,7 +1579,7 @@ class Flexible_Page_Navigation
                 ));
 
                 if (!empty($children)) {
-                    $output .= $this->build_navigation_tree($children, $current_page_id, $max_depth, $current_depth + 1, $accordion_enabled, $active_padding, $page->ID);
+                    $output .= $this->build_navigation_tree($children, $current_page_id, $max_depth, $current_depth + 1, $accordion_enabled, $active_padding, $page->ID, $menu_orientation);
                 }
             }
 
@@ -1305,7 +1587,7 @@ class Flexible_Page_Navigation
         }
 
         $output .= '</ul>';
-        return $output;
+        return $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 
     private function has_children($page_id, $post_type = 'page')

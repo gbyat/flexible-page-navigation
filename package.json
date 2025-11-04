@@ -4,14 +4,15 @@
   "description": "A flexible page navigation block with customizable content types, sorting, depth, and child selection options.",
   "main": "flexible-page-navigation.php",
   "scripts": {
-    "build": "webpack --mode=development",
-    "build:prod": "webpack --mode=production",
+    "build": "webpack --mode=development && node scripts/generate-pot.js",
+    "build:prod": "webpack --mode=production && node scripts/generate-pot.js",
     "start": "webpack --watch --mode=development",
     "deploy": "node scripts/deploy.js",
     "release:patch": "npm version patch && npm run build:prod && node scripts/release.js",
     "release:minor": "npm version minor && npm run build:prod && node scripts/release.js",
     "release:major": "npm version major && npm run build:prod && node scripts/release.js",
-    "version": "node scripts/sync-version.js"
+    "version": "node scripts/sync-version.js",
+    "pot": "node scripts/generate-pot.js"
   },
   "keywords": [
     "wordpress",
@@ -43,6 +44,7 @@
     "mini-css-extract-plugin": "^2.7.0",
     "style-loader": "^3.3.0",
     "webpack": "^5.88.0",
-    "webpack-cli": "^5.1.0"
+    "webpack-cli": "^5.1.0",
+    "wp-pot": "^1.10.2"
   }
 }

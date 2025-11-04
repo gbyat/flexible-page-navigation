@@ -24,30 +24,33 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
         contentType: { type: 'string', default: 'page' },
         sortBy: { type: 'string', default: 'menu_order' },
         sortOrder: { type: 'string', default: 'ASC' },
-        depth: { type: 'number', default: 1 },
-        childSelection: { type: 'string', default: 'current' },
-        menuDisplayMode: { type: 'string', default: 'default' },
+        depth: { type: 'number', default: 3 },
+        childSelection: { type: 'string', default: 'all' },
+        menuDisplayMode: { type: 'string', default: 'children' },
         parentPageId: { type: 'number', default: 0 },
-        accordionEnabled: { type: 'boolean', default: false },
+        accordionEnabled: { type: 'boolean', default: true },
         columnLayout: { type: 'string', default: 'single' },
-        showActiveIndicator: { type: 'boolean', default: false },
-        separator: { type: 'string', default: '' },
-        hoverEffect: { type: 'string', default: 'none' },
-        backgroundColor: { type: 'string', default: '' },
-        textColor: { type: 'string', default: '' },
-        activeBackgroundColor: { type: 'string', default: '' },
-        activeTextColor: { type: 'string', default: '' },
+        showActiveIndicator: { type: 'boolean', default: true },
+        firstLevelItemBackgroundColor: { type: 'string', default: '' },
+        firstLevelItemColor: { type: 'string', default: '' },
+        firstLevelItemBackgroundColor: { type: 'string', default: '' },
+        separator: { type: 'string', default: 'none' },
+        hoverEffect: { type: 'string', default: 'underline' },
+        backgroundColor: { type: 'string', default: '#f8f9fa' },
+        textColor: { type: 'string', default: '#333333' },
+        activeBackgroundColor: { type: 'string', default: '#007cba' },
+        activeTextColor: { type: 'string', default: '#ffffff' },
         activePadding: { type: 'number', default: 8 },
-        childActiveBackgroundColor: { type: 'string', default: '' },
-        childActiveTextColor: { type: 'string', default: '' },
-        separatorEnabled: { type: 'boolean', default: false },
-        separatorWidth: { type: 'number', default: 1 },
-        separatorColor: { type: 'string', default: '' },
-        separatorPadding: { type: 'number', default: 10 },
-        hoverBackgroundColor: { type: 'string', default: '' },
-        mainItemFontWeight: { type: 'string', default: '400' },
+        childActiveBackgroundColor: { type: 'string', default: '#e8f4fd' },
+        childActiveTextColor: { type: 'string', default: '#333333' },
+        separatorEnabled: { type: 'boolean', default: true },
+        separatorWidth: { type: 'number', default: 2 },
+        separatorColor: { type: 'string', default: '#e0e0e0' },
+        separatorPadding: { type: 'number', default: 20 },
+        hoverBackgroundColor: { type: 'string', default: 'rgba(0, 0, 0, 0.1)' },
+        mainItemFontWeight: { type: 'string', default: '600' },
         mainItemFontSize: { type: 'number', default: 16 },
-        mainItemTextColor: { type: 'string', default: '' },
+        mainItemTextColor: { type: 'string', default: '#333333' },
         dropdownMaxWidth: { type: 'number', default: 280 },
         menuOrientation: { type: 'string', default: 'vertical' },
         submenuBehavior: { type: 'boolean', default: false },
@@ -66,6 +69,8 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
             accordionEnabled,
             columnLayout,
             showActiveIndicator,
+            firstLevelItemBackgroundColor,
+            firstLevelItemColor,
             separator,
             hoverEffect,
             backgroundColor,
@@ -96,8 +101,8 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
         // Fetch available post types
         useEffect(() => {
             const builtInTypes = [
-                { label: __('Pages', 'flexible-page-navigation'), value: 'page' },
-                { label: __('Posts', 'flexible-page-navigation'), value: 'post' },
+                { label: esc_html('Pages', 'flexible-page-navigation'), value: 'page' },
+                { label: esc_html('Posts', 'flexible-page-navigation'), value: 'post' },
             ];
 
             // Try to fetch custom post types
@@ -136,8 +141,8 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                 .catch(() => {
                     // Fallback to default types if API fails
                     setPostTypes([
-                        { label: __('Pages', 'flexible-page-navigation'), value: 'page' },
-                        { label: __('Posts', 'flexible-page-navigation'), value: 'post' },
+                        { label: esc_html('Pages', 'flexible-page-navigation'), value: 'page' },
+                        { label: esc_html('Posts', 'flexible-page-navigation'), value: 'post' },
                     ]);
                     setLoading(false);
                 });
@@ -155,37 +160,37 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
         });
 
         const sortOptions = [
-            { label: __('Menu Order', 'flexible-page-navigation'), value: 'menu_order' },
-            { label: __('Title', 'flexible-page-navigation'), value: 'title' },
-            { label: __('Date', 'flexible-page-navigation'), value: 'date' },
-            { label: __('ID', 'flexible-page-navigation'), value: 'ID' },
-            { label: __('Author', 'flexible-page-navigation'), value: 'author' },
-            { label: __('Modified Date', 'flexible-page-navigation'), value: 'modified' },
+            { label: esc_html('Menu Order', 'flexible-page-navigation'), value: 'menu_order' },
+            { label: esc_html('Title', 'flexible-page-navigation'), value: 'title' },
+            { label: esc_html('Date', 'flexible-page-navigation'), value: 'date' },
+            { label: esc_html('ID', 'flexible-page-navigation'), value: 'ID' },
+            { label: esc_html('Author', 'flexible-page-navigation'), value: 'author' },
+            { label: esc_html('Modified Date', 'flexible-page-navigation'), value: 'modified' },
         ];
 
         const orderOptions = [
-            { label: __('Ascending', 'flexible-page-navigation'), value: 'ASC' },
-            { label: __('Descending', 'flexible-page-navigation'), value: 'DESC' },
+            { label: esc_html('Ascending', 'flexible-page-navigation'), value: 'ASC' },
+            { label: esc_html('Descending', 'flexible-page-navigation'), value: 'DESC' },
         ];
 
         const childSelectionOptions = [
-            { label: __('Current Page Children', 'flexible-page-navigation'), value: 'current' },
-            { label: __('All Items', 'flexible-page-navigation'), value: 'all' },
-            { label: __('Custom Parent', 'flexible-page-navigation'), value: 'custom' },
+            { label: esc_html('Current Page Children', 'flexible-page-navigation'), value: 'current' },
+            { label: esc_html('All Items', 'flexible-page-navigation'), value: 'all' },
+            { label: esc_html('Custom Parent', 'flexible-page-navigation'), value: 'custom' },
         ];
 
         const columnLayoutOptions = [
-            { label: __('Single Column', 'flexible-page-navigation'), value: 'single' },
-            { label: __('Two Columns', 'flexible-page-navigation'), value: 'two-columns' },
-            { label: __('Three Columns', 'flexible-page-navigation'), value: 'three-columns' },
-            { label: __('Four Columns', 'flexible-page-navigation'), value: 'four-columns' },
+            { label: esc_html('Single Column', 'flexible-page-navigation'), value: 'single' },
+            { label: esc_html('Two Columns', 'flexible-page-navigation'), value: 'two-columns' },
+            { label: esc_html('Three Columns', 'flexible-page-navigation'), value: 'three-columns' },
+            { label: esc_html('Four Columns', 'flexible-page-navigation'), value: 'four-columns' },
         ];
 
         const hoverEffectOptions = [
-            { label: __('None', 'flexible-page-navigation'), value: 'none' },
-            { label: __('Underline', 'flexible-page-navigation'), value: 'underline' },
-            { label: __('Background', 'flexible-page-navigation'), value: 'background' },
-            { label: __('Scale', 'flexible-page-navigation'), value: 'scale' },
+            { label: esc_html('None', 'flexible-page-navigation'), value: 'none' },
+            { label: esc_html('Underline', 'flexible-page-navigation'), value: 'underline' },
+            { label: esc_html('Background', 'flexible-page-navigation'), value: 'background' },
+            { label: esc_html('Scale', 'flexible-page-navigation'), value: 'scale' },
         ];
 
         const themeColors = useSelect(
@@ -201,8 +206,8 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                             label={__('Ausrichtung', 'flexible-page-navigation')}
                             value={menuOrientation}
                             options={[
-                                { label: __('Vertikal', 'flexible-page-navigation'), value: 'vertical' },
-                                { label: __('Horizontal', 'flexible-page-navigation'), value: 'horizontal' },
+                                { label: esc_html('Vertikal', 'flexible-page-navigation'), value: 'vertical' },
+                                { label: esc_html('Horizontal', 'flexible-page-navigation'), value: 'horizontal' },
                             ]}
                             onChange={(value) => setAttributes({ menuOrientation: value })}
                         />
@@ -236,6 +241,70 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                                         max={20}
                                         help={__('Padding for active navigation items (in pixels)', 'flexible-page-navigation')}
                                     />
+                                )}
+                                {!showActiveIndicator && (
+                                    <div style={{ marginTop: '0.75em' }}>
+                                        <label style={{ display: 'block', marginBottom: 4 }}>{__('First Level Text Color', 'flexible-page-navigation')}</label>
+                                        <Dropdown
+                                            renderToggle={({ isOpen, onToggle }) => (
+                                                <button
+                                                    onClick={onToggle}
+                                                    aria-expanded={isOpen}
+                                                    aria-label={__('First Level Text Color', 'flexible-page-navigation')}
+                                                    style={{
+                                                        width: 32,
+                                                        height: 32,
+                                                        borderRadius: '50%',
+                                                        border: '1px solid #ccc',
+                                                        background: firstLevelItemColor || '#fff',
+                                                    }}
+                                                />
+                                            )}
+                                            renderContent={() => (
+                                                <div style={{ padding: 8 }}>
+                                                    <ColorPalette
+                                                        value={firstLevelItemColor}
+                                                        onChange={(color) => setAttributes({ firstLevelItemColor: color })}
+                                                        colors={themeColors}
+                                                        enableAlpha={false}
+                                                        clearable
+                                                    />
+                                                </div>
+                                            )}
+                                        />
+                                    </div>
+                                )}
+                                {!showActiveIndicator && (
+                                    <div style={{ marginTop: '0.75em' }}>
+                                        <label style={{ display: 'block', marginBottom: 4 }}>{__('First Level Background Color', 'flexible-page-navigation')}</label>
+                                        <Dropdown
+                                            renderToggle={({ isOpen, onToggle }) => (
+                                                <button
+                                                    onClick={onToggle}
+                                                    aria-expanded={isOpen}
+                                                    aria-label={__('First Level Background Color', 'flexible-page-navigation')}
+                                                    style={{
+                                                        width: 32,
+                                                        height: 32,
+                                                        borderRadius: '50%',
+                                                        border: '1px solid #ccc',
+                                                        background: firstLevelItemBackgroundColor || '#fff',
+                                                    }}
+                                                />
+                                            )}
+                                            renderContent={() => (
+                                                <div style={{ padding: 8 }}>
+                                                    <ColorPalette
+                                                        value={firstLevelItemBackgroundColor}
+                                                        onChange={(color) => setAttributes({ firstLevelItemBackgroundColor: color })}
+                                                        colors={themeColors}
+                                                        enableAlpha={false}
+                                                        clearable
+                                                    />
+                                                </div>
+                                            )}
+                                        />
+                                    </div>
                                 )}
                                 {/* Border-Line-Optionen, Submenu Indentation wie zuvor */}
                                 {/* ... (siehe vorherige Änderungen) ... */}
@@ -425,11 +494,11 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                             label={__('Font Weight', 'flexible-page-navigation')}
                             value={mainItemFontWeight}
                             options={[
-                                { label: __('Normal', 'flexible-page-navigation'), value: '400' },
-                                { label: __('Medium', 'flexible-page-navigation'), value: '500' },
-                                { label: __('Semi Bold', 'flexible-page-navigation'), value: '600' },
-                                { label: __('Bold', 'flexible-page-navigation'), value: '700' },
-                                { label: __('Extra Bold', 'flexible-page-navigation'), value: '800' },
+                                { label: esc_html('Normal', 'flexible-page-navigation'), value: '400' },
+                                { label: esc_html('Medium', 'flexible-page-navigation'), value: '500' },
+                                { label: esc_html('Semi Bold', 'flexible-page-navigation'), value: '600' },
+                                { label: esc_html('Bold', 'flexible-page-navigation'), value: '700' },
+                                { label: esc_html('Extra Bold', 'flexible-page-navigation'), value: '800' },
                             ]}
                             onChange={(value) => setAttributes({ mainItemFontWeight: value })}
                             help={__('Font weight for main menu items (level 0)', 'flexible-page-navigation')}
@@ -803,7 +872,7 @@ registerBlockType('flexible-page-navigation/flexible-nav', {
                             )}
                         </p>
                         <p>
-                            {__('Accordion:', 'flexible-page-navigation')} {accordionEnabled ? __('Enabled', 'flexible-page-navigation') : __('Disabled', 'flexible-page-navigation')}
+                            {__('Accordion:', 'flexible-page-navigation')} {accordionEnabled ? esc_html('Enabled', 'flexible-page-navigation') : esc_html('Disabled', 'flexible-page-navigation')}
                         </p>
                         <p>
                             {__('Layout:', 'flexible-page-navigation')} {columnLayout.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}

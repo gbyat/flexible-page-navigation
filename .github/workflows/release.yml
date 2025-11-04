@@ -63,6 +63,14 @@ jobs:
             echo "⚠️  Assets directory not found (optional)"
           fi
 
+          # Copy languages directory (CSS/JS Assets)
+          if [ -d "languages" ]; then
+            cp -r languages temp/
+            echo "✅ Copied languages/ (language files)"
+          else
+            echo "⚠️  languages directory not found (optional)"
+          fi
+
           # Copy documentation files
           for doc in README.md CHANGELOG.md LICENSE; do
             if [ -f "$doc" ]; then
@@ -80,6 +88,8 @@ jobs:
           ls -la temp/build/ || echo "Temp/build not found"
           echo "=== Temp/assets contents ==="
           ls -la temp/assets/ || echo "Temp/assets not found"
+          echo "=== Temp/languages contents ==="
+          ls -la temp/languages/ || echo "Temp/languages not found"
 
           # Create ZIP file from temp directory contents
           cd temp

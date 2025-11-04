@@ -1,5 +1,5 @@
 {
-  "apiVersion": 2,
+  "apiVersion": 3,
   "name": "flexible-page-navigation/flexible-nav",
   "title": "Flexible Page Navigation",
   "category": "widgets",
@@ -8,7 +8,8 @@
   "textdomain": "flexible-page-navigation",
   "supports": {
     "html": false,
-    "align": ["wide", "full"]
+    "align": ["wide", "full"],
+    "inserter": false
   },
   "attributes": {
     "contentType": {
@@ -29,7 +30,7 @@
     },
     "childSelection": {
       "type": "string",
-      "default": "current"
+      "default": "all"
     },
     "menuDisplayMode": {
       "type": "string",
