@@ -1,3 +1,19 @@
+## 2025-11-04 13:08:43 - 2.0.0
+
+### Changed Files:
+- `build/flexible-breadcrumb/index.js`
+- `build/flexible-nav-horizontal/block.json`
+- `build/flexible-nav-horizontal/index.css`
+- `build/flexible-nav-horizontal/index.js`
+- `build/flexible-nav-horizontal/style.css`
+- `build/flexible-nav-vertical/block.json`
+- `build/flexible-nav-vertical/index.css`
+- `build/flexible-nav-vertical/index.js`
+- `build/flexible-nav-vertical/style.css`
+- `build/flexible-nav/index.js`
+- `flexible-page-navigation.php`
+- `languages/flexible-page-navigation.pot`
+
 ## 2025-11-04 13:08:41 - Update flexible navigation blocks to support new vertical and horizontal layouts, enhance accessibility with improved ARIA attributes, and ensure proper escaping for translatable strings. Add new block registration and asset enqueuing for vertical and horizontal navigation blocks. Update README to reflect new features and deprecate the old block.
 
 ### Changed Files:
